@@ -18,6 +18,7 @@ import {
   Zap,
 } from 'lucide-react'
 import Navbar from './Navbar'
+import LoginModal from './LoginModal'
 
 const FONT_IMPORT = `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');`
 
@@ -27,7 +28,7 @@ function pad(n) {
   return n.toString().padStart(2, '0')
 }
 
-function LandingPage({ onGetStarted }) {
+function LandingPage({ onGetStarted, onLoginClick }) {
   const containerRef = useRef(null)
 
   useEffect(() => {
@@ -50,43 +51,59 @@ function LandingPage({ onGetStarted }) {
 
   return (
     <div className="lp-root" ref={containerRef}>
-      <Navbar onGetStarted={onGetStarted} onLoginClick={() => console.log('Login clicked')} />
+      <Navbar onGetStarted={onGetStarted} onLoginClick={onLoginClick} />
 
       <section className="lp-hero" id="home">
-        <div className="lp-wrap lp-hero-grid">
-          <div className="lp-reveal in">
-            <span className="lp-eyebrow">$ status --daily</span>
+        <div className="lp-wrap lp-hero-stage">
+          <div className="lp-hero-copy lp-reveal in">
+            <span className="lp-eyebrow">Built for people who ship</span>
             <h1 className="lp-headline">
-              Your day, <span className="lp-accent-word">structured</span> before you open your editor.
+              Keep your <span className="lp-accent-word">flow</span> in one place.
             </h1>
             <p className="lp-sub">
-              Devflow reads your commits, flags what needs attention, and hands you a clear list for today — so the first ten minutes of your morning aren&apos;t spent figuring out where you left off.
+              DevFlow turns commits, tasks, pull requests, and focus time into a calm daily workspace for developers.
             </p>
             <div className="lp-hero-ctas">
               <button className="lp-btn lp-btn-primary" onClick={onGetStarted}>
-                Get Started Free <ArrowRight size={16} />
+                Start your workspace <ArrowRight size={16} />
               </button>
-              <a href="#how-it-works" className="lp-btn lp-btn-ghost">See how it works</a>
+              <a href="#how-it-works" className="lp-btn lp-btn-ghost">How it works</a>
             </div>
           </div>
 
-          <div className="lp-hero-preview lp-reveal" onClick={onGetStarted} role="button" tabIndex={0}>
-            <div className="lp-preview-chrome">
-              <span className="lp-dot" />
-              <span className="lp-dot" />
-              <span className="lp-dot" />
+          <div className="lp-workspace lp-reveal" onClick={onGetStarted} role="button" tabIndex={0}>
+            <div className="lp-workspace-nav">
+              <div className="lp-workspace-brand"><span>⌘</span> DevFlow</div>
+              <div className="lp-workspace-tabs"><b>Overview</b><span>Tasks</span><span>Activity</span></div>
+              <div className="lp-workspace-avatar">N</div>
             </div>
-            <div className="lp-preview-body">
-              <div className="lp-preview-prompt">
-                <span className="sigil">$</span>good morning, <span className="who">nisith</span>
+            <div className="lp-workspace-content">
+              <div className="lp-workspace-welcome">
+                <span>Monday, 13 July</span>
+                <h2>Good morning, Nisith <span>✦</span></h2>
+                <p>Here&apos;s what deserves your attention today.</p>
               </div>
-              <div className="lp-preview-row"><span className="chk">✓</span> Fixed login API</div>
-              <div className="lp-preview-row"><span className="chk">✓</span> Completed authentication</div>
-              <div className="lp-preview-row pending"><span className="chk">○</span> Finish payment API</div>
-              <div className="lp-preview-row pending"><span className="chk">○</span> Review PR #14</div>
-              <div className="lp-preview-tag">⚠ AI found 3 possible fixes for Mongo timeout</div>
+              <div className="lp-workspace-grid">
+                <div className="lp-work-card lp-tasks-card">
+                  <div className="lp-card-label">TODAY&apos;S FOCUS <span>3 tasks</span></div>
+                  <div className="lp-task-row"><i>✓</i> Finish payment API <b>In progress</b></div>
+                  <div className="lp-task-row"><i>○</i> Review PR #14 <b>Review</b></div>
+                  <div className="lp-task-row"><i>○</i> Add auth tests <b>Next</b></div>
+                </div>
+                <div className="lp-work-card lp-progress-card">
+                  <div className="lp-card-label">WEEKLY FLOW <span>82%</span></div>
+                  <div className="lp-progress-ring"><strong>18h</strong><small>focused</small></div>
+                  <div className="lp-mini-bars"><i /><i /><i /><i className="active" /><i /></div>
+                </div>
+                <div className="lp-work-card lp-activity-card">
+                  <div className="lp-card-label">RECENT ACTIVITY</div>
+                  <p><span className="lp-activity-dot green" />Auth flow merged <em>12m</em></p>
+                  <p><span className="lp-activity-dot purple" />New CI run passed <em>35m</em></p>
+                </div>
+              </div>
             </div>
-            <div className="lp-preview-hint">click to open the dashboard →</div>
+            <div className="lp-floating lp-float-left"><span>✓</span><div><b>PR merged</b><small>auth/session</small></div></div>
+            <div className="lp-floating lp-float-right"><span>⚡</span><div><b>Deep work</b><small>1h 42m today</small></div></div>
           </div>
         </div>
       </section>
@@ -257,7 +274,7 @@ function LandingPage({ onGetStarted }) {
   )
 }
 
-function Dashboard({ onBack }) {
+function Dashboard({ onBack, onLoginClick, user }) {
   const [today, setToday] = useState([
     { id: 1, text: 'Finish Payment API', done: false },
     { id: 2, text: 'Review PR #14', done: false },
@@ -313,7 +330,7 @@ function Dashboard({ onBack }) {
 
   return (
     <div>
-      <Navbar onGetStarted={onBack} onLoginClick={() => console.log('Login clicked')} />
+      <Navbar onGetStarted={onBack} onLoginClick={onLoginClick} />
       <div className="df-root">
         <div className="df-wrap">
           <div className="df-topbar">
@@ -327,7 +344,7 @@ function Dashboard({ onBack }) {
           </div>
 
         <p className="df-prompt">
-          <span className="df-sigil">$</span> good morning, <span className="df-name">nisith</span>
+          <span className="df-sigil">$</span> good morning, <span className="df-name">{user?.name || 'developer'}</span>
           <span className="df-cursor" />
         </p>
         <p className="df-subline">
@@ -462,6 +479,25 @@ function Dashboard({ onBack }) {
 
 export default function DevflowApp() {
   const [view, setView] = useState('landing')
+  const [authOpen, setAuthOpen] = useState(false)
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search)
+    if (query.get('auth') !== 'success') return
+
+    fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/me`, { credentials: 'include' })
+      .then(async (response) => {
+        if (!response.ok) throw new Error('Unable to complete Google sign-in.')
+        return response.json()
+      })
+      .then(({ user: signedInUser }) => {
+        setUser(signedInUser)
+        setView('dashboard')
+      })
+      .catch(() => setAuthOpen(true))
+      .finally(() => window.history.replaceState({}, '', window.location.pathname))
+  }, [])
 
   const goToDashboard = () => {
     setView('dashboard')
@@ -473,12 +509,21 @@ export default function DevflowApp() {
     window.scrollTo({ top: 0, behavior: 'auto' })
   }
 
+  const handleAuthenticated = (signedInUser) => {
+    setUser(signedInUser)
+    setAuthOpen(false)
+    goToDashboard()
+  }
+
   return (
     <div className="app-shell">
       <style>{FONT_IMPORT + APP_STYLES}</style>
       <div className="app-view" key={view}>
-        {view === 'landing' ? <LandingPage onGetStarted={goToDashboard} /> : <Dashboard onBack={goToLanding} />}
+        {view === 'landing'
+          ? <LandingPage onGetStarted={goToDashboard} onLoginClick={() => setAuthOpen(true)} />
+          : <Dashboard onBack={goToLanding} onLoginClick={() => setAuthOpen(true)} user={user} />}
       </div>
+      {authOpen && <LoginModal onClose={() => setAuthOpen(false)} onAuthenticated={handleAuthenticated} />}
     </div>
   )
 }

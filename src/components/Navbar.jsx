@@ -1,15 +1,23 @@
 import { ChevronDown, Globe2, LogIn, Menu, X } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Navbar({ onGetStarted, onLoginClick }) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [hasScrolled, setHasScrolled] = useState(false)
+
+  useEffect(() => {
+    const updateScrollState = () => setHasScrolled(window.scrollY > 12)
+    updateScrollState()
+    window.addEventListener('scroll', updateScrollState, { passive: true })
+    return () => window.removeEventListener('scroll', updateScrollState)
+  }, [])
 
   return (
-    <header className="navbar">
+    <header className={`navbar ${hasScrolled ? 'navbar-scrolled' : ''}`}>
       <div className="navbar-container">
         <button className="navbar-logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} aria-label="Devflow home">
-          <span className="navbar-logo-icon">D</span>
-          <span className="navbar-logo-text">Dev<span>flow</span></span>
+          <span className="navbar-logo-icon" aria-hidden="true">⌘</span>
+          <span className="navbar-logo-text">Dev<span>Flow</span></span>
         </button>
 
         <nav className={`navbar-links ${menuOpen ? 'open' : ''}`} aria-label="Main navigation">
