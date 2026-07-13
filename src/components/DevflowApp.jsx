@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+﻿import { useState, useEffect, useRef } from 'react'
 import {
   Check,
   Circle,
@@ -14,10 +14,10 @@ import {
   ChevronRight,
   RotateCcw,
   ArrowRight,
-  Menu,
   ArrowLeft,
   Zap,
 } from 'lucide-react'
+import Navbar from './Navbar'
 
 const FONT_IMPORT = `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');`
 
@@ -28,7 +28,6 @@ function pad(n) {
 }
 
 function LandingPage({ onGetStarted }) {
-  const [menuOpen, setMenuOpen] = useState(false)
   const containerRef = useRef(null)
 
   useEffect(() => {
@@ -51,29 +50,9 @@ function LandingPage({ onGetStarted }) {
 
   return (
     <div className="lp-root" ref={containerRef}>
-      <header className="lp-nav">
-        <div className="lp-wrap lp-nav-inner">
-          <button className="lp-brand" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <span className="lp-brand-mark">D</span>
-            Dev<span className="lp-brand-sub">flow</span>
-          </button>
-          <nav className={`lp-links ${menuOpen ? 'open' : ''}`}>
-            <a href="#how-it-works" onClick={() => setMenuOpen(false)}>How it works</a>
-            <a href="#features" onClick={() => setMenuOpen(false)}>Features</a>
-            <a href="#" onClick={(event) => event.preventDefault()}>Pricing</a>
-            <a href="#" onClick={(event) => event.preventDefault()}>Docs</a>
-          </nav>
-          <div className="lp-nav-actions">
-            <a href="#" className="lp-btn lp-btn-ghost lp-btn-sm" onClick={(event) => event.preventDefault()}>Log in</a>
-            <button className="lp-btn lp-btn-primary lp-btn-sm" onClick={onGetStarted}>Get Started</button>
-            <button className="lp-nav-toggle" aria-label="Toggle menu" onClick={() => setMenuOpen((open) => !open)}>
-              <Menu size={20} />
-            </button>
-          </div>
-        </div>
-      </header>
+      <Navbar onGetStarted={onGetStarted} onLoginClick={() => console.log('Login clicked')} />
 
-      <section className="lp-hero">
+      <section className="lp-hero" id="home">
         <div className="lp-wrap lp-hero-grid">
           <div className="lp-reveal in">
             <span className="lp-eyebrow">$ status --daily</span>
@@ -222,7 +201,7 @@ function LandingPage({ onGetStarted }) {
         </div>
       </section>
 
-      <section className="lp-section" style={{ paddingTop: 0 }}>
+      <section className="lp-section" id="blog" style={{ paddingTop: 0 }}>
         <div className="lp-wrap">
           <div className="lp-cta-band lp-reveal">
             <h2>Start tomorrow morning with a plan.</h2>
@@ -234,7 +213,7 @@ function LandingPage({ onGetStarted }) {
         </div>
       </section>
 
-      <footer className="lp-footer">
+      <footer className="lp-footer" id="about">
         <div className="lp-wrap">
           <div className="lp-footer-grid">
             <div className="lp-footer-brand">
@@ -333,17 +312,19 @@ function Dashboard({ onBack }) {
   const completedYesterday = ['Fixed Login API', 'Completed Authentication', '4 commits pushed to main']
 
   return (
-    <div className="df-root">
-      <div className="df-wrap">
-        <div className="df-topbar">
-          <button className="df-back" onClick={onBack}>
-            <ArrowLeft size={13} /> Back to homepage
-          </button>
-          <div className="df-topbrand">
-            <Zap size={13} color="var(--amber)" />
-            <b>Devflow</b>
+    <div>
+      <Navbar onGetStarted={onBack} onLoginClick={() => console.log('Login clicked')} />
+      <div className="df-root">
+        <div className="df-wrap">
+          <div className="df-topbar">
+            <button className="df-back" onClick={onBack}>
+              <ArrowLeft size={13} /> Back to homepage
+            </button>
+            <div className="df-topbrand">
+              <Zap size={13} color="var(--amber)" />
+              <b>Devflow</b>
+            </div>
           </div>
-        </div>
 
         <p className="df-prompt">
           <span className="df-sigil">$</span> good morning, <span className="df-name">nisith</span>
@@ -462,6 +443,7 @@ function Dashboard({ onBack }) {
           <span className="df-mono"><Bell size={13} style={{ verticalAlign: -2, marginRight: 6 }} /> Notifications on</span>
           <button className="df-btn" onClick={sendTestNotification}>Send test notification</button>
         </div>
+        </div>
       </div>
 
       {toast && (
@@ -476,6 +458,7 @@ function Dashboard({ onBack }) {
     </div>
   )
 }
+
 
 export default function DevflowApp() {
   const [view, setView] = useState('landing')

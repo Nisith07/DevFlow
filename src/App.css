@@ -1,3 +1,232 @@
+/* ============================================= */
+/* NAVBAR STYLES */
+/* ============================================= */
+
+.navbar {
+  background: #fbf7f0;
+  border-bottom: 1px solid #e8e0d1;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: none;
+}
+
+.navbar-container {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+  gap: 28px;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+  transition: opacity 0.2s ease;
+}
+
+.navbar-logo:hover {
+  opacity: 0.8;
+}
+
+.navbar-logo-icon {
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, #e8a33d, #c2632f);
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(194, 99, 47, 0.24);
+}
+
+.navbar-logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #221d17;
+  letter-spacing: -0.02em;
+}
+
+.navbar-logo-text span { color: #c2632f; }
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  flex: 1;
+}
+
+.navbar-link {
+  color: #625b50;
+  font-size: 13px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.navbar-link:hover {
+  color: #c2632f;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.navbar-language {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 0;
+  padding: 8px 4px;
+  background: transparent;
+  color: #625b50;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.navbar-language:hover { color: #c2632f; }
+
+.navbar-login-btn {
+  background: transparent;
+  border: 1px solid #d9cfbf;
+  color: #3a3329;
+  padding: 9px 13px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.navbar-login-btn:hover {
+  background: #f3e0c9;
+  border-color: #c2632f;
+  color: #9a4b23;
+}
+
+.navbar-get-started {
+  background: #c2632f;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(232, 163, 61, 0.2);
+}
+
+.navbar-get-started:hover {
+  background: #9a4b23;
+  box-shadow: 0 6px 16px rgba(194, 99, 47, 0.24);
+  transform: translateY(-1px);
+}
+
+.navbar-menu-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #e8e6e1;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .navbar { padding: 0 16px; }
+
+  .navbar-container {
+    height: 60px;
+    gap: 16px;
+  }
+
+  .navbar-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .navbar-links {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 16px;
+    right: 16px;
+    background: #fff;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    padding: 8px;
+    border: 1px solid #e8e0d1;
+    border-radius: 12px;
+    box-shadow: 0 16px 36px rgba(34, 29, 23, 0.16);
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transition: max-height 0.2s ease, opacity 0.2s ease;
+  }
+
+  .navbar-links.open {
+    max-height: 240px;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .navbar-link {
+    padding: 11px 12px;
+    border-radius: 7px;
+  }
+
+  .navbar-link:hover {
+    background: #f3e0c9;
+  }
+
+  .navbar-actions {
+    gap: 8px;
+  }
+
+  .navbar-get-started {
+    padding: 8px 11px;
+    font-size: 13px;
+  }
+
+  .navbar-language,
+  .navbar-login-btn span { display: none; }
+
+  .navbar-login-btn {
+    padding: 8px;
+  }
+}
+
+/* ============================================= */
+/* ORIGINAL STYLES */
+/* ============================================= */
+
 .counter {
   font-size: 16px;
   padding: 5px 10px;
