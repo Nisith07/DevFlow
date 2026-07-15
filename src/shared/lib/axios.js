@@ -9,6 +9,30 @@ const api = axios.create({
   timeout: 15_000,
 })
 
+// Read persisted token directly from sessionStorage (avoids circular import with authStore).
+// This is the fallback for when the browser blocks cross-site httpOnly cookies.
+function getStoredToken() {
+  try {
+    const raw = sessionStorage.getItem('devflow-auth')
+    if (!raw) return null
+    return JSON.parse(raw)?.state?.token ?? null
+  } catch {
+    return null
+  }
+}
+
+// Attach JWT token to every request as Authorization header fallback
+api.interceptors.request.use(
+  (config) => {
+    const token = getStoredToken()
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  },
+  (error) => Promise.reject(error)
+)
+
 // Normalise error shape so every call can do: catch(e) => e.message
 api.interceptors.response.use(
   (response) => response,

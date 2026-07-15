@@ -26,8 +26,8 @@ export default function LoginModal({ onClose, defaultRedirectTo }) {
   const isSignup = mode === 'signup'
   const redirectTo = defaultRedirectTo || location.state?.from?.pathname || '/dashboard'
 
-  const handleSuccess = (user) => {
-    login(user)
+  const handleSuccess = (user, token) => {
+    login(user, token)
     onClose()
     navigate(redirectTo, { replace: true })
   }
@@ -41,7 +41,7 @@ export default function LoginModal({ onClose, defaultRedirectTo }) {
       const endpoint = isSignup ? '/auth/signup' : '/auth/login'
       const body = isSignup ? { name, email, password } : { email, password }
       const { data } = await api.post(endpoint, body)
-      handleSuccess(data.user)
+      handleSuccess(data.user, data.token)
     } catch (err) {
       setError(err.message || 'Unable to reach the server. Please try again.')
     } finally {
