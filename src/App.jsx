@@ -1,8 +1,12 @@
-import './App.css'
-import DevflowApp from './components/DevflowApp'
+import Providers from '@/app/providers'
+import AppRouter from '@/app/router'
 
 function App() {
-  return <DevflowApp />
+  return (
+    <Providers>
+      <AppRouter />
+    </Providers>
+  )
 }
 
 export default App
