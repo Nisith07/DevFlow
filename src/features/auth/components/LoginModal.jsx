@@ -4,7 +4,7 @@ import { LoaderCircle, LockKeyhole, Mail, X } from 'lucide-react'
 import api from '@/shared/lib/axios'
 import useAuthStore from '@/features/auth/store/authStore'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+const API_URL = import.meta.env.VITE_API_URL || 'https://devflow-backend-53bm.onrender.com'
 
 /**
  * Auth modal — handles login, signup, and Google OAuth.
