@@ -33,8 +33,9 @@ const useAuthStore = create(
        * Called once in the root provider.
        */
       initAuth: async () => {
-        // If we have a cached user, skip the loading flash
-        if (get().user) {
+        const isGoogleSuccess = typeof window !== 'undefined' && window.location?.search?.includes('auth=success')
+        // If we have a cached user, skip the loading flash, unless we just completed Google OAuth
+        if (get().user && !isGoogleSuccess) {
           set({ loading: false })
           return
         }
