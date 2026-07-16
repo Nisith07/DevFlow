@@ -1,51 +1,96 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard,
-  FolderKanban,
-  ListTodo,
-  CalendarDays,
+  User,
+  Briefcase,
   FileText,
-  Activity,
-  BarChart3,
-  LogOut,
-  Zap,
+  Globe2,
   Sparkles,
+  MapPin,
+  Mail,
+  LogOut,
+  Settings,
+  Moon,
+  Sun,
+  Zap,
+  ArrowRight,
 } from 'lucide-react'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { getInitials } from '@/shared/lib/utils'
+import { useState } from 'react'
 
 const NAV_ITEMS = [
-  { to: '/dashboard',  label: 'Dashboard',  icon: LayoutDashboard },
-  { to: '/projects',   label: 'Projects',   icon: FolderKanban    },
-  { to: '/tasks',      label: 'Tasks',      icon: ListTodo        },
-  { to: '/planner',    label: 'Planner',    icon: CalendarDays    },
-  { to: '/notes',      label: 'Notes',      icon: FileText        },
-  { to: '/activity',   label: 'Activity',   icon: Activity        },
-  { to: '/analytics',  label: 'Analytics',  icon: BarChart3       },
-  { to: '/ai',         label: 'AI Copilot', icon: Sparkles        },
+  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { to: '/projects',  label: 'Portfolio',  icon: Briefcase },
+  { to: '/tasks',     label: 'Profile',    icon: User },
+  { to: '/analytics', label: 'Resume',     icon: FileText },
+  { to: '/activity',  label: 'GitHub',     icon: Globe2 },
 ]
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const [isDark, setIsDark] = useState(true)
 
   const handleLogout = async () => {
     await logout()
     navigate('/', { replace: true })
+    onClose?.()
+  }
+
+  const handleAI = () => {
+    navigate('/ai')
+    onClose?.()
   }
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isOpen ? 'open' : ''}`} aria-label="App sidebar">
+
       {/* Brand */}
       <div className="sidebar-brand">
-        <div className="sidebar-brand-mark">
-          <Zap size={14} />
+        <div className="sidebar-brand-mark" aria-hidden="true">
+          <Zap size={15} />
         </div>
-        Dev<span style={{ color: 'var(--color-amber)' }}>Flow</span>
+        <span className="sidebar-brand-text">
+          Dev<span>Flow</span>
+        </span>
+      </div>
+
+      {/* Developer Identity */}
+      <div className="sidebar-identity">
+        <div className="sidebar-avatar-wrap">
+          <div className="sidebar-avatar">
+            {user?.avatarUrl ? (
+              <img src={user.avatarUrl} alt={user?.name || 'Nisith Bhowmik'} />
+            ) : (
+              <span>{user?.name ? getInitials(user.name) : 'NB'}</span>
+            )}
+          </div>
+          <span className="sidebar-status-dot" aria-label="Online" />
+        </div>
+
+        <div className="sidebar-dev-name">
+          {user?.name || 'Nisith Bhowmik'}
+        </div>
+        <div className="sidebar-dev-role">Full Stack Developer</div>
+
+        <div className="sidebar-dev-meta">
+          <div className="sidebar-dev-meta-row">
+            <MapPin size={11} />
+            <span>Kolkata, India</span>
+          </div>
+          <div className="sidebar-dev-meta-row">
+            <Mail size={11} />
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 160 }}>
+              {user?.email || 'nisith.bhowmik@gmail.com'}
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Navigation */}
       <nav className="sidebar-nav" aria-label="Main navigation">
+        <span className="sidebar-nav-label">Navigation</span>
         {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
           <NavLink
             key={to}
@@ -53,29 +98,82 @@ export default function Sidebar() {
             className={({ isActive }) =>
               `sidebar-link ${isActive ? 'active' : ''}`
             }
+            onClick={onClose}
           >
-            <Icon size={16} />
+            <Icon size={15} />
             {label}
           </NavLink>
         ))}
       </nav>
 
-      {/* User footer */}
+      {/* AI Copilot section */}
+      <div style={{ padding: '0 0 8px' }}>
+        <span className="sidebar-nav-label" style={{ padding: '4px 16px 6px', display: 'block' }}>
+          AI Assistant
+        </span>
+        <button className="sidebar-ai-section" onClick={handleAI} aria-label="Open AI Copilot">
+          <div className="sidebar-ai-header">
+            <div className="sidebar-ai-icon">
+              <Sparkles size={14} />
+            </div>
+            <span className="sidebar-ai-title">AI Copilot</span>
+            <span className="sidebar-ai-badge">NEW</span>
+          </div>
+          <p className="sidebar-ai-sub">
+            Your intelligent coding assistant. Ask anything.
+          </p>
+          <button className="sidebar-ai-btn" onClick={handleAI} tabIndex={-1}>
+            <Sparkles size={12} />
+            Open Copilot
+            <ArrowRight size={12} style={{ marginLeft: 'auto' }} />
+          </button>
+        </button>
+      </div>
+
+      {/* Footer Controls */}
       <div className="sidebar-footer">
+        {/* Theme toggle */}
+        <button
+          className="sidebar-theme-toggle"
+          onClick={() => setIsDark((d) => !d)}
+          aria-label="Toggle theme"
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--color-app-muted)', fontSize: 13, fontWeight: 500 }}>
+            {isDark ? <Moon size={14} /> : <Sun size={14} />}
+            Dark Mode
+          </div>
+          <div className={`toggle-track ${isDark ? 'on' : 'off'}`}>
+            <div className="toggle-thumb" />
+          </div>
+        </button>
+
+        {/* Settings */}
+        <button className="sidebar-footer-btn" aria-label="Settings">
+          <Settings size={14} />
+          Settings
+        </button>
+
+        {/* User / Logout */}
         {user && (
-          <div className="sidebar-user" onClick={handleLogout} title="Sign out" role="button" tabIndex={0}>
-            <div className="sidebar-avatar">
-              {user.avatarUrl
-                ? <img src={user.avatarUrl} alt={user.name} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
-                : getInitials(user.name)
-              }
+          <button
+            className="sidebar-user"
+            onClick={handleLogout}
+            title="Sign out"
+            aria-label="Sign out"
+          >
+            <div className="sidebar-user-avatar">
+              {user.avatarUrl ? (
+                <img src={user.avatarUrl} alt={user.name} />
+              ) : (
+                getInitials(user.name)
+              )}
             </div>
             <div className="sidebar-user-info">
               <div className="sidebar-user-name">{user.name}</div>
               <div className="sidebar-user-email">{user.email}</div>
             </div>
-            <LogOut size={14} style={{ color: 'var(--color-app-faint)', flexShrink: 0 }} />
-          </div>
+            <LogOut size={13} style={{ color: 'var(--color-app-faint)', flexShrink: 0 }} />
+          </button>
         )}
       </div>
     </aside>
