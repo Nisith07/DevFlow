@@ -84,54 +84,54 @@
 
 :root {
   /* Default: Dark mode values */
-  --app-bg: #0D0F14;
-  --app-surface: #131620;
-  --app-surface-2: #181C2A;
-  --app-surface-hover: #1E2235;
-  --app-border: #1F2535;
-  --app-border-bright: #2A3050;
+  --app-bg: #090B10;
+  --app-surface: #101422;
+  --app-surface-2: #161A2D;
+  --app-surface-hover: #1C2139;
+  --app-border: #1D2336;
+  --app-border-bright: #2E3754;
   --app-text: #E8EAF0;
-  --app-muted: #7A8299;
-  --app-faint: #4A5168;
+  --app-muted: #8E98B0;
+  --app-faint: #4E5670;
 
-  --accent-color: #7C3AED;
-  --accent-bright: #8B5CF6;
-  --accent-dim: #1E1535;
-  --accent-glow: rgba(124, 58, 237, 0.25);
+  --accent-color: #8B5CF6;
+  --accent-bright: #A78BFA;
+  --accent-dim: #1E163B;
+  --accent-glow: rgba(139, 92, 246, 0.18);
 
   --blue-dim: #0F1E3D;
-  --green-dim: #0A1F16;
+  --green-dim: #0A2216;
   --amber-dim: #291F07;
   --pink-dim: #2A0D1E;
-  --teal-dim: #051A1F;
+  --teal-dim: #051C22;
   --danger-dim: #2D1212;
 
-  --neu-dark: rgba(0, 0, 0, 0.6);
-  --neu-light: rgba(255, 255, 255, 0.035);
+  --neu-dark: rgba(0, 0, 0, 0.65);
+  --neu-light: rgba(255, 255, 255, 0.025);
 
-  --shadow-neu-sm-val: 4px 4px 8px rgba(0, 0, 0, 0.4), -2px -2px 6px rgba(255, 255, 255, 0.02);
-  --shadow-neu-md-val: 8px 8px 16px rgba(0, 0, 0, 0.5), -4px -4px 10px rgba(255, 255, 255, 0.025);
-  --shadow-neu-lg-val: 12px 12px 24px rgba(0, 0, 0, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.03);
-  --shadow-card-val: 0 4px 24px rgba(0, 0, 0, 0.35), 0 1px 4px rgba(0, 0, 0, 0.2);
-  --shadow-glow-violet-val: 0 0 20px rgba(124, 58, 237, 0.3), 0 0 40px rgba(124, 58, 237, 0.15);
+  --shadow-neu-sm-val: 4px 4px 10px rgba(0, 0, 0, 0.5), -2px -2px 6px rgba(255, 255, 255, 0.015);
+  --shadow-neu-md-val: 8px 8px 18px rgba(0, 0, 0, 0.55), -4px -4px 10px rgba(255, 255, 255, 0.02);
+  --shadow-neu-lg-val: 12px 12px 26px rgba(0, 0, 0, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.025);
+  --shadow-card-val: 0 4px 20px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.25);
+  --shadow-glow-violet-val: 0 0 20px rgba(139, 92, 246, 0.25), 0 0 40px rgba(139, 92, 246, 0.1);
 }
 
 .theme-light {
   /* Light mode overrides */
   --app-bg: #E8ECF2;
-  --app-surface: #EFF2F7;
+  --app-surface: #FFFFFF;
   --app-surface-2: #F6F8FC;
-  --app-surface-hover: #E2E6EE;
-  --app-border: #D1D6E0;
-  --app-border-bright: #C0C6D3;
-  --app-text: #1A202C;
-  --app-muted: #626A7A;
-  --app-faint: #8E98A8;
+  --app-surface-hover: #F1F3F7;
+  --app-border: #E1E4EB;
+  --app-border-bright: #CCD0D9;
+  --app-text: #1E293B;
+  --app-muted: #64748B;
+  --app-faint: #94A3B8;
 
   --accent-color: #7C3AED;
   --accent-bright: #6D28D9;
-  --accent-dim: #EDE9FD;
-  --accent-glow: rgba(124, 58, 237, 0.15);
+  --accent-dim: #EEF2FF;
+  --accent-glow: rgba(124, 58, 237, 0.1);
 
   --blue-dim: #DBEAFE;
   --green-dim: #D1FAE5;
@@ -140,14 +140,14 @@
   --teal-dim: #E0F2FE;
   --danger-dim: #FEE2E2;
 
-  --neu-dark: rgba(163, 177, 198, 0.6);
+  --neu-dark: rgba(163, 177, 198, 0.5);
   --neu-light: rgba(255, 255, 255, 0.95);
 
-  --shadow-neu-sm-val: 4px 4px 8px rgba(163, 177, 198, 0.55), -4px -4px 8px rgba(255, 255, 255, 0.9);
-  --shadow-neu-md-val: 8px 8px 16px rgba(163, 177, 198, 0.6), -8px -8px 16px rgba(255, 255, 255, 0.95);
-  --shadow-neu-lg-val: 12px 12px 24px rgba(163, 177, 198, 0.65), -12px -12px 24px rgba(255, 255, 255, 0.98);
-  --shadow-card-val: 6px 6px 12px rgba(163, 177, 198, 0.5), -6px -6px 12px rgba(255, 255, 255, 0.9);
-  --shadow-glow-violet-val: 0 0 20px rgba(124, 58, 237, 0.2), 0 0 40px rgba(124, 58, 237, 0.1);
+  --shadow-neu-sm-val: 4px 4px 8px rgba(163, 177, 198, 0.45), -4px -4px 8px rgba(255, 255, 255, 0.9);
+  --shadow-neu-md-val: 8px 8px 16px rgba(163, 177, 198, 0.5), -8px -8px 16px rgba(255, 255, 255, 0.95);
+  --shadow-neu-lg-val: 12px 12px 24px rgba(163, 177, 198, 0.55), -12px -12px 24px rgba(255, 255, 255, 0.98);
+  --shadow-card-val: 6px 6px 12px rgba(163, 177, 198, 0.4), -6px -6px 12px rgba(255, 255, 255, 0.9);
+  --shadow-glow-violet-val: 0 0 20px rgba(124, 58, 237, 0.15), 0 0 40px rgba(124, 58, 237, 0.08);
 }
 
 

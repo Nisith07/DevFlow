@@ -20,13 +20,13 @@ export default function AICopilotWidget() {
   const handleOpen = () => navigate('/ai')
 
   return (
-    <div className="card" id="ai-copilot-widget" style={{ flex: '1', minHeight: 0, display: 'flex', flexDirection: 'column', padding: '10px 12px !important' }}>
+    <div className="card" id="ai-copilot-widget" style={{ flex: '1', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
-      <div className="card-head" style={{ marginBottom: '6px' }}>
-        <h2 className="card-title" style={{ fontSize: '13px' }}>
+      <div className="card-head">
+        <h2 className="card-title">
           <Sparkles size={14} className="card-title-icon" />
           AI Copilot
-          <span style={{ fontSize: '9px', padding: '2px 4px', background: 'var(--color-violet-dim)', color: 'var(--color-violet-bright)', borderRadius: '4px', marginLeft: '6px' }}>Beta</span>
+          <span style={{ fontSize: '9px', padding: '2px 6px', background: 'var(--accent-dim)', color: 'var(--color-violet-bright)', borderRadius: '4px', marginLeft: '6px', fontWeight: 600 }}>Beta</span>
         </h2>
       </div>
 
@@ -41,18 +41,14 @@ export default function AICopilotWidget() {
           alignItems: 'center',
           gap: '8px',
           width: '100%',
-          padding: '6px 10px',
           border: 'none',
-          borderRadius: '6px',
           cursor: 'pointer',
-          textAlign: 'left',
-          marginBottom: '8px',
-          boxShadow: 'var(--neu-shadow-inset-sm)'
+          textAlign: 'left'
         }}
       >
         <Sparkles size={12} style={{ color: 'var(--color-violet-bright)', flexShrink: 0 }} />
-        <span style={{ flex: 1, fontSize: '11px', color: 'var(--color-app-muted)' }}>Ask Copilot anything...</span>
-        <Send size={11} style={{ color: 'var(--color-app-faint)', transform: 'rotate(45deg)' }} />
+        <span>Ask Copilot anything...</span>
+        <Send size={11} style={{ color: 'var(--color-app-faint)', transform: 'rotate(45deg)', marginLeft: 'auto' }} />
       </button>
 
       {/* Action buttons */}
@@ -69,10 +65,7 @@ export default function AICopilotWidget() {
               alignItems: 'center',
               justifyContent: 'center',
               gap: '6px',
-              padding: '6px 4px',
-              fontSize: '10px',
-              fontWeight: 500,
-              borderRadius: '6px'
+              fontWeight: 500
             }}
           >
             <Icon size={11} style={{ color: 'var(--color-violet-bright)', flexShrink: 0 }} />

@@ -37,40 +37,31 @@ const REPOSITORIES = [
 
 export default function TopRepositories() {
   return (
-    <div className="card" id="top-repositories-card" style={{ flex: '1', minHeight: 0, display: 'flex', flexDirection: 'column', padding: '10px 12px !important' }}>
-      <div className="card-head" style={{ marginBottom: '6px' }}>
-        <h2 className="card-title" style={{ fontSize: '13px' }}>
+    <div className="card" id="top-repositories-card" style={{ flex: '1', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+      <div className="card-head">
+        <h2 className="card-title">
           <BookOpen size={14} className="card-title-icon" />
           Top Repositories
         </h2>
       </div>
 
-      <div className="repo-list" style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minHeight: 0, overflowY: 'auto' }}>
+      <div className="repo-list">
         {REPOSITORIES.map(({ id, name, desc, lang, stars, forks, link }) => (
           <div
             key={id}
             className="repo-item neu-inset"
             id={`repo-${id}`}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '6px 10px',
-              borderRadius: '8px',
-              border: 'none',
-              boxShadow: 'var(--neu-shadow-inset-sm)'
-            }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
-              <BookOpen size={11} style={{ color: 'var(--color-violet-bright)', flexShrink: 0 }} />
-              <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: '11.5px', fontWeight: 'bold', color: 'var(--color-app-text)' }}>{name}</div>
-                <div style={{ fontSize: '10px', color: 'var(--color-app-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{desc}</div>
+              <BookOpen size={12} style={{ color: 'var(--color-violet-bright)', flexShrink: 0 }} />
+              <div className="repo-info">
+                <div className="repo-name">{name}</div>
+                <div className="repo-desc">{desc}</div>
               </div>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: '6px', fontSize: '10px', color: 'var(--color-app-muted)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
                 <span
                   style={{
                     width: '6px',
@@ -82,11 +73,11 @@ export default function TopRepositories() {
                 <span>JS</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1px', color: 'var(--color-amber)' }}>
-                <Star size={10} />
+                <Star size={11} />
                 <span>{stars}</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1px' }}>
-                <GitFork size={10} />
+                <GitFork size={11} />
                 <span>{forks}</span>
               </div>
               <a
@@ -96,9 +87,8 @@ export default function TopRepositories() {
                 className="project-link-btn neu-btn"
                 id={`github-repo-${id}`}
                 onClick={(e) => e.stopPropagation()}
-                style={{ width: '22px', height: '22px', border: 'none', borderRadius: '4px' }}
               >
-                <ExternalLink size={10} style={{ color: 'var(--color-app-text)' }} />
+                <ExternalLink size={11} />
               </a>
             </div>
           </div>

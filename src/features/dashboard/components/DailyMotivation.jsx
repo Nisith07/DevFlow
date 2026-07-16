@@ -17,17 +17,14 @@ export default function DailyMotivation() {
         flexDirection: 'row',
         alignItems: 'center',
         gap: '8px',
-        padding: '6px 12px !important',
-        height: '32px',
         flexShrink: 0,
-        boxShadow: 'var(--shadow-card-val)'
       }}
     >
       <Quote size={12} style={{ color: 'var(--color-violet-bright)', flexShrink: 0 }} />
-      <span style={{ fontSize: '11px', color: 'var(--color-app-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
+      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
         "{QUOTE.text}"
       </span>
-      <span style={{ fontSize: '10.5px', color: 'var(--color-app-faint)', fontStyle: 'italic', flexShrink: 0 }}>
+      <span style={{ flexShrink: 0, fontStyle: 'italic' }}>
         — {QUOTE.author}
       </span>
     </div>

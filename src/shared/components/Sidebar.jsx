@@ -54,94 +54,97 @@ export default function Sidebar({ isOpen, onClose }) {
 
 
   return (
-    <aside className={`sidebar ${isOpen ? 'open' : ''}`} aria-label="App sidebar">
+    <aside className={`sidebar ${isOpen ? 'open' : ''}`} aria-label="App sidebar" style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
 
-      {/* Brand */}
-      <div className="sidebar-brand">
-        <div className="sidebar-brand-mark" aria-hidden="true">
-          <Zap size={15} />
-        </div>
-        <span className="sidebar-brand-text">
-          Dev<span>Flow</span>
-        </span>
-      </div>
-
-      {/* Developer Identity */}
-      <div className="sidebar-identity">
-        <div className="sidebar-avatar-wrap">
-          <div className="sidebar-avatar">
-            {user?.avatarUrl ? (
-              <img src={user.avatarUrl} alt={user?.name || 'Nisith Bhowmik'} />
-            ) : (
-              <span>{user?.name ? getInitials(user.name) : 'NB'}</span>
-            )}
+      {/* Top Container (scrollable if viewport height is too small, scrollbars hidden) */}
+      <div className="sidebar-top-container" style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', scrollbarWidth: 'none' }}>
+        {/* Brand */}
+        <div className="sidebar-brand" style={{ flexShrink: 0 }}>
+          <div className="sidebar-brand-mark" aria-hidden="true">
+            <Zap size={15} />
           </div>
-          <span className="sidebar-status-dot" aria-label="Online" />
+          <span className="sidebar-brand-text">
+            Dev<span>Flow</span>
+          </span>
         </div>
 
-        <div className="sidebar-dev-name">
-          {user?.name || 'Nisith Bhowmik'}
-        </div>
-        <div className="sidebar-dev-role">Full Stack Developer</div>
-
-        <div className="sidebar-dev-meta">
-          <div className="sidebar-dev-meta-row">
-            <MapPin size={11} />
-            <span>Kolkata, India</span>
-          </div>
-          <div className="sidebar-dev-meta-row">
-            <Mail size={11} />
-            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 160 }}>
-              {user?.email || 'nisith.bhowmik@gmail.com'}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <nav className="sidebar-nav" aria-label="Main navigation">
-        <span className="sidebar-nav-label">Navigation</span>
-        {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            className={({ isActive }) =>
-              `sidebar-link ${isActive ? 'active' : ''}`
-            }
-            onClick={onClose}
-          >
-            <Icon size={15} />
-            {label}
-          </NavLink>
-        ))}
-      </nav>
-
-      {/* AI Copilot section */}
-      <div style={{ padding: '0 0 8px' }}>
-        <span className="sidebar-nav-label" style={{ padding: '4px 16px 6px', display: 'block' }}>
-          AI Assistant
-        </span>
-        <button className="sidebar-ai-section" onClick={handleAI} aria-label="Open AI Copilot">
-          <div className="sidebar-ai-header">
-            <div className="sidebar-ai-icon">
-              <Sparkles size={14} />
+        {/* Developer Identity */}
+        <div className="sidebar-identity" style={{ flexShrink: 0 }}>
+          <div className="sidebar-avatar-wrap">
+            <div className="sidebar-avatar">
+              {user?.avatarUrl ? (
+                <img src={user.avatarUrl} alt={user?.name || 'Nisith Bhowmik'} />
+              ) : (
+                <span>{user?.name ? getInitials(user.name) : 'NB'}</span>
+              )}
             </div>
-            <span className="sidebar-ai-title">AI Copilot</span>
-            <span className="sidebar-ai-badge">NEW</span>
+            <span className="sidebar-status-dot" aria-label="Online" />
           </div>
-          <p className="sidebar-ai-sub">
-            Your intelligent coding assistant. Ask anything.
-          </p>
-          <button className="sidebar-ai-btn" onClick={handleAI} tabIndex={-1}>
-            <Sparkles size={12} />
-            Open Copilot
-            <ArrowRight size={12} style={{ marginLeft: 'auto' }} />
+
+          <div className="sidebar-dev-name">
+            {user?.name || 'Nisith Bhowmik'}
+          </div>
+          <div className="sidebar-dev-role">Full Stack Developer</div>
+
+          <div className="sidebar-dev-meta">
+            <div className="sidebar-dev-meta-row">
+              <MapPin size={11} />
+              <span>Kolkata, India</span>
+            </div>
+            <div className="sidebar-dev-meta-row">
+              <Mail size={11} />
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 160 }}>
+                {user?.email || 'nisith.bhowmik@gmail.com'}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation */}
+        <nav className="sidebar-nav" aria-label="Main navigation" style={{ flexShrink: 0 }}>
+          <span className="sidebar-nav-label">Navigation</span>
+          {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
+            <NavLink
+              key={to}
+              to={to}
+              className={({ isActive }) =>
+                `sidebar-link ${isActive ? 'active' : ''}`
+              }
+              onClick={onClose}
+            >
+              <Icon size={15} />
+              {label}
+            </NavLink>
+          ))}
+        </nav>
+
+        {/* AI Copilot section */}
+        <div style={{ padding: '0 0 8px', flexShrink: 0 }}>
+          <span className="sidebar-nav-label" style={{ padding: '4px 16px 6px', display: 'block' }}>
+            AI Assistant
+          </span>
+          <button className="sidebar-ai-section" onClick={handleAI} aria-label="Open AI Copilot">
+            <div className="sidebar-ai-header">
+              <div className="sidebar-ai-icon">
+                <Sparkles size={14} />
+              </div>
+              <span className="sidebar-ai-title">AI Copilot</span>
+              <span className="sidebar-ai-badge">NEW</span>
+            </div>
+            <p className="sidebar-ai-sub">
+              Your intelligent coding assistant. Ask anything.
+            </p>
+            <button className="sidebar-ai-btn" onClick={handleAI} tabIndex={-1}>
+              <Sparkles size={12} />
+              Open Copilot
+              <ArrowRight size={12} style={{ marginLeft: 'auto' }} />
+            </button>
           </button>
-        </button>
+        </div>
       </div>
 
-      {/* Footer Controls */}
-      <div className="sidebar-footer">
+      {/* Footer Controls (pinned to bottom) */}
+      <div className="sidebar-footer" style={{ flexShrink: 0, marginTop: 'auto' }}>
         {/* Theme toggle */}
         <button
           className="sidebar-theme-toggle"

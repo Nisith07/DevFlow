@@ -1,4 +1,4 @@
-import { GitBranch, Users, UserCheck, Flame } from 'lucide-react'
+import { GitBranch, Users, Flame } from 'lucide-react'
 import { useMemo } from 'react'
 
 const GithubIcon = ({ size = 16 }) => (
@@ -15,7 +15,7 @@ const GH_STATS = {
   contributions: 512,
 }
 
-// Generate last 18 weeks contribution heatmap grid (fits 240px container perfectly)
+// Generate last 18 weeks contribution heatmap grid (fits container perfectly)
 function generateHeatmapData() {
   const weeks = []
   const today = new Date()
@@ -54,10 +54,10 @@ export default function GitHubOverview() {
   const heatmapWeeks = useMemo(() => generateHeatmapData(), [])
 
   return (
-    <div className="card" id="github-overview-card" style={{ flex: '1.2', minHeight: 0, display: 'flex', flexDirection: 'column', padding: '10px 12px !important' }}>
+    <div className="card" id="github-overview-card" style={{ flex: '1.2', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
-      <div className="card-head" style={{ marginBottom: '6px' }}>
-        <h2 className="card-title" style={{ fontSize: '13px' }}>
+      <div className="card-head">
+        <h2 className="card-title">
           <GithubIcon size={14} />
           GitHub Overview
         </h2>
@@ -78,21 +78,19 @@ export default function GitHubOverview() {
             key={key}
             className="neu-inset"
             style={{
-              padding: '6px 4px',
               borderRadius: '6px',
               textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: 'var(--neu-shadow-inset-sm)'
+              justifyContent: 'center'
             }}
           >
-            <span style={{ fontSize: '13px', fontWeight: 'bold', color, lineHeight: '1.2' }}>
+            <span style={{ fontWeight: 'bold', color, lineHeight: '1.2' }}>
               {GH_STATS[key]}
             </span>
-            <span style={{ fontSize: '9px', color: 'var(--color-app-muted)', display: 'flex', alignItems: 'center', gap: '2px', marginTop: '2px' }}>
-              <Icon size={8} />
+            <span style={{ color: 'var(--color-app-muted)', display: 'flex', alignItems: 'center', gap: '2px', marginTop: '2px' }}>
+              <Icon size={9} />
               {label}
             </span>
           </div>
@@ -101,7 +99,7 @@ export default function GitHubOverview() {
 
       {/* Heatmap */}
       <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '9.5px', color: 'var(--color-app-muted)', marginBottom: '4px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '10px', color: 'var(--color-app-muted)', marginBottom: '4px' }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
             <Flame size={10} style={{ color: 'var(--color-amber)' }} />
             <span>{GH_STATS.contributions} contributions</span>
@@ -110,7 +108,7 @@ export default function GitHubOverview() {
             <span>Less</span>
             <div style={{ display: 'flex', gap: '2px' }}>
               {['l0','l1','l2','l3','l4'].map((l) => (
-                <div key={l} className={`heatmap-cell ${l}`} style={{ width: '6px', height: '6px', borderRadius: '1px' }} />
+                <div key={l} className={`heatmap-cell ${l}`} style={{ borderRadius: '1.5px' }} />
               ))}
             </div>
             <span>More</span>
@@ -132,7 +130,7 @@ export default function GitHubOverview() {
                     key={date}
                     className={`heatmap-cell ${getLevel(count)}`}
                     title={`${date}: ${count} commits`}
-                    style={{ width: '6px', height: '6px', borderRadius: '1px', transition: 'background 0.2s' }}
+                    style={{ borderRadius: '1.5px', transition: 'background 0.2s' }}
                   />
                 ))}
               </div>
