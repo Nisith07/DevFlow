@@ -31,6 +31,7 @@ const NAV_ITEMS = [
 export default function Sidebar({ isOpen, onClose }) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const cleanName = (user?.name || 'Nisith Bhowmik').replace(/:+$/, '')
   const [theme, setTheme] = useState(getTheme())
 
   useEffect(() => {
@@ -52,37 +53,37 @@ export default function Sidebar({ isOpen, onClose }) {
     onClose?.()
   }
 
-
   return (
     <aside className={`sidebar ${isOpen ? 'open' : ''}`} aria-label="App sidebar" style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
 
+      {/* Brand - permanently pinned to the top, outside scrollable container */}
+      <div className="sidebar-brand" style={{ flexShrink: 0 }}>
+        <div className="sidebar-brand-mark" aria-hidden="true">
+          <Zap size={15} />
+        </div>
+        <span className="sidebar-brand-text">
+          Dev<span>Flow</span>
+        </span>
+      </div>
+
       {/* Top Container (scrollable if viewport height is too small, scrollbars hidden) */}
       <div className="sidebar-top-container" style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', scrollbarWidth: 'none' }}>
-        {/* Brand */}
-        <div className="sidebar-brand" style={{ flexShrink: 0 }}>
-          <div className="sidebar-brand-mark" aria-hidden="true">
-            <Zap size={15} />
-          </div>
-          <span className="sidebar-brand-text">
-            Dev<span>Flow</span>
-          </span>
-        </div>
-
+        
         {/* Developer Identity */}
         <div className="sidebar-identity" style={{ flexShrink: 0 }}>
           <div className="sidebar-avatar-wrap">
             <div className="sidebar-avatar">
               {user?.avatarUrl ? (
-                <img src={user.avatarUrl} alt={user?.name || 'Nisith Bhowmik'} />
+                <img src={user.avatarUrl} alt={cleanName} />
               ) : (
-                <span>{user?.name ? getInitials(user.name) : 'NB'}</span>
+                <span>{getInitials(cleanName)}</span>
               )}
             </div>
             <span className="sidebar-status-dot" aria-label="Online" />
           </div>
 
           <div className="sidebar-dev-name">
-            {user?.name || 'Nisith Bhowmik'}
+            {cleanName}
           </div>
           <div className="sidebar-dev-role">Full Stack Developer</div>
 
@@ -176,13 +177,13 @@ export default function Sidebar({ isOpen, onClose }) {
           >
             <div className="sidebar-user-avatar">
               {user.avatarUrl ? (
-                <img src={user.avatarUrl} alt={user.name} />
+                <img src={user.avatarUrl} alt={cleanName} />
               ) : (
-                getInitials(user.name)
+                getInitials(cleanName)
               )}
             </div>
             <div className="sidebar-user-info">
-              <div className="sidebar-user-name">{user.name}</div>
+              <div className="sidebar-user-name">{cleanName}</div>
               <div className="sidebar-user-email">{user.email}</div>
             </div>
             <LogOut size={13} style={{ color: 'var(--color-app-faint)', flexShrink: 0 }} />

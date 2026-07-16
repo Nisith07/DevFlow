@@ -2,7 +2,7 @@ import { Layers } from 'lucide-react'
 
 const TECH_STACK = [
   { id: 'react',      label: 'React',       icon: '⚛️',  color: '#61DAFB' },
-  { id: 'javascript', label: 'JS',          icon: 'JS',  color: '#F7DF1E' },
+  { id: 'javascript', label: 'JS',          icon: '⚡',  color: '#F7DF1E' },
   { id: 'nodejs',     label: 'Node',        icon: '⬡',   color: '#339933' },
   { id: 'mongodb',    label: 'MongoDB',     icon: '🍃',  color: '#47A248' },
   { id: 'java',       label: 'Java',        icon: '☕',  color: '#f89820' },
@@ -13,9 +13,9 @@ const TECH_STACK = [
 
 export default function TechStackCard() {
   return (
-    <div className="card" id="tech-stack-card" style={{ flex: '1', minHeight: 0, display: 'flex', flexDirection: 'column', padding: '10px 12px !important' }}>
-      <div className="card-head" style={{ marginBottom: '6px' }}>
-        <h2 className="card-title" style={{ fontSize: '13px' }}>
+    <div className="card" id="tech-stack-card" style={{ flex: '0.9', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+      <div className="card-head">
+        <h2 className="card-title">
           <Layers size={14} className="card-title-icon" />
           Tech Stack
         </h2>
@@ -29,27 +29,18 @@ export default function TechStackCard() {
             id={`tech-${id}`}
             style={{
               display: 'flex',
-              flexDirection: 'column',
+              flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
+              gap: '4px',
               padding: '6px 4px',
               borderRadius: '6px',
               cursor: 'default',
               boxShadow: 'var(--neu-shadow-inset-sm)'
             }}
           >
-            <div
-              style={{
-                color,
-                fontSize: '14px',
-                fontWeight: 'bold',
-                lineHeight: '1.2',
-                marginBottom: '2px'
-              }}
-            >
-              {icon}
-            </div>
-            <span className="tech-label" style={{ fontSize: '10px', color: 'var(--color-app-text)', fontWeight: 500 }}>{label}</span>
+            <span style={{ color, fontSize: '13px', display: 'flex', alignItems: 'center' }}>{icon}</span>
+            <span className="tech-label" style={{ fontSize: '10.5px', color: 'var(--color-app-text)', fontWeight: 600 }}>{label}</span>
           </div>
         ))}
       </div>

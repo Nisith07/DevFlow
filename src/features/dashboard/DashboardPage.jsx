@@ -24,7 +24,9 @@ export default function DashboardPage() {
   const [toast, setToast] = useState(null)
   const [theme, setTheme] = useState(getTheme())
 
-  const firstName = user?.name?.split(' ')[0] || 'Nisith'
+  const cleanName = user?.name ? user.name.replace(/:+$/, '') : 'Nisith'
+  const firstName = cleanName.split(' ')[0]
+
 
   useEffect(() => {
     const handleThemeChange = () => {

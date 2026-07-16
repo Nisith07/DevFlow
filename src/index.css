@@ -1436,7 +1436,10 @@ button {
 .project-list {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .project-item {
@@ -1791,7 +1794,10 @@ button {
 .repo-list {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .repo-item {
