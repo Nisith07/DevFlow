@@ -56,7 +56,7 @@ export default function Sidebar({ isOpen, onClose }) {
   return (
     <aside className={`sidebar ${isOpen ? 'open' : ''}`} aria-label="App sidebar" style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
 
-      {/* Brand - permanently pinned to the top, outside scrollable container */}
+      {/* Brand - permanently pinned to the top */}
       <div className="sidebar-brand" style={{ flexShrink: 0 }}>
         <div className="sidebar-brand-mark" aria-hidden="true">
           <Zap size={15} />
@@ -66,43 +66,11 @@ export default function Sidebar({ isOpen, onClose }) {
         </span>
       </div>
 
-      {/* Top Container (scrollable if viewport height is too small, scrollbars hidden) */}
+      {/* Top Container - Navigation and AI Quick Links */}
       <div className="sidebar-top-container" style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', scrollbarWidth: 'none' }}>
         
-        {/* Developer Identity */}
-        <div className="sidebar-identity" style={{ flexShrink: 0 }}>
-          <div className="sidebar-avatar-wrap">
-            <div className="sidebar-avatar">
-              {user?.avatarUrl ? (
-                <img src={user.avatarUrl} alt={cleanName} />
-              ) : (
-                <span>{getInitials(cleanName)}</span>
-              )}
-            </div>
-            <span className="sidebar-status-dot" aria-label="Online" />
-          </div>
-
-          <div className="sidebar-dev-name">
-            {cleanName}
-          </div>
-          <div className="sidebar-dev-role">Full Stack Developer</div>
-
-          <div className="sidebar-dev-meta">
-            <div className="sidebar-dev-meta-row">
-              <MapPin size={11} />
-              <span>Kolkata, India</span>
-            </div>
-            <div className="sidebar-dev-meta-row">
-              <Mail size={11} />
-              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 160 }}>
-                {user?.email || 'nisith.bhowmik@gmail.com'}
-              </span>
-            </div>
-          </div>
-        </div>
-
         {/* Navigation */}
-        <nav className="sidebar-nav" aria-label="Main navigation" style={{ flexShrink: 0 }}>
+        <nav className="sidebar-nav" aria-label="Main navigation" style={{ flexShrink: 0, marginTop: '8px' }}>
           <span className="sidebar-nav-label">Navigation</span>
           {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
             <NavLink
@@ -119,7 +87,7 @@ export default function Sidebar({ isOpen, onClose }) {
           ))}
         </nav>
 
-        {/* AI Copilot section */}
+        {/* AI Assistant Section */}
         <div style={{ padding: '0 0 8px', flexShrink: 0 }}>
           <span className="sidebar-nav-label" style={{ padding: '4px 16px 6px', display: 'block' }}>
             AI Assistant
@@ -144,13 +112,15 @@ export default function Sidebar({ isOpen, onClose }) {
         </div>
       </div>
 
-      {/* Footer Controls (pinned to bottom) */}
-      <div className="sidebar-footer" style={{ flexShrink: 0, marginTop: 'auto' }}>
+      {/* Footer Controls & Consolidated Developer Profile (pinned to bottom) */}
+      <div className="sidebar-footer" style={{ flexShrink: 0, marginTop: 'auto', borderTop: '1px solid var(--color-app-border)', padding: '10px 14px 14px' }}>
+        
         {/* Theme toggle */}
         <button
           className="sidebar-theme-toggle"
           onClick={toggleTheme}
           aria-label="Toggle theme"
+          style={{ marginBottom: '6px' }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--color-app-muted)', fontSize: 13, fontWeight: 500 }}>
             {theme === 'dark' ? <Moon size={14} /> : <Sun size={14} />}
@@ -162,32 +132,77 @@ export default function Sidebar({ isOpen, onClose }) {
         </button>
 
         {/* Settings */}
-        <button className="sidebar-footer-btn" aria-label="Settings">
+        <button className="sidebar-footer-btn" aria-label="Settings" style={{ marginBottom: '10px' }}>
           <Settings size={14} />
           Settings
         </button>
 
-        {/* User / Logout */}
+        {/* Consolidated Profile Card */}
         {user && (
-          <button
-            className="sidebar-user"
-            onClick={handleLogout}
-            title="Sign out"
-            aria-label="Sign out"
+          <div
+            className="sidebar-profile-card neu-inset"
+            style={{
+              padding: '10px 12px',
+              borderRadius: '10px',
+              background: 'var(--color-app-surface-2)',
+              border: '1px solid var(--color-app-border)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+              boxShadow: 'var(--shadow-neu-sm-val)'
+            }}
           >
-            <div className="sidebar-user-avatar">
-              {user.avatarUrl ? (
-                <img src={user.avatarUrl} alt={cleanName} />
-              ) : (
-                getInitials(cleanName)
-              )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ position: 'relative', width: '36px', height: '36px', flexShrink: 0 }}>
+                <div style={{ width: '100%', height: '100%', borderRadius: '50%', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-app-surface)', border: '1px solid var(--color-app-border-bright)', fontSize: '13px', fontWeight: 'bold' }}>
+                  {user.avatarUrl ? (
+                    <img src={user.avatarUrl} alt={cleanName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    getInitials(cleanName)
+                  )}
+                </div>
+                <span className="sidebar-status-dot" style={{ bottom: '-1px', right: '-1px', width: '10px', height: '10px', borderWidth: '1.5px' }} aria-label="Online" />
+              </div>
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <div style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--color-app-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: '1.2' }}>{cleanName}</div>
+                <div style={{ fontSize: '10.5px', color: 'var(--color-violet-bright)', fontWeight: 500, marginTop: '1px' }}>Full Stack Developer</div>
+              </div>
+              <button
+                onClick={handleLogout}
+                title="Sign out"
+                aria-label="Sign out"
+                className="neu-btn"
+                style={{
+                  width: '26px',
+                  height: '26px',
+                  borderRadius: '6px',
+                  border: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  background: 'var(--color-app-surface)',
+                  flexShrink: 0
+                }}
+              >
+                <LogOut size={12} style={{ color: 'var(--color-app-faint)' }} />
+              </button>
             </div>
-            <div className="sidebar-user-info">
-              <div className="sidebar-user-name">{cleanName}</div>
-              <div className="sidebar-user-email">{user.email}</div>
+
+            {/* Quick Metadata Details */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '10.5px', color: 'var(--color-app-muted)', borderTop: '1px solid var(--color-app-border)', paddingTop: '6px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <MapPin size={10} style={{ color: 'var(--color-app-faint)' }} />
+                <span>Kolkata, India</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Mail size={10} style={{ color: 'var(--color-app-faint)' }} />
+                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={user.email}>
+                  {user.email}
+                </span>
+              </div>
             </div>
-            <LogOut size={13} style={{ color: 'var(--color-app-faint)', flexShrink: 0 }} />
-          </button>
+          </div>
         )}
       </div>
     </aside>

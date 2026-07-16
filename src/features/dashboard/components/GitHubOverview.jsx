@@ -98,7 +98,7 @@ export default function GitHubOverview() {
       </div>
 
       {/* Heatmap */}
-      <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', marginTop: '6px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '10px', color: 'var(--color-app-muted)', marginBottom: '4px' }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
             <Flame size={10} style={{ color: 'var(--color-amber)' }} />
