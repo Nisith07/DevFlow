@@ -135,17 +135,17 @@ export default function DashboardPage() {
       <StatsCards />
 
       {/* ── Main content grid (Proportional viewport alignment) ─────── */}
-      <div style={{ flex: 1, minHeight: 0, display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '10px', overflow: 'hidden' }}>
+      <div className="dashboard-main-grid">
         
         {/* ── Central Content Area (Left side) ── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', height: '100%', overflow: 'hidden' }}>
+        <div className="dash-column">
           <AboutMeCard />
           <TechStackCard />
           <RecentProjectsCard />
         </div>
 
         {/* ── Right-Side Content Area (Right side) ── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', height: '100%', overflow: 'hidden' }}>
+        <div className="dash-column">
           <AICopilotWidget />
           <GitHubOverview />
           <TopRepositories />
