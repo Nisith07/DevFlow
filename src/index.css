@@ -4279,69 +4279,7 @@ html.theme-light .theme-switch-thumb {
 
   /* 2. Scale Sidebar */
   .sidebar {
-    width: 290px !important;
-    padding: 24px 18px !important;
-  }
-  
-  .sidebar-brand {
-    margin-bottom: 24px !important;
-  }
-  
-  .sidebar-brand-text {
-    font-size: 20px !important;
-  }
-
-  .sidebar-avatar {
-    width: 64px !important;
-    height: 64px !important;
-  }
-
-  .sidebar-dev-name {
-    font-size: 18px !important;
-    margin-top: 12px !important;
-  }
-
-  .sidebar-dev-role {
-    font-size: 13.5px !important;
-  }
-
-  .sidebar-dev-meta-row {
-    font-size: 13px !important;
-    gap: 8px !important;
-  }
-
-  .sidebar-link {
-    font-size: 15px !important;
-    padding: 12px 16px !important;
-    gap: 12px !important;
-  }
-
-  .sidebar-ai-section {
-    padding: 12px 14px !important;
-    margin: 8px 0 !important;
-  }
-
-  .sidebar-ai-title {
-    font-size: 13.5px !important;
-  }
-
-  .sidebar-ai-sub {
-    font-size: 12px !important;
-  }
-
-  .sidebar-ai-btn {
-    font-size: 12px !important;
-    padding: 8px 12px !important;
-  }
-
-  .sidebar-theme-toggle {
-    padding: 12px 16px !important;
-    margin-bottom: 8px !important;
-  }
-
-  .sidebar-footer-btn {
-    font-size: 13.5px !important;
-    padding: 10px 16px !important;
+    width: 260px !important;
   }
 
   /* 3. Scale Header */

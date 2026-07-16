@@ -56,22 +56,56 @@ export default function Sidebar({ isOpen, onClose }) {
   return (
     <aside className={`sidebar ${isOpen ? 'open' : ''}`} aria-label="App sidebar" style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
 
-      {/* Brand - permanently pinned to the top */}
-      <div className="sidebar-brand" style={{ flexShrink: 0 }}>
+      {/* Brand logo - permanently fixed at the top */}
+      <div className="sidebar-brand" style={{ flexShrink: 0, borderBottom: 'none', padding: '16px 20px 8px' }}>
         <div className="sidebar-brand-mark" aria-hidden="true">
-          <Zap size={15} />
+          <Zap size={14} />
         </div>
         <span className="sidebar-brand-text">
           Dev<span>Flow</span>
         </span>
       </div>
 
-      {/* Top Container - Navigation and AI Quick Links */}
+      {/* Top Container - Developer Profile, Navigation, and AI Copilot */}
       <div className="sidebar-top-container" style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', scrollbarWidth: 'none' }}>
         
+        {/* Developer Identity (Top Profile Block) */}
+        <div className="sidebar-identity" style={{ flexShrink: 0, padding: '8px 16px 12px', display: 'flex', flexDirection: 'column', alignItems: 'center', borderBottom: '1px solid var(--color-app-border)' }}>
+          <div className="sidebar-avatar-wrap" style={{ width: '48px', height: '48px', margin: '0 auto 6px' }}>
+            <div className="sidebar-avatar" style={{ width: '48px', height: '48px', borderWidth: '1.5px', fontSize: '16px' }}>
+              {user?.avatarUrl ? (
+                <img src={user.avatarUrl} alt={cleanName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                <span>{getInitials(cleanName)}</span>
+              )}
+            </div>
+            <span className="sidebar-status-dot" style={{ bottom: '0px', right: '0px', width: '10px', height: '10px', borderWidth: '1.5px' }} aria-label="Online" />
+          </div>
+
+          <div className="sidebar-dev-name" style={{ fontSize: '14.5px', fontWeight: 'bold', margin: '0 0 1px' }}>
+            {cleanName}
+          </div>
+          <div className="sidebar-dev-role" style={{ fontSize: '11px', color: 'var(--color-violet-bright)', fontWeight: 500, margin: '0 0 6px' }}>
+            Full Stack Developer
+          </div>
+
+          <div className="sidebar-dev-meta" style={{ display: 'flex', flexDirection: 'column', gap: '3px', alignItems: 'center' }}>
+            <div className="sidebar-dev-meta-row" style={{ fontSize: '10.5px', gap: '4px' }}>
+              <MapPin size={10} style={{ color: 'var(--color-app-faint)' }} />
+              <span>Kolkata, India</span>
+            </div>
+            <div className="sidebar-dev-meta-row" style={{ fontSize: '10.5px', gap: '4px' }}>
+              <Mail size={10} style={{ color: 'var(--color-app-faint)' }} />
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 140 }} title={user?.email}>
+                {user?.email || 'nisith.bhowmik@gmail.com'}
+              </span>
+            </div>
+          </div>
+        </div>
+
         {/* Navigation */}
-        <nav className="sidebar-nav" aria-label="Main navigation" style={{ flexShrink: 0, marginTop: '8px' }}>
-          <span className="sidebar-nav-label">Navigation</span>
+        <nav className="sidebar-nav" aria-label="Main navigation" style={{ flexShrink: 0, marginTop: '6px', padding: '0 10px' }}>
+          <span className="sidebar-nav-label" style={{ paddingLeft: '10px', fontSize: '10.5px', marginBottom: '4px' }}>Navigation</span>
           {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
             <NavLink
               key={to}
@@ -80,39 +114,61 @@ export default function Sidebar({ isOpen, onClose }) {
                 `sidebar-link ${isActive ? 'active' : ''}`
               }
               onClick={onClose}
+              style={{ padding: '8px 12px', fontSize: '13px', gap: '10px', borderRadius: '8px' }}
             >
-              <Icon size={15} />
+              <Icon size={14} />
               {label}
             </NavLink>
           ))}
         </nav>
 
-        {/* AI Assistant Section */}
-        <div style={{ padding: '0 0 8px', flexShrink: 0 }}>
-          <span className="sidebar-nav-label" style={{ padding: '4px 16px 6px', display: 'block' }}>
+        {/* AI Assistant Section (Compact Box) */}
+        <div style={{ padding: '6px 10px 12px', flexShrink: 0 }}>
+          <span className="sidebar-nav-label" style={{ paddingLeft: '10px', fontSize: '10.5px', display: 'block', marginBottom: '4px' }}>
             AI Assistant
           </span>
-          <button className="sidebar-ai-section" onClick={handleAI} aria-label="Open AI Copilot">
-            <div className="sidebar-ai-header">
-              <div className="sidebar-ai-icon">
-                <Sparkles size={14} />
-              </div>
-              <span className="sidebar-ai-title">AI Copilot</span>
-              <span className="sidebar-ai-badge">NEW</span>
-            </div>
-            <p className="sidebar-ai-sub">
-              Your intelligent coding assistant. Ask anything.
-            </p>
-            <button className="sidebar-ai-btn" onClick={handleAI} tabIndex={-1}>
+          <button
+            className="sidebar-ai-section neu-inset"
+            onClick={handleAI}
+            aria-label="Open AI Copilot"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              width: '100%',
+              margin: 0,
+              padding: '8px 10px',
+              borderRadius: '8px',
+              border: '1px solid var(--color-app-border)',
+              cursor: 'pointer',
+              textAlign: 'left',
+              boxShadow: 'var(--shadow-neu-sm-val)',
+              background: 'var(--color-app-surface-2)'
+            }}
+          >
+            <div style={{
+              width: '24px',
+              height: '24px',
+              borderRadius: '6px',
+              background: 'var(--accent-glow)',
+              color: 'var(--color-violet-bright)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0
+            }}>
               <Sparkles size={12} />
-              Open Copilot
-              <ArrowRight size={12} style={{ marginLeft: 'auto' }} />
-            </button>
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: '11.5px', fontWeight: 'bold', color: 'var(--color-app-text)', lineHeight: '1.2' }}>AI Copilot</div>
+              <div style={{ fontSize: '10px', color: 'var(--color-app-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginTop: '1px' }}>Ask helper anything</div>
+            </div>
+            <ArrowRight size={11} style={{ color: 'var(--color-violet-bright)', flexShrink: 0 }} />
           </button>
         </div>
       </div>
 
-      {/* Footer Controls & Consolidated Developer Profile (pinned to bottom) */}
+      {/* Footer Controls (pinned to bottom) */}
       <div className="sidebar-footer" style={{ flexShrink: 0, marginTop: 'auto', borderTop: '1px solid var(--color-app-border)', padding: '10px 14px 14px' }}>
         
         {/* Theme toggle */}
@@ -120,90 +176,63 @@ export default function Sidebar({ isOpen, onClose }) {
           className="sidebar-theme-toggle"
           onClick={toggleTheme}
           aria-label="Toggle theme"
-          style={{ marginBottom: '6px' }}
+          style={{ marginBottom: '6px', height: '32px', padding: '6px 12px', border: '1px solid var(--color-app-border)', borderRadius: '8px' }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--color-app-muted)', fontSize: 13, fontWeight: 500 }}>
-            {theme === 'dark' ? <Moon size={14} /> : <Sun size={14} />}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--color-app-muted)', fontSize: 12, fontWeight: 500 }}>
+            {theme === 'dark' ? <Moon size={12} /> : <Sun size={12} />}
             Dark Mode
           </div>
-          <div className={`toggle-track ${theme === 'dark' ? 'on' : 'off'}`}>
-            <div className="toggle-thumb" />
+          <div className={`toggle-track ${theme === 'dark' ? 'on' : 'off'}`} style={{ width: '32px', height: '16px', borderRadius: '8px' }}>
+            <div className="toggle-thumb" style={{ width: '12px', height: '12px' }} />
           </div>
         </button>
 
-        {/* Settings */}
-        <button className="sidebar-footer-btn" aria-label="Settings" style={{ marginBottom: '10px' }}>
-          <Settings size={14} />
-          Settings
-        </button>
-
-        {/* Consolidated Profile Card */}
-        {user && (
-          <div
-            className="sidebar-profile-card neu-inset"
+        {/* Settings and Logout (Side by Side) */}
+        <div style={{ display: 'flex', gap: '6px' }}>
+          <button
+            className="sidebar-footer-btn neu-btn"
+            aria-label="Settings"
             style={{
-              padding: '10px 12px',
-              borderRadius: '10px',
-              background: 'var(--color-app-surface-2)',
-              border: '1px solid var(--color-app-border)',
+              flex: 1,
+              padding: '6px 8px',
+              fontSize: '11.5px',
+              height: '32px',
+              borderRadius: '8px',
               display: 'flex',
-              flexDirection: 'column',
-              gap: '8px',
-              boxShadow: 'var(--shadow-neu-sm-val)'
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px',
+              border: '1px solid var(--color-app-border)',
+              background: 'var(--color-app-surface)'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div style={{ position: 'relative', width: '36px', height: '36px', flexShrink: 0 }}>
-                <div style={{ width: '100%', height: '100%', borderRadius: '50%', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-app-surface)', border: '1px solid var(--color-app-border-bright)', fontSize: '13px', fontWeight: 'bold' }}>
-                  {user.avatarUrl ? (
-                    <img src={user.avatarUrl} alt={cleanName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  ) : (
-                    getInitials(cleanName)
-                  )}
-                </div>
-                <span className="sidebar-status-dot" style={{ bottom: '-1px', right: '-1px', width: '10px', height: '10px', borderWidth: '1.5px' }} aria-label="Online" />
-              </div>
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <div style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--color-app-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: '1.2' }}>{cleanName}</div>
-                <div style={{ fontSize: '10.5px', color: 'var(--color-violet-bright)', fontWeight: 500, marginTop: '1px' }}>Full Stack Developer</div>
-              </div>
-              <button
-                onClick={handleLogout}
-                title="Sign out"
-                aria-label="Sign out"
-                className="neu-btn"
-                style={{
-                  width: '26px',
-                  height: '26px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  background: 'var(--color-app-surface)',
-                  flexShrink: 0
-                }}
-              >
-                <LogOut size={12} style={{ color: 'var(--color-app-faint)' }} />
-              </button>
-            </div>
-
-            {/* Quick Metadata Details */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '10.5px', color: 'var(--color-app-muted)', borderTop: '1px solid var(--color-app-border)', paddingTop: '6px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <MapPin size={10} style={{ color: 'var(--color-app-faint)' }} />
-                <span>Kolkata, India</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Mail size={10} style={{ color: 'var(--color-app-faint)' }} />
-                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={user.email}>
-                  {user.email}
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
+            <Settings size={12} />
+            <span>Settings</span>
+          </button>
+          <button
+            onClick={handleLogout}
+            className="sidebar-footer-btn logout neu-btn"
+            title="Sign out"
+            aria-label="Sign out"
+            style={{
+              flex: 1,
+              padding: '6px 8px',
+              fontSize: '11.5px',
+              height: '32px',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px',
+              border: '1px solid var(--color-app-border)',
+              background: 'var(--color-app-surface)',
+              color: 'var(--color-danger)'
+            }}
+          >
+            <LogOut size={12} />
+            <span>Logout</span>
+          </button>
+        </div>
       </div>
     </aside>
   )
