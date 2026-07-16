@@ -62,21 +62,22 @@ const SOCIALS = [
 
 export default function FloatingSocials() {
   return (
-    <nav className="floating-socials" aria-label="Social links">
+    <div className="header-social-group" aria-label="Social links">
       {SOCIALS.map(({ id, label, href, className, Icon }) => (
         <a
           key={id}
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className={`social-bubble ${className}`}
+          className={`header-social-bubble ${className}`}
           aria-label={label}
           id={`social-${id}`}
+          title={label}
         >
           <Icon />
-          <span className="social-tooltip">{label}</span>
         </a>
       ))}
-    </nav>
+    </div>
   )
 }
+

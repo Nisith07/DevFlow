@@ -21,38 +21,38 @@
   --color-lp-accent-soft: #F3E0C9;
   --color-lp-accent-soft-line: #E7C79E;
 
-  /* ── App / Dashboard palette (dark navy-black neumorphic) ── */
-  --color-app-bg: #0D0F14;
-  --color-app-surface: #131620;
-  --color-app-surface-2: #181C2A;
-  --color-app-surface-hover: #1E2235;
-  --color-app-border: #1F2535;
-  --color-app-border-bright: #2A3050;
-  --color-app-text: #E8EAF0;
-  --color-app-muted: #7A8299;
-  --color-app-faint: #4A5168;
+  /* ── App / Dashboard palette (neumorphic dynamically set via CSS variables) ── */
+  --color-app-bg: var(--app-bg);
+  --color-app-surface: var(--app-surface);
+  --color-app-surface-2: var(--app-surface-2);
+  --color-app-surface-hover: var(--app-surface-hover);
+  --color-app-border: var(--app-border);
+  --color-app-border-bright: var(--app-border-bright);
+  --color-app-text: var(--app-text);
+  --color-app-muted: var(--app-muted);
+  --color-app-faint: var(--app-faint);
 
   /* ── Primary accent: Electric Violet ── */
-  --color-violet: #7C3AED;
-  --color-violet-bright: #8B5CF6;
-  --color-violet-dim: #1E1535;
-  --color-violet-glow: rgba(124, 58, 237, 0.25);
+  --color-violet: var(--accent-color);
+  --color-violet-bright: var(--accent-bright);
+  --color-violet-dim: var(--accent-dim);
+  --color-violet-glow: var(--accent-glow);
 
   /* ── Supporting accents ── */
   --color-blue: #3B82F6;
-  --color-blue-dim: #0F1E3D;
+  --color-blue-dim: var(--blue-dim);
   --color-green: #10B981;
-  --color-green-dim: #0A1F16;
+  --color-green-dim: var(--green-dim);
   --color-amber: #F59E0B;
-  --color-amber-dim: #291F07;
+  --color-amber-dim: var(--amber-dim);
   --color-pink: #EC4899;
-  --color-pink-dim: #2A0D1E;
+  --color-pink-dim: var(--pink-dim);
   --color-teal: #06B6D4;
-  --color-teal-dim: #051A1F;
+  --color-teal-dim: var(--teal-dim);
 
   /* ── Semantic ── */
   --color-danger: #EF4444;
-  --color-danger-dim: #2D1212;
+  --color-danger-dim: var(--danger-dim);
   --color-success: #10B981;
   --color-warning: #F59E0B;
 
@@ -73,26 +73,83 @@
   --radius-full: 9999px;
 
   /* ── Neumorphic shadows ── */
-  --shadow-neu-sm:
-    4px 4px 8px rgba(0, 0, 0, 0.4),
-    -2px -2px 6px rgba(255, 255, 255, 0.02);
-  --shadow-neu-md:
-    8px 8px 16px rgba(0, 0, 0, 0.5),
-    -4px -4px 10px rgba(255, 255, 255, 0.025);
-  --shadow-neu-lg:
-    12px 12px 24px rgba(0, 0, 0, 0.6),
-    -6px -6px 14px rgba(255, 255, 255, 0.03);
-  --shadow-card:
-    0 4px 24px rgba(0, 0, 0, 0.35),
-    0 1px 4px rgba(0, 0, 0, 0.2);
-  --shadow-glow-violet:
-    0 0 20px rgba(124, 58, 237, 0.3),
-    0 0 40px rgba(124, 58, 237, 0.15);
-  --shadow-glow-blue:
-    0 0 16px rgba(59, 130, 246, 0.25);
-  --shadow-glow-green:
-    0 0 16px rgba(16, 185, 129, 0.25);
+  --shadow-neu-sm: var(--shadow-neu-sm-val);
+  --shadow-neu-md: var(--shadow-neu-md-val);
+  --shadow-neu-lg: var(--shadow-neu-lg-val);
+  --shadow-card: var(--shadow-card-val);
+  --shadow-glow-violet: var(--shadow-glow-violet-val);
+  --shadow-glow-blue: 0 0 16px rgba(59, 130, 246, 0.25);
+  --shadow-glow-green: 0 0 16px rgba(16, 185, 129, 0.25);
 }
+
+:root {
+  /* Default: Dark mode values */
+  --app-bg: #0D0F14;
+  --app-surface: #131620;
+  --app-surface-2: #181C2A;
+  --app-surface-hover: #1E2235;
+  --app-border: #1F2535;
+  --app-border-bright: #2A3050;
+  --app-text: #E8EAF0;
+  --app-muted: #7A8299;
+  --app-faint: #4A5168;
+
+  --accent-color: #7C3AED;
+  --accent-bright: #8B5CF6;
+  --accent-dim: #1E1535;
+  --accent-glow: rgba(124, 58, 237, 0.25);
+
+  --blue-dim: #0F1E3D;
+  --green-dim: #0A1F16;
+  --amber-dim: #291F07;
+  --pink-dim: #2A0D1E;
+  --teal-dim: #051A1F;
+  --danger-dim: #2D1212;
+
+  --neu-dark: rgba(0, 0, 0, 0.6);
+  --neu-light: rgba(255, 255, 255, 0.035);
+
+  --shadow-neu-sm-val: 4px 4px 8px rgba(0, 0, 0, 0.4), -2px -2px 6px rgba(255, 255, 255, 0.02);
+  --shadow-neu-md-val: 8px 8px 16px rgba(0, 0, 0, 0.5), -4px -4px 10px rgba(255, 255, 255, 0.025);
+  --shadow-neu-lg-val: 12px 12px 24px rgba(0, 0, 0, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.03);
+  --shadow-card-val: 0 4px 24px rgba(0, 0, 0, 0.35), 0 1px 4px rgba(0, 0, 0, 0.2);
+  --shadow-glow-violet-val: 0 0 20px rgba(124, 58, 237, 0.3), 0 0 40px rgba(124, 58, 237, 0.15);
+}
+
+.theme-light {
+  /* Light mode overrides */
+  --app-bg: #E8ECF2;
+  --app-surface: #EFF2F7;
+  --app-surface-2: #F6F8FC;
+  --app-surface-hover: #E2E6EE;
+  --app-border: #D1D6E0;
+  --app-border-bright: #C0C6D3;
+  --app-text: #1A202C;
+  --app-muted: #626A7A;
+  --app-faint: #8E98A8;
+
+  --accent-color: #7C3AED;
+  --accent-bright: #6D28D9;
+  --accent-dim: #EDE9FD;
+  --accent-glow: rgba(124, 58, 237, 0.15);
+
+  --blue-dim: #DBEAFE;
+  --green-dim: #D1FAE5;
+  --amber-dim: #FEF3C7;
+  --pink-dim: #FCE7F3;
+  --teal-dim: #E0F2FE;
+  --danger-dim: #FEE2E2;
+
+  --neu-dark: rgba(163, 177, 198, 0.6);
+  --neu-light: rgba(255, 255, 255, 0.95);
+
+  --shadow-neu-sm-val: 4px 4px 8px rgba(163, 177, 198, 0.55), -4px -4px 8px rgba(255, 255, 255, 0.9);
+  --shadow-neu-md-val: 8px 8px 16px rgba(163, 177, 198, 0.6), -8px -8px 16px rgba(255, 255, 255, 0.95);
+  --shadow-neu-lg-val: 12px 12px 24px rgba(163, 177, 198, 0.65), -12px -12px 24px rgba(255, 255, 255, 0.98);
+  --shadow-card-val: 6px 6px 12px rgba(163, 177, 198, 0.5), -6px -6px 12px rgba(255, 255, 255, 0.9);
+  --shadow-glow-violet-val: 0 0 20px rgba(124, 58, 237, 0.2), 0 0 40px rgba(124, 58, 237, 0.1);
+}
+
 
 /* ═══════════════════════════════════════════════════════════════════
    GLOBAL RESET
@@ -3939,4 +3996,249 @@ button {
   .df-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PORTFOLIO VIEWPORT-FIT NEUMORPHIC LAYOUT
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Global App Shell modifications for 100vh layout */
+.app-shell {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: var(--color-app-bg);
+}
+
+.app-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-main {
+  flex: 1;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+/* Force App Main to hide overflow when showing the fit dashboard */
+.app-shell:has(.dashboard-viewport-fit) .app-main {
+  overflow: hidden;
+}
+
+/* Sidebar overrides for compact, clean viewport alignment */
+.sidebar {
+  width: 230px;
+  flex-shrink: 0;
+  height: 100%;
+  border-right: 1px solid var(--color-app-border);
+  box-shadow: 4px 0 16px var(--neu-dark);
+  background: var(--color-app-surface);
+  display: flex;
+  flex-direction: column;
+  padding: 16px 12px;
+  overflow-y: auto;
+}
+
+/* The Core Viewport Wrapper */
+.dashboard-viewport-fit {
+  height: calc(100vh - 24px); /* Full height minus app-main paddings */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  gap: 10px;
+}
+
+/* Neumorphic Cards styling */
+.card, .neu-card {
+  background: var(--color-app-surface) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-card-val) !important;
+  border: 1px solid var(--color-app-border) !important;
+  padding: 12px 14px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  box-sizing: border-box;
+}
+
+.neu-inset, .neu-card-inset {
+  box-shadow: var(--neu-shadow-inset) !important;
+  background: var(--color-app-surface-2) !important;
+  border: 1px solid var(--color-app-border) !important;
+  border-radius: var(--radius-sm);
+  box-sizing: border-box;
+}
+
+.neu-btn {
+  background: var(--color-app-surface);
+  box-shadow: var(--neu-shadow-btn);
+  border: 1px solid var(--color-app-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-app-text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.neu-btn:hover {
+  background: var(--color-app-surface-hover);
+  transform: translateY(-1px);
+}
+
+.neu-btn:active {
+  box-shadow: var(--neu-shadow-inset-sm);
+  transform: translateY(0);
+}
+
+/* Compact layout grids */
+.compact-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  height: 62px;
+  flex-shrink: 0;
+}
+
+.compact-stats-row .stat-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px !important;
+  height: 100%;
+}
+
+.compact-stats-row .stat-card-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.compact-stats-row .stat-card-value {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--color-app-text);
+}
+
+.compact-stats-row .stat-card-label {
+  font-size: 11px;
+  color: var(--color-app-muted);
+}
+
+/* 3-Column main area split */
+.dashboard-grid-three-col {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 240px 1.2fr 1fr;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.dash-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.dash-column.scrollable {
+  overflow-y: auto;
+}
+
+/* Floating social media bubbles inside Header */
+.header-social-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-right: 12px;
+}
+
+.header-social-bubble {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-app-surface);
+  box-shadow: 2px 2px 5px var(--neu-dark), -2px -2px 5px var(--neu-light);
+  border: 1px solid var(--color-app-border);
+  color: var(--color-app-muted);
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.header-social-bubble:hover {
+  transform: translateY(-2px) scale(1.1);
+  color: #fff;
+}
+
+.header-social-bubble.instagram:hover {
+  background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  box-shadow: 0 0 10px rgba(220, 39, 67, 0.4);
+}
+
+.header-social-bubble.linkedin:hover {
+  background: #0077B5;
+  box-shadow: 0 0 10px rgba(0, 119, 181, 0.4);
+}
+
+.header-social-bubble.facebook:hover {
+  background: #1877F2;
+  box-shadow: 0 0 10px rgba(24, 119, 242, 0.4);
+}
+
+.header-social-bubble.github:hover {
+  background: #24292E;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* Theme Toggle styles */
+.theme-switch-track {
+  width: 44px;
+  height: 22px;
+  border-radius: 11px;
+  background: var(--color-app-surface-hover);
+  box-shadow: inset 2px 2px 5px var(--neu-dark), inset -2px -2px 5px var(--neu-light);
+  position: relative;
+  cursor: pointer;
+}
+
+.theme-switch-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-violet-bright);
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+}
+
+html.theme-light .theme-switch-thumb {
+  transform: translateX(22px);
+}
+
+/* Custom compact style scrollbar override for grids */
+.dash-column::-webkit-scrollbar,
+.project-list::-webkit-scrollbar,
+.repo-list::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.dash-column::-webkit-scrollbar-thumb,
+.project-list::-webkit-scrollbar-thumb,
+.repo-list::-webkit-scrollbar-thumb {
+  background: var(--color-app-border-bright);
+  border-radius: 2px;
 }

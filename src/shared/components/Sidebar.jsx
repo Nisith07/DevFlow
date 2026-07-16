@@ -17,7 +17,8 @@ import {
 } from 'lucide-react'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { getInitials } from '@/shared/lib/utils'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { getTheme, toggleTheme } from '@/shared/lib/theme'
 
 const NAV_ITEMS = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -30,7 +31,15 @@ const NAV_ITEMS = [
 export default function Sidebar({ isOpen, onClose }) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
-  const [isDark, setIsDark] = useState(true)
+  const [theme, setTheme] = useState(getTheme())
+
+  useEffect(() => {
+    const handleThemeChange = () => {
+      setTheme(getTheme())
+    }
+    window.addEventListener('themechange', handleThemeChange)
+    return () => window.removeEventListener('themechange', handleThemeChange)
+  }, [])
 
   const handleLogout = async () => {
     await logout()
@@ -42,6 +51,7 @@ export default function Sidebar({ isOpen, onClose }) {
     navigate('/ai')
     onClose?.()
   }
+
 
   return (
     <aside className={`sidebar ${isOpen ? 'open' : ''}`} aria-label="App sidebar">
@@ -135,14 +145,14 @@ export default function Sidebar({ isOpen, onClose }) {
         {/* Theme toggle */}
         <button
           className="sidebar-theme-toggle"
-          onClick={() => setIsDark((d) => !d)}
+          onClick={toggleTheme}
           aria-label="Toggle theme"
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--color-app-muted)', fontSize: 13, fontWeight: 500 }}>
-            {isDark ? <Moon size={14} /> : <Sun size={14} />}
+            {theme === 'dark' ? <Moon size={14} /> : <Sun size={14} />}
             Dark Mode
           </div>
-          <div className={`toggle-track ${isDark ? 'on' : 'off'}`}>
+          <div className={`toggle-track ${theme === 'dark' ? 'on' : 'off'}`}>
             <div className="toggle-thumb" />
           </div>
         </button>

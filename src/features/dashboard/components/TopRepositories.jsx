@@ -1,133 +1,108 @@
-import { BookOpen, Star, GitFork, Clock, ExternalLink, ArrowRight } from 'lucide-react'
+import { BookOpen, Star, GitFork, ExternalLink } from 'lucide-react'
 
-/** Language color map — expand as needed */
 const LANG_COLORS = {
   JavaScript: '#F7DF1E',
-  TypeScript: '#3178C6',
-  Java:       '#f89820',
-  Python:     '#3776AB',
-  HTML:       '#E34F26',
-  CSS:        '#1572B6',
-  Go:         '#00ADD8',
+  React: '#61DAFB',
 }
 
 const REPOSITORIES = [
   {
     id: 'devflow-repo',
     name: 'DevFlow',
-    desc: 'A full stack project management tool',
+    desc: 'Full-stack PM tool',
     lang: 'JavaScript',
     stars: 24,
     forks: 8,
-    updated: '2 days ago',
     link: 'https://github.com/nisith-bhowmik/devflow',
   },
   {
     id: 'swadify-repo',
     name: 'Swadify',
-    desc: 'Food delivery platform',
+    desc: 'Food delivery app',
     lang: 'JavaScript',
     stars: 18,
     forks: 5,
-    updated: '1 week ago',
     link: 'https://github.com/nisith-bhowmik/swadify',
   },
   {
     id: 'otp-auth-repo',
     name: 'OTP-Auth',
-    desc: 'Email OTP authentication system',
+    desc: 'Email OTP system',
     lang: 'JavaScript',
     stars: 15,
     forks: 4,
-    updated: '2 weeks ago',
     link: 'https://github.com/nisith-bhowmik/otp-auth',
-  },
-  {
-    id: 'spotify-clone-repo',
-    name: 'Spotify Clone',
-    desc: 'Spotify UI clone using React',
-    lang: 'JavaScript',
-    stars: 12,
-    forks: 3,
-    updated: '1 month ago',
-    link: 'https://github.com/nisith-bhowmik/spotify-clone',
   },
 ]
 
 export default function TopRepositories() {
   return (
-    <div className="card" id="top-repositories-card">
-      <div className="card-head">
-        <h2 className="card-title">
-          <BookOpen size={13} className="card-title-icon" />
+    <div className="card" id="top-repositories-card" style={{ flex: '1', minHeight: 0, display: 'flex', flexDirection: 'column', padding: '10px 12px !important' }}>
+      <div className="card-head" style={{ marginBottom: '6px' }}>
+        <h2 className="card-title" style={{ fontSize: '13px' }}>
+          <BookOpen size={14} className="card-title-icon" />
           Top Repositories
         </h2>
       </div>
 
-      <div className="repo-list">
-        {REPOSITORIES.map(({ id, name, desc, lang, stars, forks, updated, link }) => (
-          <div key={id} className="repo-item" id={`repo-${id}`}>
-            <div className="repo-icon">
-              <BookOpen size={13} />
+      <div className="repo-list" style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minHeight: 0, overflowY: 'auto' }}>
+        {REPOSITORIES.map(({ id, name, desc, lang, stars, forks, link }) => (
+          <div
+            key={id}
+            className="repo-item neu-inset"
+            id={`repo-${id}`}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '6px 10px',
+              borderRadius: '8px',
+              border: 'none',
+              boxShadow: 'var(--neu-shadow-inset-sm)'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
+              <BookOpen size={11} style={{ color: 'var(--color-violet-bright)', flexShrink: 0 }} />
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: '11.5px', fontWeight: 'bold', color: 'var(--color-app-text)' }}>{name}</div>
+                <div style={{ fontSize: '10px', color: 'var(--color-app-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{desc}</div>
+              </div>
             </div>
 
-            <div className="repo-info">
-              <div className="repo-name">{name}</div>
-              <div className="repo-desc">{desc}</div>
-            </div>
-
-            <div className="repo-meta">
-              {lang && (
-                <div className="repo-meta-item">
-                  <span
-                    className="repo-lang-dot"
-                    style={{ background: LANG_COLORS[lang] || '#6B7280' }}
-                    aria-hidden="true"
-                  />
-                  {lang}
-                </div>
-              )}
-              <div className="repo-meta-item repo-star" aria-label={`${stars} stars`}>
-                <Star size={11} />
-                {stars}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: '6px', fontSize: '10px', color: 'var(--color-app-muted)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+                <span
+                  style={{
+                    width: '6px',
+                    height: '6px',
+                    borderRadius: '50%',
+                    background: LANG_COLORS[lang] || '#6B7280'
+                  }}
+                />
+                <span>JS</span>
               </div>
-              <div className="repo-meta-item repo-fork" aria-label={`${forks} forks`}>
-                <GitFork size={11} />
-                {forks}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1px', color: 'var(--color-amber)' }}>
+                <Star size={10} />
+                <span>{stars}</span>
               </div>
-              <div className="repo-meta-item" aria-label={`Updated ${updated}`}>
-                <Clock size={10} />
-                {updated}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1px' }}>
+                <GitFork size={10} />
+                <span>{forks}</span>
               </div>
               <a
                 href={link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="project-link-btn"
-                aria-label={`Open ${name} on GitHub`}
+                className="project-link-btn neu-btn"
                 id={`github-repo-${id}`}
                 onClick={(e) => e.stopPropagation()}
+                style={{ width: '22px', height: '22px', border: 'none', borderRadius: '4px' }}
               >
-                <ExternalLink size={11} />
+                <ExternalLink size={10} style={{ color: 'var(--color-app-text)' }} />
               </a>
             </div>
           </div>
         ))}
-      </div>
-
-      <div style={{ marginTop: 14, paddingTop: 12, borderTop: '1px solid var(--color-app-border)' }}>
-        <a
-          href="https://github.com/nisith-bhowmik?tab=repositories"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="card-link-btn"
-          id="view-all-repositories-btn"
-          aria-label="View all repositories on GitHub"
-          style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 5, justifyContent: 'center', width: '100%' }}
-        >
-          View All Repositories
-          <ArrowRight size={13} />
-        </a>
       </div>
     </div>
   )

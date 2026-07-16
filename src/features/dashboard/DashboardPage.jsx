@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
-import { Search, Bell, User, Sun, Command } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Search, Bell, User, Sun, Moon, Command } from 'lucide-react'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import StatsCards from './components/StatsCards'
 import AboutMeCard from './components/AboutMeCard'
@@ -9,7 +9,8 @@ import GitHubOverview from './components/GitHubOverview'
 import TopRepositories from './components/TopRepositories'
 import AICopilotWidget from './components/AICopilotWidget'
 import DailyMotivation from './components/DailyMotivation'
-import LoadingSpinner from '@/shared/components/LoadingSpinner'
+import FloatingSocials from '@/shared/components/FloatingSocials'
+import { getTheme, toggleTheme } from '@/shared/lib/theme'
 
 function getGreeting() {
   const hour = new Date().getHours()
@@ -21,8 +22,17 @@ function getGreeting() {
 export default function DashboardPage() {
   const { user } = useAuth()
   const [toast, setToast] = useState(null)
+  const [theme, setTheme] = useState(getTheme())
 
   const firstName = user?.name?.split(' ')[0] || 'Nisith'
+
+  useEffect(() => {
+    const handleThemeChange = () => {
+      setTheme(getTheme())
+    }
+    window.addEventListener('themechange', handleThemeChange)
+    return () => window.removeEventListener('themechange', handleThemeChange)
+  }, [])
 
   // Auto-dismiss toast
   useEffect(() => {
@@ -32,48 +42,61 @@ export default function DashboardPage() {
   }, [toast])
 
   return (
-    <div className="view-enter" style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+    <div className="dashboard-viewport-fit view-enter">
 
       {/* ── Dashboard Header ──────────────────────────────────────── */}
-      <header className="dash-header">
+      <header className="dash-header" style={{ marginBottom: 0, paddingBottom: 0 }}>
         <div className="dash-greeting-block">
-          <h1 className="dash-greeting">
+          <h1 className="dash-greeting" style={{ fontSize: '18px', margin: 0 }}>
             {getGreeting()},{' '}
             <span className="greeting-name">{firstName}!</span>
             <span className="greeting-emoji">👋</span>
           </h1>
-          <p className="dash-greeting-sub">Let's build something amazing today.</p>
+          <p className="dash-greeting-sub" style={{ fontSize: '11px', margin: 0 }}>Let's build something amazing today.</p>
         </div>
 
-        <div className="dash-header-actions">
+        <div className="dash-header-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {/* Search */}
           <div
-            className="dash-search-box"
+            className="dash-search-box neu-inset"
             role="search"
             id="dashboard-search"
             tabIndex={0}
             aria-label="Global search"
+            style={{
+              padding: '4px 10px',
+              height: '32px',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              boxShadow: 'var(--neu-shadow-inset-sm)',
+              border: 'none'
+            }}
           >
-            <Search size={14} />
-            <span>Search anything...</span>
-            <div className="dash-search-shortcut" aria-label="Keyboard shortcut Ctrl K">
-              <Command size={9} />
+            <Search size={12} style={{ color: 'var(--color-app-muted)' }} />
+            <span style={{ fontSize: '11px', color: 'var(--color-app-muted)', marginLeft: '6px', marginRight: '16px' }}>Search...</span>
+            <div className="dash-search-shortcut" aria-label="Keyboard shortcut Ctrl K" style={{ padding: '2px 4px', fontSize: '9px' }}>
+              <Command size={8} />
               K
             </div>
           </div>
 
-          {/* Theme */}
-          <button
-            className="dash-icon-btn"
+          {/* Social Media Bubble Links */}
+          <FloatingSocials />
+
+          {/* Theme Switch Toggle */}
+          <div
+            className="theme-switch-track"
+            onClick={toggleTheme}
             aria-label="Toggle theme"
-            id="dashboard-theme-toggle"
+            style={{ flexShrink: 0 }}
           >
-            <Sun size={15} />
-          </button>
+            <div className="theme-switch-thumb" />
+          </div>
 
           {/* Notifications */}
           <button
-            className="dash-icon-btn"
+            className="dash-icon-btn neu-btn"
             aria-label="Notifications"
             id="dashboard-notifications"
             onClick={() =>
@@ -82,17 +105,18 @@ export default function DashboardPage() {
                 body: "Reminder: you've been coding for 45 min. Take a short break.",
               })
             }
+            style={{ width: '32px', height: '32px', border: 'none', background: 'none' }}
           >
-            <Bell size={15} />
-            <span className="dash-notif-dot" aria-hidden="true" />
+            <Bell size={14} style={{ color: 'var(--color-app-text)' }} />
+            <span className="dash-notif-dot" aria-hidden="true" style={{ width: '6px', height: '6px', top: '6px', right: '6px' }} />
           </button>
 
           {/* User menu */}
           <button
-            className="dash-icon-btn"
+            className="dash-icon-btn neu-btn"
             aria-label="User menu"
             id="dashboard-user-menu"
-            style={{ borderRadius: '50%', overflow: 'hidden', padding: 0 }}
+            style={{ borderRadius: '50%', overflow: 'hidden', padding: 0, width: '32px', height: '32px', border: 'none' }}
           >
             {user?.avatarUrl ? (
               <img
@@ -101,7 +125,7 @@ export default function DashboardPage() {
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
             ) : (
-              <User size={15} />
+              <User size={14} style={{ color: 'var(--color-app-text)' }} />
             )}
           </button>
         </div>
@@ -110,36 +134,34 @@ export default function DashboardPage() {
       {/* ── Stats Row ─────────────────────────────────────────────── */}
       <StatsCards />
 
-      {/* ── Main content grid ─────────────────────────────────────── */}
-      <div className="dash-grid-2" style={{ marginTop: 18 }}>
-
-        {/* ── Left column ─────────────────────────────────────────── */}
-        <div className="dash-col-left">
+      {/* ── Main content grid (Proportional viewport alignment) ─────── */}
+      <div style={{ flex: 1, minHeight: 0, display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '10px', overflow: 'hidden' }}>
+        
+        {/* ── Central Content Area (Left side) ── */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', height: '100%', overflow: 'hidden' }}>
           <AboutMeCard />
           <TechStackCard />
-          <DailyMotivation />
+          <RecentProjectsCard />
         </div>
 
-        {/* ── Right column ────────────────────────────────────────── */}
-        <div className="dash-col-right">
+        {/* ── Right-Side Content Area (Right side) ── */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', height: '100%', overflow: 'hidden' }}>
+          <AICopilotWidget />
           <GitHubOverview />
           <TopRepositories />
         </div>
       </div>
 
-      {/* ── Bottom grid: Recent Projects + AI Copilot ─────────────── */}
-      <div className="dash-grid-2" style={{ marginTop: 18, marginBottom: 32 }}>
-        <RecentProjectsCard />
-        <AICopilotWidget />
-      </div>
+      {/* ── Compact Bottom strip ───────────────────────────────────── */}
+      <DailyMotivation />
 
       {/* ── Notification Toast ────────────────────────────────────── */}
       {toast && (
-        <div className="toast toast-enter" role="alert" aria-live="polite">
+        <div className="toast toast-enter" role="alert" aria-live="polite" style={{ zIndex: 100 }}>
           <Bell size={16} style={{ color: 'var(--color-violet-bright)' }} />
           <div>
             <div className="toast-title">{toast.title}</div>
-            <div style={{ fontSize: 12, color: 'var(--color-app-muted)' }}>{toast.body}</div>
+            <div style={{ fontSize: 11, color: 'var(--color-app-muted)' }}>{toast.body}</div>
           </div>
         </div>
       )}

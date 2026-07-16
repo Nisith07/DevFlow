@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import Sidebar from '@/shared/components/Sidebar'
-import FloatingSocials from '@/shared/components/FloatingSocials'
 import { Menu, X } from 'lucide-react'
 
 export default function AppLayout() {
@@ -40,9 +39,6 @@ export default function AppLayout() {
           <Outlet />
         </main>
       </div>
-
-      {/* Floating Social Bubbles */}
-      <FloatingSocials />
     </div>
   )
 }
