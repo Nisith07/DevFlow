@@ -3,10 +3,12 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import Navbar from '@/shared/components/Navbar'
 import Hero from './components/Hero'
-import HowItWorks from './components/HowItWorks'
 import Features from './components/Features'
+import HowItWorks from './components/HowItWorks'
+import About from './components/About'
 import CtaBand from './components/CtaBand'
 import Footer from './components/Footer'
+import CustomCursor from './components/CustomCursor'
 
 export default function LandingPage() {
   const containerRef = useRef(null)
@@ -30,7 +32,7 @@ export default function LandingPage() {
     }
   }, [searchParams, navigate])
 
-  // Scroll reveal animation
+  // Scroll reveal IntersectionObserver animations
   useEffect(() => {
     const els = containerRef.current?.querySelectorAll('.reveal') ?? []
     const io = new IntersectionObserver(
@@ -50,12 +52,20 @@ export default function LandingPage() {
 
   return (
     <div className="lp-root" ref={containerRef}>
+      {/* Animated Glowing Trail Cursor (Desktop only) */}
+      <CustomCursor />
+
+      {/* Floating Glassmorphic Navbar */}
       <Navbar />
 
-      <Hero onLoginClick={() => navigate('/register')} />
-      <HowItWorks />
+      {/* Sections */}
+      <Hero />
       <Features />
+      <HowItWorks />
+      <About />
       <CtaBand onLoginClick={() => navigate('/register')} />
+      
+      {/* Footer */}
       <Footer />
     </div>
   )
