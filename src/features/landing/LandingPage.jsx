@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
-import { useNavigate, useLocation, useSearchParams } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import Navbar from '@/shared/components/Navbar'
-import LoginModal from '@/features/auth/components/LoginModal'
 import Hero from './components/Hero'
 import HowItWorks from './components/HowItWorks'
 import Features from './components/Features'
@@ -10,13 +9,11 @@ import CtaBand from './components/CtaBand'
 import Footer from './components/Footer'
 
 export default function LandingPage() {
-  const [loginOpen, setLoginOpen] = useState(false)
   const containerRef = useRef(null)
 
   const { isAuthenticated, loading } = useAuth()
   const navigate = useNavigate()
-  const location = useLocation()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
 
   // 1. Redirection if already authenticated
   useEffect(() => {
@@ -25,24 +22,13 @@ export default function LandingPage() {
     }
   }, [isAuthenticated, loading, navigate])
 
-  // 2. Open login modal if requested by AuthGuard
-  useEffect(() => {
-    if (location.state?.openLogin) {
-      setLoginOpen(true)
-      // Clear the state so page refresh doesn't reopen it
-      navigate(location.pathname, { replace: true, state: {} })
-    }
-  }, [location, navigate])
-
-  // 3. Handle Google OAuth redirect errors
+  // 2. Handle Google OAuth redirect errors by redirecting to LoginPage
   useEffect(() => {
     const authError = searchParams.get('authError')
     if (authError) {
-      setLoginOpen(true)
-      searchParams.delete('authError')
-      setSearchParams(searchParams, { replace: true })
+      navigate('/login', { replace: true })
     }
-  }, [searchParams, setSearchParams])
+  }, [searchParams, navigate])
 
   // Scroll reveal animation
   useEffect(() => {
@@ -64,20 +50,13 @@ export default function LandingPage() {
 
   return (
     <div className="lp-root" ref={containerRef}>
-      <Navbar onLoginClick={(redirectPath) => setLoginOpen(redirectPath || true)} />
+      <Navbar />
 
-      <Hero onLoginClick={() => setLoginOpen(true)} />
+      <Hero onLoginClick={() => navigate('/register')} />
       <HowItWorks />
       <Features />
-      <CtaBand onLoginClick={() => setLoginOpen(true)} />
+      <CtaBand onLoginClick={() => navigate('/register')} />
       <Footer />
-
-      {loginOpen && (
-        <LoginModal
-          onClose={() => setLoginOpen(false)}
-          defaultRedirectTo={typeof loginOpen === 'string' ? loginOpen : undefined}
-        />
-      )}
     </div>
   )
 }

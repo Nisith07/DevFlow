@@ -16,7 +16,7 @@ export default function AuthGuard({ children }) {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/" state={{ from: location, openLogin: true }} replace />
+    return <Navigate to="/login" state={{ from: location }} replace />
   }
 
   return children

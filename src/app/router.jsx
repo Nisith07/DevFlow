@@ -1,5 +1,7 @@
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import LandingPage from '@/features/landing/LandingPage'
+import LoginPage from '@/features/auth/components/LoginPage'
+import RegisterPage from '@/features/auth/components/RegisterPage'
 import AppLayout from '@/shared/components/AppLayout'
 import AuthGuard from '@/features/auth/components/AuthGuard'
 import DashboardPage from '@/features/dashboard/DashboardPage'
@@ -18,6 +20,14 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <LandingPage />,
+      },
+      {
+        path: 'login',
+        element: <LoginPage />,
+      },
+      {
+        path: 'register',
+        element: <RegisterPage />,
       },
       {
         element: (

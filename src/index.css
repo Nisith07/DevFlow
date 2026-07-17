@@ -2668,6 +2668,25 @@ button {
   margin: 0;
 }
 
+.auth-success {
+  font-size: 13px;
+  color: var(--color-success);
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 7px;
+  padding: 10px 12px;
+  margin: 0;
+}
+
+.auth-page-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-app-bg);
+  padding: 20px;
+}
+
 .auth-submit {
   width: 100%;
   padding: 12px;

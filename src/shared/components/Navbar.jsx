@@ -8,7 +8,7 @@ import { useAuth } from '@/features/auth/hooks/useAuth'
  *
  * @param {{ onLoginClick: (redirectPath?: string) => void }} props
  */
-export default function Navbar({ onLoginClick }) {
+export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [hasScrolled, setHasScrolled] = useState(false)
   const { isAuthenticated } = useAuth()
@@ -60,7 +60,7 @@ export default function Navbar({ onLoginClick }) {
           {/* AI Copilot button — always visible */}
           <button
             className="navbar-ai-btn"
-            onClick={() => isAuthenticated ? navigate('/ai') : onLoginClick('/ai')}
+            onClick={() => isAuthenticated ? navigate('/ai') : navigate('/login', { state: { from: { pathname: '/ai' } } })}
             aria-label="Open AI Copilot"
             title="AI Copilot"
           >
@@ -74,11 +74,11 @@ export default function Navbar({ onLoginClick }) {
             </button>
           ) : (
             <>
-              <button className="navbar-login-btn" onClick={onLoginClick}>
+              <button className="navbar-login-btn" onClick={() => navigate('/login')}>
                 <LogIn size={16} aria-hidden="true" />
                 <span>Log in</span>
               </button>
-              <button className="navbar-get-started" onClick={onLoginClick}>
+              <button className="navbar-get-started" onClick={() => navigate('/register')}>
                 Get started
               </button>
             </>
