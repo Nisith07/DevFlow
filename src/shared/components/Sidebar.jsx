@@ -15,6 +15,7 @@ import {
   Activity,
   Settings,
   Link2,
+  LogOut,
   Moon,
   Sun
 } from 'lucide-react'
@@ -30,7 +31,8 @@ const GithubIcon = ({ size = 13 }) => (
 )
 
 export default function Sidebar({ isOpen, onClose }) {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
   const cleanName = (user?.name || 'Nisith').replace(/:+$/, '')
   const [theme, setTheme] = useState(getTheme())
 
@@ -41,6 +43,12 @@ export default function Sidebar({ isOpen, onClose }) {
     window.addEventListener('themechange', handleThemeChange)
     return () => window.removeEventListener('themechange', handleThemeChange)
   }, [])
+
+  const handleLogout = async () => {
+    await logout()
+    navigate('/', { replace: true })
+    onClose?.()
+  }
 
   return (
     <aside className={`sidebar ${isOpen ? 'open' : ''}`} aria-label="App sidebar" style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
@@ -54,8 +62,8 @@ export default function Sidebar({ isOpen, onClose }) {
       </div>
 
       {/* Developer Identity (Top Profile Block) */}
-      <div className="sidebar-identity" style={{ flexShrink: 0, padding: '10px 20px 12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <div style={{ position: 'relative' }}>
+      <div className="sidebar-identity" style={{ flexShrink: 0, padding: '10px 16px 12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ position: 'relative', flexShrink: 0 }}>
           {user?.avatarUrl ? (
             <img src={user.avatarUrl} alt={cleanName} style={{ width: '34px', height: '34px', borderRadius: '50%', objectFit: 'cover' }} />
           ) : (
@@ -65,13 +73,36 @@ export default function Sidebar({ isOpen, onClose }) {
           )}
           <span style={{ position: 'absolute', bottom: '0px', right: '0px', width: '7px', height: '7px', background: '#10b981', borderRadius: '50%', border: '2px solid var(--color-app-bg)' }} />
         </div>
-        <div>
+        <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span style={{ fontSize: '12.5px', fontWeight: '700', color: '#fff' }}>{cleanName}</span>
-            <span style={{ fontSize: '8px', fontWeight: '700', color: '#a78bfa', background: 'rgba(167, 139, 250, 0.15)', padding: '0px 4px', borderRadius: '3px' }}>PRO</span>
+            <span style={{ fontSize: '12.5px', fontWeight: '700', color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{cleanName}</span>
+            <span style={{ fontSize: '8px', fontWeight: '700', color: '#a78bfa', background: 'rgba(167, 139, 250, 0.15)', padding: '0px 4px', borderRadius: '3px', flexShrink: 0 }}>PRO</span>
           </div>
-          <div style={{ fontSize: '10px', color: 'var(--color-app-muted)', marginTop: '1px' }}>Full Stack Developer</div>
+          <div style={{ fontSize: '10px', color: 'var(--color-app-muted)', marginTop: '1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Full Stack Dev</div>
         </div>
+        
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          title="Logout"
+          aria-label="Logout"
+          style={{
+            background: 'rgba(239, 68, 68, 0.08)',
+            border: '1px solid rgba(239, 68, 68, 0.2)',
+            color: '#f87171',
+            borderRadius: '6px',
+            width: '26px',
+            height: '26px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            flexShrink: 0,
+            transition: 'all 0.15s ease'
+          }}
+        >
+          <LogOut size={12} />
+        </button>
       </div>
 
       {/* Nav Area */}
