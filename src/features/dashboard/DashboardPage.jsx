@@ -8,7 +8,8 @@ import {
   Calendar,
   Layers,
   CheckCircle2,
-  Code
+  Code,
+  Bell
 } from 'lucide-react'
 import DashboardHeader from './components/DashboardHeader'
 import QuickActions from './components/QuickActions'
