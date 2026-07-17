@@ -54,8 +54,10 @@ export default function RegisterPage() {
         </button>
 
         <div className="auth-brand" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-          <span className="auth-brand-mark" aria-hidden="true">⌘</span>
-          <span>Dev<span style={{ color: 'var(--color-amber)' }}>Flow</span></span>
+          <span className="auth-brand-mark" aria-hidden="true">
+            <img src="/logo-icon.svg" alt="" />
+          </span>
+          <span>Dev<span style={{ color: '#8b5cf6' }}>Flow</span></span>
         </div>
 
         <h2 id="auth-title">Create your account</h2>
