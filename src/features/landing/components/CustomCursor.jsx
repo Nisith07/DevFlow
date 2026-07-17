@@ -1,100 +1,63 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function CustomCursor() {
-  const [hoverState, setHoverState] = useState('default') // 'default', 'hovering', 'hovering-3d'
-  const [visible, setVisible] = useState(false)
   const ringRef = useRef(null)
-  const glowRef = useRef(null)
-  
-  // Track mouse coordinates for trailing delay interpolation
-  const mouse = useRef({ x: 0, y: 0 })
-  const ringPos = useRef({ x: 0, y: 0 })
+  const dotRef  = useRef(null)
+  const [state, setState] = useState('default') // 'default' | 'hovering' | 'cta'
 
   useEffect(() => {
-    // Disable custom cursor on touch/mobile devices
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
-    if (isTouchDevice) return
+    // Disable on touch devices
+    if (window.matchMedia('(hover: none)').matches) return
 
-    setVisible(true)
+    const mouse  = { x: 0, y: 0 }
+    const ring   = { x: 0, y: 0 }
+    let rafId
 
-    const handleMouseMove = (e) => {
-      mouse.current.x = e.clientX
-      mouse.current.y = e.clientY
+    const move = (e) => {
+      mouse.x = e.clientX
+      mouse.y = e.clientY
 
-      // Instantly position the center glow dot
-      if (glowRef.current) {
-        glowRef.current.style.left = `${e.clientX}px`
-        glowRef.current.style.top = `${e.clientY}px`
+      // Dot follows instantly
+      if (dotRef.current) {
+        dotRef.current.style.left = `${e.clientX}px`
+        dotRef.current.style.top  = `${e.clientY}px`
       }
 
-      // Check what type of element we are hovering
-      const target = e.target
-      if (!target) return
-
-      if (target.closest('.card-3d') || target.closest('.hero-3d-grid-wrap')) {
-        setHoverState('hovering-3d')
-      } else if (
-        target.closest('a') || 
-        target.closest('button') || 
-        target.closest('.lp-btn') ||
-        target.closest('[role="button"]')
-      ) {
-        setHoverState('hovering')
-      } else {
-        setHoverState('default')
-      }
+      // Detect hover target
+      const t = e.target
+      if (t.closest('[data-cursor="cta"]')) setState('cta')
+      else if (t.closest('a, button, [role="button"]')) setState('hovering')
+      else setState('default')
     }
 
-    const handleMouseLeave = () => {
-      if (ringRef.current) ringRef.current.style.opacity = '0'
-      if (glowRef.current) glowRef.current.style.opacity = '0'
-    }
-
-    const handleMouseEnter = () => {
-      if (ringRef.current) ringRef.current.style.opacity = '1'
-      if (glowRef.current) glowRef.current.style.opacity = '0.85'
-    }
-
-    window.addEventListener('mousemove', handleMouseMove, { passive: true })
-    document.addEventListener('mouseleave', handleMouseLeave)
-    document.addEventListener('mouseenter', handleMouseEnter)
-
-    // Smooth trailing animation loop using requestAnimationFrame
-    let animId
     const tick = () => {
-      // Ease the trailing outer ring position
-      const ease = 0.15
-      ringPos.current.x += (mouse.current.x - ringPos.current.x) * ease
-      ringPos.current.y += (mouse.current.y - ringPos.current.y) * ease
-
+      const ease = 0.12
+      ring.x += (mouse.x - ring.x) * ease
+      ring.y += (mouse.y - ring.y) * ease
       if (ringRef.current) {
-        ringRef.current.style.left = `${ringPos.current.x}px`
-        ringRef.current.style.top = `${ringPos.current.y}px`
+        ringRef.current.style.left = `${ring.x}px`
+        ringRef.current.style.top  = `${ring.y}px`
       }
-
-      animId = requestAnimationFrame(tick)
+      rafId = requestAnimationFrame(tick)
     }
-    tick()
+
+    window.addEventListener('mousemove', move, { passive: true })
+    rafId = requestAnimationFrame(tick)
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseleave', handleMouseLeave)
-      document.removeEventListener('mouseenter', handleMouseEnter)
-      cancelAnimationFrame(animId)
+      window.removeEventListener('mousemove', move)
+      cancelAnimationFrame(rafId)
     }
   }, [])
 
-  if (!visible) return null
-
-  // State-based trailing ring class
-  let ringClass = 'custom-cursor-ring'
-  if (hoverState === 'hovering') ringClass += ' hovering'
-  if (hoverState === 'hovering-3d') ringClass += ' hovering-3d'
-
   return (
     <>
-      <div ref={ringRef} className={ringClass} aria-hidden="true" />
-      <div ref={glowRef} className="custom-cursor-glow" aria-hidden="true" />
+      <div
+        ref={ringRef}
+        className={`lp-cursor-ring ${state === 'hovering' ? 'is-hovering' : ''} ${state === 'cta' ? 'is-cta' : ''}`}
+        aria-hidden="true"
+      />
+      <div ref={dotRef} className="lp-cursor-dot" aria-hidden="true" />
     </>
   )
 }

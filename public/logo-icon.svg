@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+  <!-- Purple rounded square background -->
+  <rect width="36" height="36" rx="9" fill="url(#bg)"/>
+  
+  <!--
+    Command (⌘) / Bowen knot symbol
+    Built from 4 rounded squares joined by their corners, centered in a 36x36 box.
+    Each small rounded rect is 6x6 with r=2, connected by 2-wide bridges.
+  -->
+  <g transform="translate(8, 8)">
+    <!-- Top-left corner circle -->
+    <rect x="0" y="0" width="6" height="6" rx="2" fill="none" stroke="white" stroke-width="2"/>
+    <!-- Top-right corner circle -->
+    <rect x="14" y="0" width="6" height="6" rx="2" fill="none" stroke="white" stroke-width="2"/>
+    <!-- Bottom-left corner circle -->
+    <rect x="0" y="14" width="6" height="6" rx="2" fill="none" stroke="white" stroke-width="2"/>
+    <!-- Bottom-right corner circle -->
+    <rect x="14" y="14" width="6" height="6" rx="2" fill="none" stroke="white" stroke-width="2"/>
+
+    <!-- Horizontal bridges -->
+    <rect x="6" y="2" width="8" height="2" rx="0" fill="white"/>
+    <rect x="6" y="16" width="8" height="2" rx="0" fill="white"/>
+
+    <!-- Vertical bridges -->
+    <rect x="2" y="6" width="2" height="8" rx="0" fill="white"/>
+    <rect x="16" y="6" width="2" height="8" rx="0" fill="white"/>
+  </g>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#4c1d95"/>
+    </linearGradient>
+  </defs>
+</svg>

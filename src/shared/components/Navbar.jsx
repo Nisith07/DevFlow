@@ -1,244 +1,154 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { ChevronDown, Globe2, LogIn, Menu, Sparkles, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 
+const NAV_LINKS = [
+  { label: 'Home',        href: '#home' },
+  { label: 'Features',    href: '#features' },
+  { label: 'How It Works', href: '#how-it-works' },
+  { label: 'About',       href: '#about' },
+]
+
 export default function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [hasScrolled, setHasScrolled] = useState(false)
-  const [activeSection, setActiveSection] = useState('home')
-  
-  const { isAuthenticated } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
+  const [scrolled, setScrolled]       = useState(false)
+  const [mobileOpen, setMobileOpen]   = useState(false)
+  const [activeSection, setActive]    = useState('home')
+  const { isAuthenticated }           = useAuth()
+  const navigate                      = useNavigate()
+  const location                      = useLocation()
 
-  // Track scroll position for glassmorphism and active section link highlighting
+  /* ── Scroll tracking ─────────────────────────────────────────────── */
   useEffect(() => {
-    const handleScroll = () => {
-      setHasScrolled(window.scrollY > 12)
+    const onScroll = () => {
+      setScrolled(window.scrollY > 20)
 
-      // Only track active sections on the home/landing page '/'
       if (location.pathname !== '/') return
-
-      const sections = ['home', 'features', 'how-it-works', 'about']
-      const scrollPos = window.scrollY + 200
-
-      for (const section of sections) {
-        const el = document.getElementById(section)
-        if (el) {
-          const top = el.offsetTop
-          const height = el.offsetHeight
-          if (scrollPos >= top && scrollPos < top + height) {
-            setActiveSection(section)
-            break
-          }
+      const ids = ['home', 'features', 'how-it-works', 'about']
+      const offset = window.scrollY + 140
+      for (let i = ids.length - 1; i >= 0; i--) {
+        const el = document.getElementById(ids[i])
+        if (el && el.offsetTop <= offset) {
+          setActive(ids[i])
+          break
         }
       }
     }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [location.pathname])
 
-    handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [location])
-
-  const handleNavClick = (sectionId, e) => {
+  /* ── Smooth scroll (or navigate then scroll) ─────────────────────── */
+  const scrollTo = (href, e) => {
     e.preventDefault()
-    setMenuOpen(false)
-    
+    setMobileOpen(false)
+    const id = href.replace('#', '')
+
     if (location.pathname !== '/') {
-      navigate(`/#${sectionId}`)
+      navigate('/')
+      // Wait for page to mount, then scroll
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+      }, 100)
       return
     }
-
-    const isMobile = window.innerWidth <= 768 || 'ontouchstart' in window
-    if (!isMobile) {
-      const sectionIndices = {
-        'home': 0,
-        'features': 1,
-        'how-it-works': 2,
-        'about': 3
-      }
-      const idx = sectionIndices[sectionId] !== undefined ? sectionIndices[sectionId] : 0
-      window.scrollTo({
-        top: window.innerHeight * idx,
-        behavior: 'smooth'
-      })
-      setActiveSection(sectionId)
-      return
-    }
-
-    const el = document.getElementById(sectionId)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' })
-      setActiveSection(sectionId)
-    }
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  const goToDashboard = () => navigate('/dashboard')
-
   return (
-    <header className={`lp-nav ${hasScrolled ? 'lp-nav-scrolled' : ''}`} style={hasScrolled ? { background: 'rgba(3, 5, 12, 0.9)', boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)' } : {}}>
-      <div className="lp-nav-inner">
-        {/* Brand logo */}
-        <button
-          className="lp-brand"
-          onClick={(e) => handleNavClick('home', e)}
-          aria-label="DevFlow home"
-        >
-          <span className="lp-brand-mark" aria-hidden="true">⌘</span>
-          <span>Dev<span className="lp-brand-sub">Flow</span></span>
-        </button>
+    <>
+      <nav className={`lp-nav ${scrolled ? 'lp-nav-scrolled' : ''}`} aria-label="Main navigation">
+        <div className="lp-nav-inner">
 
-        {/* Links (Desktop) */}
-        <nav className="lp-links" aria-label="Main navigation">
-          {['home', 'features', 'how-it-works', 'about'].map((sec) => (
-            <a
-              key={sec}
-              href={`#${sec}`}
-              onClick={(e) => handleNavClick(sec, e)}
-              className={activeSection === sec ? 'active' : ''}
-              style={{ textTransform: 'capitalize' }}
-            >
-              {sec.replace('-', ' ')}
-            </a>
-          ))}
-        </nav>
-
-        {/* Actions (Desktop) */}
-        <div className="lp-nav-actions">
-          <button
-            className="lp-btn lp-btn-ghost"
-            style={{ padding: '6px 12px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '4px', border: '1px solid var(--color-lp-line)' }}
-            type="button"
-            aria-label="Language Selector"
-          >
-            <Globe2 size={13} />
-            ENG
-            <ChevronDown size={12} />
+          {/* Brand */}
+          <button className="lp-brand" onClick={(e) => scrollTo('#home', e)} aria-label="DevFlow home">
+            <img
+              src="/logo-icon.svg"
+              alt=""
+              aria-hidden="true"
+              style={{ width: 30, height: 30, borderRadius: 7, flexShrink: 0 }}
+            />
+            DevFlow
           </button>
 
-          {/* AI Copilot Button */}
-          <button
-            className="lp-btn lp-btn-ghost"
-            onClick={() => isAuthenticated ? navigate('/ai') : navigate('/login', { state: { from: { pathname: '/ai' } } })}
-            style={{ padding: '8px 14px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px', border: '1px solid rgba(6, 182, 212, 0.3)', color: 'var(--color-lp-cyan)' }}
-          >
-            <Sparkles size={13} style={{ color: 'var(--color-lp-cyan)' }} />
-            <span>AI Copilot</span>
-          </button>
+          {/* Desktop links */}
+          <ul className="lp-nav-links" role="list">
+            {NAV_LINKS.map(({ label, href }) => {
+              const id = href.replace('#', '')
+              return (
+                <li key={href}>
+                  <a
+                    href={href}
+                    onClick={(e) => scrollTo(href, e)}
+                    className={activeSection === id ? 'lp-nav-active' : ''}
+                  >
+                    {label}
+                  </a>
+                </li>
+              )
+            })}
+          </ul>
 
-          {isAuthenticated ? (
-            <button className="lp-btn lp-btn-primary" style={{ padding: '8px 16px', fontSize: '13px' }} onClick={goToDashboard}>
-              Go to Dashboard
-            </button>
-          ) : (
-            <>
-              <button
-                className="lp-btn lp-btn-ghost"
-                style={{ padding: '8px 14px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}
-                onClick={() => navigate('/login')}
-              >
-                <LogIn size={13} />
-                <span>Log in</span>
-              </button>
-              <button
-                className="lp-btn lp-btn-primary"
-                style={{ padding: '8px 16px', fontSize: '13px' }}
-                onClick={() => navigate('/register')}
-              >
-                Get started
-              </button>
-            </>
-          )}
-        </div>
-
-        {/* Hamburger toggle (Mobile) */}
-        <button
-          className="lp-nav-toggle"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle Navigation Menu"
-          aria-expanded={menuOpen}
-        >
-          {menuOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
-      </div>
-
-      {/* Slide-over Mobile Navigation Menu */}
-      {menuOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: '72px 0 0 0',
-            background: 'rgba(3, 5, 12, 0.98)',
-            backdropFilter: 'blur(20px)',
-            zIndex: 999,
-            display: 'flex',
-            flexDirection: 'column',
-            padding: '32px 24px',
-            gap: '24px',
-            borderTop: '1px solid var(--color-lp-line)',
-            animation: 'fadeIn 0.25s ease-out'
-          }}
-        >
-          <nav style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {['home', 'features', 'how-it-works', 'about'].map((sec) => (
-              <a
-                key={sec}
-                href={`#${sec}`}
-                onClick={(e) => handleNavClick(sec, e)}
-                style={{
-                  fontSize: '18px',
-                  fontWeight: '600',
-                  color: activeSection === sec ? 'var(--color-lp-cyan)' : 'var(--color-lp-muted)',
-                  textTransform: 'capitalize'
-                }}
-              >
-                {sec.replace('-', ' ')}
-              </a>
-            ))}
-          </nav>
-
-          <hr style={{ border: 'none', borderTop: '1px solid var(--color-lp-line)' }} />
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <button
-              className="lp-btn lp-btn-ghost"
-              onClick={() => { setMenuOpen(false); navigate(isAuthenticated ? '/ai' : '/login') }}
-              style={{ width: '100%', justifyContent: 'center' }}
-            >
-              <Sparkles size={14} style={{ color: 'var(--color-lp-cyan)' }} />
-              AI Copilot
-            </button>
-
+          {/* Desktop actions */}
+          <div className="lp-nav-actions">
             {isAuthenticated ? (
               <button
                 className="lp-btn lp-btn-primary"
-                onClick={() => { setMenuOpen(false); goToDashboard() }}
-                style={{ width: '100%' }}
+                onClick={() => navigate('/dashboard')}
               >
-                Go to Dashboard
+                Dashboard
               </button>
             ) : (
               <>
                 <button
                   className="lp-btn lp-btn-ghost"
-                  onClick={() => { setMenuOpen(false); navigate('/login') }}
-                  style={{ width: '100%', justifyContent: 'center' }}
+                  onClick={() => navigate('/login')}
                 >
                   Log in
                 </button>
                 <button
                   className="lp-btn lp-btn-primary"
-                  onClick={() => { setMenuOpen(false); navigate('/register') }}
-                  style={{ width: '100%' }}
+                  onClick={() => navigate('/register')}
                 >
-                  Get started
+                  Get Started
                 </button>
               </>
             )}
           </div>
+
+          {/* Mobile toggle */}
+          <button
+            className="lp-nav-toggle"
+            onClick={() => setMobileOpen(v => !v)}
+            aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
+          >
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div className="lp-mobile-menu" role="dialog" aria-label="Mobile navigation">
+          {NAV_LINKS.map(({ label, href }) => (
+            <a key={href} href={href} onClick={(e) => scrollTo(href, e)}>
+              {label}
+            </a>
+          ))}
+          <hr className="lp-divider" />
+          {isAuthenticated ? (
+            <button className="lp-btn lp-btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => { setMobileOpen(false); navigate('/dashboard') }}>
+              Dashboard
+            </button>
+          ) : (
+            <>
+              <button className="lp-btn lp-btn-ghost" style={{ width: '100%', justifyContent: 'center' }} onClick={() => { setMobileOpen(false); navigate('/login') }}>Log in</button>
+              <button className="lp-btn lp-btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => { setMobileOpen(false); navigate('/register') }}>Get Started</button>
+            </>
+          )}
         </div>
       )}
-    </header>
+    </>
   )
 }
