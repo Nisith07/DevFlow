@@ -8,7 +8,6 @@ import HowItWorks from './components/HowItWorks'
 import About     from './components/About'
 import CtaBand   from './components/CtaBand'
 import Footer    from './components/Footer'
-import CustomCursor from './components/CustomCursor'
 
 export default function LandingPage() {
   const { isAuthenticated, loading } = useAuth()
@@ -31,9 +30,6 @@ export default function LandingPage() {
 
   return (
     <div className="lp-root">
-      {/* Custom cursor — auto-disabled on touch devices via CSS/JS */}
-      <CustomCursor />
-
       {/* Navbar — fixed, scroll-aware */}
       <Navbar />
 
