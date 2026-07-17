@@ -7,7 +7,8 @@ import {
   Flame,
   Calendar,
   Layers,
-  CheckCircle2
+  CheckCircle2,
+  Code
 } from 'lucide-react'
 import DashboardHeader from './components/DashboardHeader'
 import QuickActions from './components/QuickActions'
