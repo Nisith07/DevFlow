@@ -66,8 +66,8 @@ export default function DashboardPage() {
 
   return (
     <div className="dashboard-viewport-fit" style={{
-      background: '#03050c',
-      color: '#e8ecf1',
+      background: 'var(--color-app-bg)',
+      color: 'var(--color-app-text)',
       height: 'calc(100vh - 24px)',
       padding: '4px 12px 10px',
       display: 'flex',
@@ -92,14 +92,14 @@ export default function DashboardPage() {
             fontWeight: '900',
             letterSpacing: '-0.03em',
             margin: '0 0 1px',
-            color: '#fff',
+            color: 'var(--color-app-text)',
             display: 'flex',
             alignItems: 'center',
             gap: '5px'
           }}>
             Good afternoon, {firstName}! <span style={{ animation: 'wave 2s infinite' }}>👋</span>
           </h1>
-          <p style={{ fontSize: '10.5px', color: '#8c98ad', margin: 0 }}>
+          <p style={{ fontSize: '10.5px', color: 'var(--color-app-muted)', margin: 0 }}>
             Let's ship something amazing today.
           </p>
         </div>
@@ -107,8 +107,8 @@ export default function DashboardPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {/* Search Box */}
           <div style={{
-            background: 'rgba(255,255,255,0.02)',
-            border: '1px solid rgba(255,255,255,0.06)',
+            background: 'var(--color-app-surface-2)',
+            border: '1px solid var(--color-app-border-bright)',
             borderRadius: '6px',
             padding: '5px 10px',
             display: 'flex',
@@ -116,7 +116,7 @@ export default function DashboardPage() {
             gap: '6px',
             width: '180px'
           }}>
-            <Search size={12} style={{ color: '#4a5568' }} />
+            <Search size={12} style={{ color: 'var(--color-app-faint)' }} />
             <input
               type="text"
               placeholder="Search anything..."
@@ -124,15 +124,15 @@ export default function DashboardPage() {
                 background: 'transparent',
                 border: 'none',
                 outline: 'none',
-                color: '#fff',
+                color: 'var(--color-app-text)',
                 fontSize: '11px',
                 width: '100%'
               }}
             />
             <span style={{
               fontSize: '8px',
-              color: '#4a5568',
-              background: 'rgba(255,255,255,0.04)',
+              color: 'var(--color-app-faint)',
+              background: 'var(--color-app-border)',
               padding: '1px 3px',
               borderRadius: '3px',
               fontFamily: 'monospace'
@@ -157,9 +157,9 @@ export default function DashboardPage() {
 
           {/* Notifications Button */}
           <button style={{
-            background: 'rgba(255,255,255,0.02)',
-            border: '1px solid rgba(255,255,255,0.06)',
-            color: '#8c98ad',
+            background: 'var(--color-app-surface-2)',
+            border: '1px solid var(--color-app-border-bright)',
+            color: 'var(--color-app-muted)',
             width: '26px',
             height: '26px',
             borderRadius: '6px',
@@ -178,9 +178,9 @@ export default function DashboardPage() {
               height: '8px',
               background: '#ef4444',
               borderRadius: '50%',
-              border: '1.5px solid #03050c',
+              border: '1.5px solid var(--color-app-bg)',
               fontSize: '6px',
-              color: '#fff',
+              color: 'var(--color-app-text)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -194,7 +194,7 @@ export default function DashboardPage() {
             height: '26px',
             borderRadius: '50%',
             overflow: 'hidden',
-            border: '1.5px solid rgba(255,255,255,0.1)'
+            border: '1.5px solid var(--color-app-border-bright)'
           }}>
             {user?.avatarUrl ? (
               <img src={user.avatarUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -229,14 +229,14 @@ export default function DashboardPage() {
           { label: 'New Task', sub: 'Add a task', icon: Plus, color: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.2)', text: '#34d399' },
           { label: 'Generate Code', sub: 'AI Code Generation', icon: Code, color: 'rgba(6,182,212,0.12)', border: 'rgba(6,182,212,0.2)', text: '#22d3ee' },
           { label: 'API', sub: 'Create API', icon: Server, color: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.2)', text: '#34d399' },
-          { label: 'Open GitHub', sub: 'View Repos', icon: GithubIcon, color: 'rgba(255,255,255,0.02)', border: 'rgba(255,255,255,0.06)', text: '#fff' },
+          { label: 'Open GitHub', sub: 'View Repos', icon: GithubIcon, color: 'var(--color-app-surface-2)', border: 'var(--color-app-border-bright)', text: 'var(--color-app-text)' },
           { label: 'Focus Mode', sub: 'Start Session', icon: Clock, color: 'rgba(59,130,246,0.12)', border: 'rgba(59,130,246,0.2)', text: '#60a5fa' },
         ].map((act, i) => (
           <button
             key={i}
             style={{
-              background: 'rgba(13,17,28,0.7)',
-              border: '1px solid rgba(255,255,255,0.04)',
+              background: 'var(--color-app-surface)',
+              border: '1px solid var(--color-app-border)',
               borderRadius: '7px',
               padding: '6px 8px',
               display: 'flex',
@@ -262,8 +262,8 @@ export default function DashboardPage() {
               <act.icon size={10} />
             </div>
             <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: '10px', fontWeight: '700', color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{act.label}</div>
-              <div style={{ fontSize: '8px', color: '#8c98ad', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{act.sub}</div>
+              <div style={{ fontSize: '10px', fontWeight: '700', color: 'var(--color-app-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{act.label}</div>
+              <div style={{ fontSize: '8px', color: 'var(--color-app-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{act.sub}</div>
             </div>
           </button>
         ))}
@@ -281,21 +281,21 @@ export default function DashboardPage() {
         {/* ── ROW 1 ── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', minHeight: 0 }}>
           {/* CARD 1: TODAY'S FOCUS */}
-          <div className="card" style={{ background: '#0f1322', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
+          <div className="card" style={{ background: 'var(--color-app-surface)', border: '1px solid var(--color-app-border)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
               <CheckSquare size={12} style={{ color: '#8b5cf6' }} />
-              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#8c98ad' }}>Today's Focus</span>
+              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-app-muted)' }}>Today's Focus</span>
             </div>
 
             <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flex: 1, minHeight: 0 }}>
               <div style={{ position: 'relative', width: '44px', height: '44px', flexShrink: 0 }}>
                 <svg width="44" height="44" viewBox="0 0 36 36">
-                  <circle cx="18" cy="18" r="15.915" fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="3" />
+                  <circle cx="18" cy="18" r="15.915" fill="none" stroke="var(--color-app-border)" strokeWidth="3" />
                   <circle cx="18" cy="18" r="15.915" fill="none" stroke="#8b5cf6" strokeWidth="3" strokeDasharray={`${(completedCount / totalTasks) * 100} ${100 - (completedCount / totalTasks) * 100}`} strokeDashoffset="25" />
                 </svg>
                 <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ fontSize: '10px', fontWeight: '900', color: '#fff' }}>{totalTasks}</span>
-                  <span style={{ fontSize: '6px', color: '#8c98ad' }}>Tasks</span>
+                  <span style={{ fontSize: '10px', fontWeight: '900', color: 'var(--color-app-text)' }}>{totalTasks}</span>
+                  <span style={{ fontSize: '6px', color: 'var(--color-app-muted)' }}>Tasks</span>
                 </div>
               </div>
 
@@ -313,7 +313,7 @@ export default function DashboardPage() {
                       <span style={{
                         fontSize: '9px',
                         textDecoration: isDone ? 'line-through' : 'none',
-                        color: isDone ? '#4a5568' : '#e8ecf1',
+                        color: isDone ? 'var(--color-app-faint)' : 'var(--color-app-text)',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
@@ -331,28 +331,28 @@ export default function DashboardPage() {
           </div>
 
           {/* CARD 2: CONTINUE WORKING */}
-          <div className="card" style={{ background: '#0f1322', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
+          <div className="card" style={{ background: 'var(--color-app-surface)', border: '1px solid var(--color-app-border)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
               <Code size={12} style={{ color: '#06b6d4' }} />
-              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#8c98ad' }}>Continue Working</span>
+              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-app-muted)' }}>Continue Working</span>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.02)', padding: '5px 6px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.04)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--color-app-surface-2)', padding: '5px 6px', borderRadius: '6px', border: '1px solid var(--color-app-border)' }}>
               <img src="/logo-icon.svg" alt="" style={{ width: 16, height: 16 }} />
               <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: '10px', fontWeight: '700', color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>DevFlow</div>
-                <div style={{ fontSize: '7.5px', color: '#8c98ad', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>All-in-one Workspace</div>
+                <div style={{ fontSize: '10px', fontWeight: '700', color: 'var(--color-app-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>DevFlow</div>
+                <div style={{ fontSize: '7.5px', color: 'var(--color-app-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>All-in-one Workspace</div>
               </div>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
               <div style={{ display: 'flex', justifySelf: 'space-between', justifyContent: 'space-between', fontSize: '9.5px' }}>
-                <span style={{ color: '#8c98ad' }}>Current Branch</span>
-                <span style={{ color: '#fff', fontWeight: '600', fontFamily: 'monospace' }}>feature/auth</span>
+                <span style={{ color: 'var(--color-app-muted)' }}>Current Branch</span>
+                <span style={{ color: 'var(--color-app-text)', fontWeight: '600', fontFamily: 'monospace' }}>feature/auth</span>
               </div>
               <div style={{ display: 'flex', justifySelf: 'space-between', justifyContent: 'space-between', fontSize: '9.5px' }}>
-                <span style={{ color: '#8c98ad' }}>Last Commit</span>
-                <span style={{ color: '#fff', fontWeight: '600', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '80px' }}>Fix: OAuth callback</span>
+                <span style={{ color: 'var(--color-app-muted)' }}>Last Commit</span>
+                <span style={{ color: 'var(--color-app-text)', fontWeight: '600', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '80px' }}>Fix: OAuth callback</span>
               </div>
             </div>
 
@@ -362,17 +362,17 @@ export default function DashboardPage() {
           </div>
 
           {/* CARD 3: AI DAILY BRIEF */}
-          <div className="card" style={{ background: '#0f1322', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
+          <div className="card" style={{ background: 'var(--color-app-surface)', border: '1px solid var(--color-app-border)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifySelf: 'start', justifyContent: 'space-between', width: '100%' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                 <Sparkles size={12} style={{ color: '#ef4444' }} />
-                <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#8c98ad' }}>AI Daily Brief</span>
+                <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-app-muted)' }}>AI Daily Brief</span>
               </div>
               <span style={{ fontSize: '7.5px', fontWeight: '700', color: '#a78bfa', background: 'rgba(167, 139, 250, 0.15)', padding: '0px 3px', borderRadius: '3px' }}>BETA</span>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', flex: 1, minHeight: 0, overflow: 'hidden', margin: '2px 0', justifyContent: 'center' }}>
-              <div style={{ fontSize: '9px', color: '#fff', fontStyle: 'italic', lineHeight: '1.25', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+              <div style={{ fontSize: '9px', color: 'var(--color-app-text)', fontStyle: 'italic', lineHeight: '1.25', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                 "If you complete Authentication first, Deployment can be finished today."
               </div>
             </div>
@@ -386,18 +386,18 @@ export default function DashboardPage() {
         {/* ── ROW 2 ── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', minHeight: 0 }}>
           {/* CARD 1: SPRINT PROGRESS */}
-          <div className="card" style={{ background: '#0f1322', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
+          <div className="card" style={{ background: 'var(--color-app-surface)', border: '1px solid var(--color-app-border)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifySelf: 'start', justifyContent: 'space-between', width: '100%' }}>
-              <span style={{ fontSize: '10px', fontWeight: '700', color: '#fff' }}>Sprint 4</span>
-              <span style={{ fontSize: '8px', color: '#8c98ad' }}>3 days left</span>
+              <span style={{ fontSize: '10px', fontWeight: '700', color: 'var(--color-app-text)' }}>Sprint 4</span>
+              <span style={{ fontSize: '8px', color: 'var(--color-app-muted)' }}>3 days left</span>
             </div>
 
             <div>
               <div style={{ display: 'flex', justifySelf: 'space-between', justifyContent: 'space-between', fontSize: '9px', marginBottom: '2px' }}>
-                <span style={{ color: '#8c98ad' }}>Progress</span>
-                <span style={{ color: '#fff', fontWeight: '700' }}>82%</span>
+                <span style={{ color: 'var(--color-app-muted)' }}>Progress</span>
+                <span style={{ color: 'var(--color-app-text)', fontWeight: '700' }}>82%</span>
               </div>
-              <div style={{ height: '3px', background: 'rgba(255,255,255,0.03)', borderRadius: '2px', overflow: 'hidden' }}>
+              <div style={{ height: '3px', background: 'var(--color-app-border)', borderRadius: '2px', overflow: 'hidden' }}>
                 <div style={{ width: '82%', height: '100%', background: '#8b5cf6' }} />
               </div>
             </div>
@@ -408,34 +408,34 @@ export default function DashboardPage() {
           </div>
 
           {/* CARD 2: ACTIVE PROJECTS */}
-          <div className="card" style={{ background: '#0f1322', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
+          <div className="card" style={{ background: 'var(--color-app-surface)', border: '1px solid var(--color-app-border)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifySelf: 'start', justifyContent: 'space-between', width: '100%' }}>
-              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#8c98ad' }}>Active Projects</span>
+              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-app-muted)' }}>Active Projects</span>
               <a href="#projects" style={{ fontSize: '8.5px', color: '#8b5cf6', textDecoration: 'none' }}>View all</a>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, justifyContent: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <img src="/logo-icon.svg" alt="" style={{ width: 12, height: 12 }} />
-                <span style={{ fontSize: '10px', color: '#fff', fontWeight: '700' }}>DevFlow (72%)</span>
+                <span style={{ fontSize: '10px', color: 'var(--color-app-text)', fontWeight: '700' }}>DevFlow (72%)</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <div style={{ width: '12px', height: '12px', background: '#f59e0b', borderRadius: '3px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '7px', fontWeight: 'bold' }}>S</div>
-                <span style={{ fontSize: '10px', color: '#fff', fontWeight: '700' }}>Swadify (45%)</span>
+                <span style={{ fontSize: '10px', color: 'var(--color-app-text)', fontWeight: '700' }}>Swadify (45%)</span>
               </div>
             </div>
           </div>
 
           {/* CARD 3: OPEN ISSUES */}
-          <div className="card" style={{ background: '#0f1322', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
+          <div className="card" style={{ background: 'var(--color-app-surface)', border: '1px solid var(--color-app-border)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifySelf: 'start', justifyContent: 'space-between', width: '100%' }}>
-              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#8c98ad' }}>Open Issues</span>
+              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-app-muted)' }}>Open Issues</span>
               <a href="#issues" style={{ fontSize: '8.5px', color: '#8b5cf6', textDecoration: 'none' }}>View all</a>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', flex: 1, minHeight: 0, overflow: 'hidden', justifyContent: 'center' }}>
-              <div style={{ fontSize: '9.5px', color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>• Auth Error on Login</div>
-              <div style={{ fontSize: '9.5px', color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>• Render Deploy Failing</div>
+              <div style={{ fontSize: '9.5px', color: 'var(--color-app-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>• Auth Error on Login</div>
+              <div style={{ fontSize: '9.5px', color: 'var(--color-app-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>• Render Deploy Failing</div>
             </div>
           </div>
         </div>
@@ -443,14 +443,14 @@ export default function DashboardPage() {
         {/* ── ROW 3 ── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', minHeight: 0 }}>
           {/* CARD 1: GITHUB ACTIVITY */}
-          <div className="card" style={{ background: '#0f1322', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
+          <div className="card" style={{ background: 'var(--color-app-surface)', border: '1px solid var(--color-app-border)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifySelf: 'start', justifyContent: 'space-between', width: '100%' }}>
-              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#8c98ad' }}>GitHub Activity</span>
+              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-app-muted)' }}>GitHub Activity</span>
               <span style={{ fontSize: '8.5px', color: '#8b5cf6' }}>This Week</span>
             </div>
 
             <div style={{ display: 'flex', justifySelf: 'space-between', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '11px', fontWeight: '800', color: '#fff' }}>23 Commits</span>
+              <span style={{ fontSize: '11px', fontWeight: '800', color: 'var(--color-app-text)' }}>23 Commits</span>
               <span style={{ fontSize: '8px', color: '#10b981', background: 'rgba(16,185,129,0.1)', padding: '0px 3px', borderRadius: '3px' }}>+12%</span>
             </div>
 
@@ -463,7 +463,7 @@ export default function DashboardPage() {
                     flex: 1,
                     height: '6px',
                     borderRadius: '1px',
-                    background: v > 6 ? '#10b981' : v > 3 ? '#047857' : v > 0 ? '#065f46' : 'rgba(255,255,255,0.02)'
+                    background: v > 6 ? '#10b981' : v > 3 ? '#047857' : v > 0 ? '#065f46' : 'var(--color-app-surface-2)'
                   }}
                 />
               ))}
@@ -471,15 +471,15 @@ export default function DashboardPage() {
           </div>
 
           {/* CARD 2: CODING TIME */}
-          <div className="card" style={{ background: '#0f1322', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
+          <div className="card" style={{ background: 'var(--color-app-surface)', border: '1px solid var(--color-app-border)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifySelf: 'start', justifyContent: 'space-between', width: '100%' }}>
-              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#8c98ad' }}>Coding Time</span>
+              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-app-muted)' }}>Coding Time</span>
               <span style={{ fontSize: '8.5px', color: '#8b5cf6' }}>This Week</span>
             </div>
 
             <div style={{ display: 'flex', justifySelf: 'space-between', justifyContent: 'space-between', alignItems: 'center', flex: 1 }}>
-              <span style={{ fontSize: '12px', fontWeight: '900', color: '#fff' }}>30h 45m</span>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', fontSize: '8px', color: '#8c98ad' }}>
+              <span style={{ fontSize: '12px', fontWeight: '900', color: 'var(--color-app-text)' }}>30h 45m</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', fontSize: '8px', color: 'var(--color-app-muted)' }}>
                 <span>• React: 14h</span>
                 <span>• Node: 9h</span>
               </div>
@@ -487,15 +487,15 @@ export default function DashboardPage() {
           </div>
 
           {/* CARD 3: UPCOMING EVENTS */}
-          <div className="card" style={{ background: '#0f1322', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
+          <div className="card" style={{ background: 'var(--color-app-surface)', border: '1px solid var(--color-app-border)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifySelf: 'start', justifyContent: 'space-between', width: '100%' }}>
-              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#8c98ad' }}>Upcoming Events</span>
+              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-app-muted)' }}>Upcoming Events</span>
               <span style={{ fontSize: '8.5px', color: '#8b5cf6' }}>This Week</span>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', flex: 1, minHeight: 0, overflow: 'hidden', justifyContent: 'center' }}>
-              <div style={{ fontSize: '9.5px', color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>• 17 JUL: Team Standup</div>
-              <div style={{ fontSize: '9.5px', color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>• 17 JUL: Deploy Backend</div>
+              <div style={{ fontSize: '9.5px', color: 'var(--color-app-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>• 17 JUL: Team Standup</div>
+              <div style={{ fontSize: '9.5px', color: 'var(--color-app-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>• 17 JUL: Deploy Backend</div>
             </div>
           </div>
         </div>
@@ -503,20 +503,20 @@ export default function DashboardPage() {
         {/* ── ROW 4 ── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', minHeight: 0 }}>
           {/* CARD 1: DEPLOYMENTS */}
-          <div className="card" style={{ background: '#0f1322', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
+          <div className="card" style={{ background: 'var(--color-app-surface)', border: '1px solid var(--color-app-border)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
               <Layers size={12} style={{ color: '#10b981' }} />
-              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#8c98ad' }}>Deployments</span>
+              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-app-muted)' }}>Deployments</span>
             </div>
 
             <div style={{ display: 'flex', justifySelf: 'space-between', justifyContent: 'space-between', alignItems: 'center', flex: 1 }}>
               <div>
-                <div style={{ fontSize: '10px', fontWeight: '700', color: '#fff' }}>DevFlow Backend</div>
+                <div style={{ fontSize: '10px', fontWeight: '700', color: 'var(--color-app-text)' }}>DevFlow Backend</div>
                 <div style={{ fontSize: '7.5px', color: '#10b981', marginTop: '1px', display: 'flex', alignItems: 'center', gap: '3px' }}>
                   <span style={{ width: '3px', height: '3px', borderRadius: '50%', background: '#10b981' }} /> Live
                 </div>
               </div>
-              <span style={{ fontSize: '8px', color: '#8c98ad' }}>2h ago</span>
+              <span style={{ fontSize: '8px', color: 'var(--color-app-muted)' }}>2h ago</span>
             </div>
 
             <a href="#deployments" style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '9px', color: '#8b5cf6', textDecoration: 'none', fontWeight: '700' }}>
@@ -525,18 +525,18 @@ export default function DashboardPage() {
           </div>
 
           {/* CARD 2: RECENT COMMITS */}
-          <div className="card" style={{ background: '#0f1322', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
+          <div className="card" style={{ background: 'var(--color-app-surface)', border: '1px solid var(--color-app-border)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <GithubIcon size={12} style={{ color: '#fff' }} />
-              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#8c98ad' }}>Recent Commits</span>
+              <GithubIcon size={12} style={{ color: 'var(--color-app-text)' }} />
+              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-app-muted)' }}>Recent Commits</span>
             </div>
 
             <div style={{ display: 'flex', justifySelf: 'space-between', justifyContent: 'space-between', alignItems: 'center', flex: 1 }}>
               <div>
-                <div style={{ fontSize: '10px', fontWeight: '700', color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100px' }}>Fix: OAuth callback</div>
+                <div style={{ fontSize: '10px', fontWeight: '700', color: 'var(--color-app-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100px' }}>Fix: OAuth callback</div>
                 <div style={{ fontSize: '7.5px', color: '#8b5cf6', fontFamily: 'monospace', marginTop: '1px' }}>a7f4d2e</div>
               </div>
-              <span style={{ fontSize: '8px', color: '#8c98ad' }}>27m ago</span>
+              <span style={{ fontSize: '8px', color: 'var(--color-app-muted)' }}>27m ago</span>
             </div>
 
             <a href="#github" style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '9px', color: '#8b5cf6', textDecoration: 'none', fontWeight: '700' }}>
@@ -545,18 +545,18 @@ export default function DashboardPage() {
           </div>
 
           {/* CARD 3: NOTIFICATIONS */}
-          <div className="card" style={{ background: '#0f1322', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
+          <div className="card" style={{ background: 'var(--color-app-surface)', border: '1px solid var(--color-app-border)', borderRadius: '10px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
               <Bell size={12} style={{ color: '#f59e0b' }} />
-              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#8c98ad' }}>Notifications</span>
+              <span style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-app-muted)' }}>Notifications</span>
             </div>
 
             <div style={{ display: 'flex', justifySelf: 'space-between', justifyContent: 'space-between', alignItems: 'center', flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                 <CheckCircle2 size={10} style={{ color: '#10b981' }} />
-                <span style={{ fontSize: '9.5px', color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100px' }}>PR #14 has been merged</span>
+                <span style={{ fontSize: '9.5px', color: 'var(--color-app-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100px' }}>PR #14 has been merged</span>
               </div>
-              <span style={{ fontSize: '8px', color: '#8c98ad' }}>1h ago</span>
+              <span style={{ fontSize: '8px', color: 'var(--color-app-muted)' }}>1h ago</span>
             </div>
 
             <a href="#notifications" style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '9px', color: '#8b5cf6', textDecoration: 'none', fontWeight: '700' }}>
