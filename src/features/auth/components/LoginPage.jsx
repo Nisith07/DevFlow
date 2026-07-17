@@ -44,8 +44,14 @@ export default function LoginPage() {
     window.location.assign(`${API_URL}/api/auth/google`)
   }
 
+  const handleOverlayClick = (e) => {
+    if (e.target.classList.contains('auth-page-container')) {
+      navigate('/')
+    }
+  }
+
   return (
-    <div className="auth-page-container">
+    <div className="auth-page-container" onClick={handleOverlayClick}>
       <section
         className="auth-modal"
         role="dialog"

@@ -16,11 +16,8 @@ import AIAssistantPage from '@/features/ai/AIAssistantPage'
 const router = createBrowserRouter([
   {
     path: '/',
+    element: <LandingPage />,
     children: [
-      {
-        index: true,
-        element: <LandingPage />,
-      },
       {
         path: 'login',
         element: <LoginPage />,
@@ -29,46 +26,46 @@ const router = createBrowserRouter([
         path: 'register',
         element: <RegisterPage />,
       },
+    ],
+  },
+  {
+    element: (
+      <AuthGuard>
+        <AppLayout />
+      </AuthGuard>
+    ),
+    children: [
       {
-        element: (
-          <AuthGuard>
-            <AppLayout />
-          </AuthGuard>
-        ),
-        children: [
-          {
-            path: 'dashboard',
-            element: <DashboardPage />,
-          },
-          {
-            path: 'projects',
-            element: <ProjectsPage />,
-          },
-          {
-            path: 'tasks',
-            element: <TasksPage />,
-          },
-          {
-            path: 'planner',
-            element: <PlannerPage />,
-          },
-          {
-            path: 'notes',
-            element: <NotesPage />,
-          },
-          {
-            path: 'activity',
-            element: <ActivityPage />,
-          },
-          {
-            path: 'analytics',
-            element: <AnalyticsPage />,
-          },
-          {
-            path: 'ai',
-            element: <AIAssistantPage />,
-          },
-        ],
+        path: 'dashboard',
+        element: <DashboardPage />,
+      },
+      {
+        path: 'projects',
+        element: <ProjectsPage />,
+      },
+      {
+        path: 'tasks',
+        element: <TasksPage />,
+      },
+      {
+        path: 'planner',
+        element: <PlannerPage />,
+      },
+      {
+        path: 'notes',
+        element: <NotesPage />,
+      },
+      {
+        path: 'activity',
+        element: <ActivityPage />,
+      },
+      {
+        path: 'analytics',
+        element: <AnalyticsPage />,
+      },
+      {
+        path: 'ai',
+        element: <AIAssistantPage />,
       },
     ],
   },

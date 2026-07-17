@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams, Outlet } from 'react-router-dom'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import Navbar    from '@/shared/components/Navbar'
 import Hero      from './components/Hero'
@@ -46,6 +46,10 @@ export default function LandingPage() {
         <CtaBand onLoginClick={() => navigate('/register')} />
         <Footer />
       </main>
+
+      {/* Login / Register modals render here */}
+      <Outlet />
     </div>
   )
 }
+
