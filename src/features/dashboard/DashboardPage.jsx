@@ -16,6 +16,8 @@ import {
   CheckCircle2
 } from 'lucide-react'
 import { useAuth } from '@/features/auth/hooks/useAuth'
+import { useDashboard, useCompleteTask } from '@/features/dashboard/hooks/useDashboard'
+import { useProjects } from '@/features/projects/hooks/useProjects'
 
 const GithubIcon = ({ size = 12 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -28,21 +30,39 @@ export default function DashboardPage() {
   const cleanName = user?.name ? user.name.replace(/:+$/, '') : 'Nisith'
   const firstName = cleanName.split(' ')[0]
 
-  // Mock State for interactivity
+  // Dynamic backend queries
+  const { data: dashboardData, isLoading: dashboardLoading } = useDashboard()
+  const { projects, isLoading: projectsLoading } = useProjects()
+  const completeTaskMutation = useCompleteTask()
+
+  // Fallback initial list state
   const [tasks, setTasks] = useState([
-    { id: 1, title: 'Finish Authentication', priority: 'High', completed: false },
-    { id: 2, title: 'Fix Render Deployment', priority: 'High', completed: false },
-    { id: 3, title: 'Push Backend Changes', priority: 'Medium', completed: false },
-    { id: 4, title: 'Review PR #14', priority: 'Medium', completed: false },
+    { id: 'mock-1', title: 'Finish Authentication', priority: 'High', completed: false, status: 'todo' },
+    { id: 'mock-2', title: 'Fix Render Deployment', priority: 'High', completed: false, status: 'todo' },
+    { id: 'mock-3', title: 'Push Backend Changes', priority: 'Medium', completed: false, status: 'todo' },
+    { id: 'mock-4', title: 'Review PR #14', priority: 'Medium', completed: false, status: 'todo' },
   ])
 
-  const toggleTask = (id) => {
-    setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t))
+  // Bind live tasks or mock fallbacks
+  const dbTasks = dashboardData?.todayTasks || []
+  const displayTasks = dbTasks.length > 0 ? dbTasks : tasks
+
+  const toggleTask = async (id) => {
+    // Check if it is a mock task
+    if (String(id).startsWith('mock-')) {
+      setTasks(prev => prev.map(t => t.id === id ? { ...t, completed: !t.completed, status: t.completed ? 'todo' : 'done' } : t))
+      return
+    }
+    try {
+      await completeTaskMutation.mutateAsync(id)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   // Calculate completed tasks for today's focus card
-  const completedCount = tasks.filter(t => t.completed).length
-  const totalTasks = tasks.length
+  const completedCount = displayTasks.filter(t => t.status === 'done' || t.completed).length
+  const totalTasks = displayTasks.length
 
   return (
     <div className="dashboard-viewport-fit" style={{
@@ -280,25 +300,28 @@ export default function DashboardPage() {
               </div>
 
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '3px', minWidth: 0, overflow: 'hidden' }}>
-                {tasks.map(t => (
-                  <label key={t.id} style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', minWidth: 0 }}>
-                    <input
-                      type="checkbox"
-                      checked={t.completed}
-                      onChange={() => toggleTask(t.id)}
-                      style={{ accentColor: '#8b5cf6', width: '10px', height: '10px', cursor: 'pointer', flexShrink: 0 }}
-                    />
-                    <span style={{
-                      fontSize: '9px',
-                      textDecoration: t.completed ? 'line-through' : 'none',
-                      color: t.completed ? '#4a5568' : '#e8ecf1',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                      width: '100%'
-                    }}>{t.title}</span>
-                  </label>
-                ))}
+                {displayTasks.map(t => {
+                  const isDone = t.status === 'done' || !!t.completed
+                  return (
+                    <label key={t.id} style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', minWidth: 0 }}>
+                      <input
+                        type="checkbox"
+                        checked={isDone}
+                        onChange={() => toggleTask(t.id)}
+                        style={{ accentColor: '#8b5cf6', width: '10px', height: '10px', cursor: 'pointer', flexShrink: 0 }}
+                      />
+                      <span style={{
+                        fontSize: '9px',
+                        textDecoration: isDone ? 'line-through' : 'none',
+                        color: isDone ? '#4a5568' : '#e8ecf1',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        width: '100%'
+                      }}>{t.title}</span>
+                    </label>
+                  )
+                })}
               </div>
             </div>
 
