@@ -46,8 +46,24 @@ export default function Navbar() {
     setMenuOpen(false)
     
     if (location.pathname !== '/') {
-      // If we are not on the landing page, navigate to '/' with hash
       navigate(`/#${sectionId}`)
+      return
+    }
+
+    const isMobile = window.innerWidth <= 768 || 'ontouchstart' in window
+    if (!isMobile) {
+      const sectionIndices = {
+        'home': 0,
+        'features': 1,
+        'how-it-works': 2,
+        'about': 3
+      }
+      const idx = sectionIndices[sectionId] !== undefined ? sectionIndices[sectionId] : 0
+      window.scrollTo({
+        top: window.innerHeight * idx,
+        behavior: 'smooth'
+      })
+      setActiveSection(sectionId)
       return
     }
 
