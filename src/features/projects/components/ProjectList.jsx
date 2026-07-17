@@ -27,8 +27,8 @@ export default function ProjectList({ projects, isLoading, onEdit, onDelete, onC
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-        gap: 20,
+        gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+        gap: 24,
       }}
     >
       {projects.map((project) => (
