@@ -1,20 +1,16 @@
 import { useState } from 'react'
 import {
-  Search,
-  Plus,
-  Bell,
   ArrowRight,
   Sparkles,
-  Clock,
   AlertCircle,
-  Code,
-  Server,
   CheckSquare,
   Flame,
   Calendar,
   Layers,
   CheckCircle2
 } from 'lucide-react'
+import DashboardHeader from './components/DashboardHeader'
+import QuickActions from './components/QuickActions'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { useDashboard, useCompleteTask } from '@/features/dashboard/hooks/useDashboard'
 import { useProjects } from '@/features/projects/hooks/useProjects'
@@ -78,196 +74,16 @@ export default function DashboardPage() {
       boxSizing: 'border-box'
     }}>
 
-      {/* ── HEADER ────────────────────────────────────────────────── */}
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '10px',
-        flexShrink: 0
-      }}>
-        <div>
-          <h1 style={{
-            fontSize: '19px',
-            fontWeight: '900',
-            letterSpacing: '-0.03em',
-            margin: '0 0 1px',
-            color: 'var(--color-app-text)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '5px'
-          }}>
-            Good afternoon, {firstName}! <span style={{ animation: 'wave 2s infinite' }}>👋</span>
-          </h1>
-          <p style={{ fontSize: '10.5px', color: 'var(--color-app-muted)', margin: 0 }}>
-            Let's ship something amazing today.
-          </p>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          {/* Search Box */}
-          <div style={{
-            background: 'var(--color-app-surface-2)',
-            border: '1px solid var(--color-app-border-bright)',
-            borderRadius: '6px',
-            padding: '5px 10px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            width: '180px'
-          }}>
-            <Search size={12} style={{ color: 'var(--color-app-faint)' }} />
-            <input
-              type="text"
-              placeholder="Search anything..."
-              style={{
-                background: 'transparent',
-                border: 'none',
-                outline: 'none',
-                color: 'var(--color-app-text)',
-                fontSize: '11px',
-                width: '100%'
-              }}
-            />
-            <span style={{
-              fontSize: '8px',
-              color: 'var(--color-app-faint)',
-              background: 'var(--color-app-border)',
-              padding: '1px 3px',
-              borderRadius: '3px',
-              fontFamily: 'monospace'
-            }}>⌘K</span>
-          </div>
-
-          {/* Plus Button */}
-          <button style={{
-            background: 'rgba(139,92,246,0.12)',
-            border: '1px solid rgba(139,92,246,0.25)',
-            color: '#a78bfa',
-            width: '26px',
-            height: '26px',
-            borderRadius: '6px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer'
-          }}>
-            <Plus size={12} />
-          </button>
-
-          {/* Notifications Button */}
-          <button style={{
-            background: 'var(--color-app-surface-2)',
-            border: '1px solid var(--color-app-border-bright)',
-            color: 'var(--color-app-muted)',
-            width: '26px',
-            height: '26px',
-            borderRadius: '6px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'relative',
-            cursor: 'pointer'
-          }}>
-            <Bell size={12} />
-            <span style={{
-              position: 'absolute',
-              top: '5px',
-              right: '5px',
-              width: '8px',
-              height: '8px',
-              background: '#ef4444',
-              borderRadius: '50%',
-              border: '1.5px solid var(--color-app-bg)',
-              fontSize: '6px',
-              color: 'var(--color-app-text)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: 'bold'
-            }}>3</span>
-          </button>
-
-          {/* Profile Picture */}
-          <div style={{
-            width: '26px',
-            height: '26px',
-            borderRadius: '50%',
-            overflow: 'hidden',
-            border: '1.5px solid var(--color-app-border-bright)'
-          }}>
-            {user?.avatarUrl ? (
-              <img src={user.avatarUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            ) : (
-              <div style={{
-                width: '100%',
-                height: '100%',
-                background: 'var(--color-app-surface-2)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '10px',
-                fontWeight: 'bold'
-              }}>
-                N
-              </div>
-            )}
-          </div>
-        </div>
-      </header>
-
-      {/* ── QUICK ACTIONS ROW ────────────────────────────────────── */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(6, 1fr)',
-        gap: '8px',
-        marginBottom: '10px',
-        flexShrink: 0
-      }}>
-        {[
-          { label: 'New Project', sub: 'Create new project', icon: Plus, color: 'rgba(139,92,246,0.12)', border: 'rgba(139,92,246,0.2)', text: '#a78bfa' },
-          { label: 'New Task', sub: 'Add a task', icon: Plus, color: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.2)', text: '#34d399' },
-          { label: 'Generate Code', sub: 'AI Code Generation', icon: Code, color: 'rgba(6,182,212,0.12)', border: 'rgba(6,182,212,0.2)', text: '#22d3ee' },
-          { label: 'API', sub: 'Create API', icon: Server, color: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.2)', text: '#34d399' },
-          { label: 'Open GitHub', sub: 'View Repos', icon: GithubIcon, color: 'var(--color-app-surface-2)', border: 'var(--color-app-border-bright)', text: 'var(--color-app-text)' },
-          { label: 'Focus Mode', sub: 'Start Session', icon: Clock, color: 'rgba(59,130,246,0.12)', border: 'rgba(59,130,246,0.2)', text: '#60a5fa' },
-        ].map((act, i) => (
-          <button
-            key={i}
-            style={{
-              background: 'var(--color-app-surface)',
-              border: '1px solid var(--color-app-border)',
-              borderRadius: '7px',
-              padding: '6px 8px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              cursor: 'pointer',
-              textAlign: 'left',
-              boxSizing: 'border-box'
-            }}
-          >
-            <div style={{
-              width: '20px',
-              height: '20px',
-              borderRadius: '5px',
-              background: act.color,
-              border: `1px solid ${act.border}`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: act.text,
-              flexShrink: 0
-            }}>
-              <act.icon size={10} />
-            </div>
-            <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: '10px', fontWeight: '700', color: 'var(--color-app-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{act.label}</div>
-              <div style={{ fontSize: '8px', color: 'var(--color-app-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{act.sub}</div>
-            </div>
-          </button>
-        ))}
-      </div>
+      {/* ── HEADER & QUICK ACTIONS ─────────────────────────────────── */}
+      <DashboardHeader onNewTask={() => {}} />
+      <QuickActions 
+        onNewProject={() => console.log('New Project')}
+        onNewTask={() => console.log('New Task')}
+        onGenerateCode={() => console.log('Generate Code')}
+        onAPI={() => console.log('API')}
+        onGithub={() => console.log('GitHub')}
+        onFocusMode={() => console.log('Focus Mode')}
+      />
 
       {/* ── DASHBOARD GRID ───────────────────────────────────────── */}
       <div style={{
