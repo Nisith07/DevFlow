@@ -106,3 +106,25 @@ export function useTasks(filters = {}) {
     deleteSubtask: deleteSubtaskMutation.mutateAsync,
   }
 }
+
+export function useReorderTasks() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (updates) => {
+      const { data } = await api.patch('/tasks/reorder', { updates })
+      return data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tasks'] })
+    },
+  })
+}
+
+export function useEstimateTask() {
+  return useMutation({
+    mutationFn: async ({ title, description }) => {
+      const { data } = await api.post('/ai/estimate-task', { title, description })
+      return data.data
+    },
+  })
+}

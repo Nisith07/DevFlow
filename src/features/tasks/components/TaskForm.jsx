@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { X, LoaderCircle } from 'lucide-react'
+import { X, LoaderCircle, Sparkles } from 'lucide-react'
 import { PRIORITY_ORDER } from '@/shared/constants/priorities'
 import { STATUS_ORDER } from '@/shared/constants/taskStatuses'
 import { useProjects } from '@/features/projects/hooks/useProjects'
+import { useEstimateTask } from '../hooks/useTasks'
 
 const PRIORITY_LABELS = { none: 'None', low: 'Low', medium: 'Medium', high: 'High', urgent: 'Urgent' }
 const STATUS_LABELS   = { todo: 'To Do', in_progress: 'In Progress', in_review: 'In Review', done: 'Done', cancelled: 'Cancelled' }
@@ -12,16 +13,29 @@ const STATUS_LABELS   = { todo: 'To Do', in_progress: 'In Progress', in_review: 
  */
 export default function TaskForm({ task, onClose, onSubmit, isSubmitting }) {
   const { projects } = useProjects()
+  const { mutateAsync: estimateTask, isPending: isEstimating } = useEstimateTask()
 
   const [title,       setTitle]       = useState(task?.title ?? '')
   const [description, setDescription] = useState(task?.description ?? '')
   const [status,      setStatus]      = useState(task?.status ?? 'todo')
   const [priority,    setPriority]    = useState(task?.priority ?? 'none')
   const [project,     setProject]     = useState(task?.project ?? '')
+  const [sprint,      setSprint]      = useState(task?.sprint ?? '')
+  const [aiEstimate,  setAiEstimate]  = useState(task?.aiEstimate ?? '')
   const [dueDate,     setDueDate]     = useState(
     task?.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : ''
   )
   const [isToday, setIsToday] = useState(task?.isToday ?? false)
+
+  const handleEstimate = async () => {
+    if (!title.trim()) return alert('Please enter a task title first.')
+    try {
+      const result = await estimateTask({ title, description })
+      if (result?.estimate) setAiEstimate(result.estimate)
+    } catch (err) {
+      console.error('Estimate failed', err)
+    }
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -32,6 +46,8 @@ export default function TaskForm({ task, onClose, onSubmit, isSubmitting }) {
       status,
       priority,
       project:     project || undefined,
+      sprint:      sprint || undefined,
+      aiEstimate:  aiEstimate || undefined,
       dueDate:     dueDate || null,
       isToday,
     })
@@ -97,21 +113,66 @@ export default function TaskForm({ task, onClose, onSubmit, isSubmitting }) {
             />
           </div>
 
-          {/* Project */}
-          {projects.length > 0 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <label className="df-timer-label">Project</label>
-              <select value={project} onChange={(e) => setProject(e.target.value)} style={selectStyle}>
-                <option value="">— No project —</option>
-                {projects.map((p) => (
-                  <option key={p.id} value={p.id}>{p.icon} {p.name}</option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          {/* Status + Priority */}
+          {/* Project and Sprint */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            {projects.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label className="df-timer-label">Project</label>
+                <select value={project} onChange={(e) => setProject(e.target.value)} style={selectStyle}>
+                  <option value="">— No project —</option>
+                  {projects.map((p) => (
+                    <option key={p.id} value={p.id}>{p.icon} {p.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label className="df-timer-label">Sprint</label>
+              <input
+                value={sprint}
+                onChange={(e) => setSprint(e.target.value)}
+                placeholder="e.g. Sprint 4"
+                style={{ ...selectStyle }}
+              />
+            </div>
+          </div>
+
+          {/* AI Estimate and Status/Priority */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label className="df-timer-label" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <Sparkles size={11} color="#8b5cf6" /> AI Estimate
+              </label>
+              <div style={{ display: 'flex', gap: 6 }}>
+                <input
+                  value={aiEstimate}
+                  onChange={(e) => setAiEstimate(e.target.value)}
+                  placeholder="e.g. 2h"
+                  style={{ ...selectStyle, flex: 1 }}
+                />
+                <button
+                  type="button"
+                  onClick={handleEstimate}
+                  disabled={isEstimating}
+                  style={{
+                    background: 'rgba(139, 92, 246, 0.1)',
+                    border: '1px solid rgba(139, 92, 246, 0.2)',
+                    color: '#8b5cf6',
+                    borderRadius: 8,
+                    padding: '0 12px',
+                    cursor: isEstimating ? 'not-allowed' : 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                  title="Generate Estimate"
+                >
+                  {isEstimating ? <LoaderCircle size={14} className="auth-spinner" /> : <Sparkles size={14} />}
+                </button>
+              </div>
+            </div>
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               <label className="df-timer-label">Status</label>
               <select value={status} onChange={(e) => setStatus(e.target.value)} style={selectStyle}>

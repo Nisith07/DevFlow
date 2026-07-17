@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Plus, Search, SlidersHorizontal, X } from 'lucide-react'
+import { Plus, Search, SlidersHorizontal, X, LayoutList, KanbanSquare } from 'lucide-react'
 import PageHeader from '@/shared/components/PageHeader'
 import TaskList from './components/TaskList'
 import TaskForm from './components/TaskForm'
+import KanbanBoard from './components/KanbanBoard'
 import { useTasks } from './hooks/useTasks'
 import { useProjects } from '@/features/projects/hooks/useProjects'
 import { PRIORITY_ORDER } from '@/shared/constants/priorities'
@@ -40,6 +41,8 @@ export default function TasksPage() {
   const [formOpen,      setFormOpen]      = useState(false)
   const [editingTask,   setEditingTask]   = useState(null)
   const [isSubmitting,  setIsSubmitting]  = useState(false)
+  const [viewMode,      setViewMode]      = useState('list')
+  const [defaultStatus, setDefaultStatus] = useState('todo')
 
   const visibleTasks = search.trim()
     ? tasks.filter((t) => t.title.toLowerCase().includes(search.toLowerCase()))
@@ -54,9 +57,13 @@ export default function TasksPage() {
     setSearch('')
   }
 
-  const handleOpenCreate = () => { setEditingTask(null); setFormOpen(true) }
+  const handleOpenCreate = (status = 'todo') => { 
+    setDefaultStatus(typeof status === 'string' ? status : 'todo')
+    setEditingTask(null)
+    setFormOpen(true) 
+  }
   const handleOpenEdit   = (task) => { setEditingTask(task); setFormOpen(true) }
-  const handleClose      = () => { setFormOpen(false); setEditingTask(null) }
+  const handleClose      = () => { setFormOpen(false); setEditingTask(null); setDefaultStatus('todo') }
 
   const handleSubmit = async (data) => {
     setIsSubmitting(true)
@@ -64,7 +71,7 @@ export default function TasksPage() {
       if (editingTask) {
         await updateTask({ id: editingTask.id, ...data })
       } else {
-        await createTask(data)
+        await createTask({ ...data, status: data.status || defaultStatus })
       }
       handleClose()
     } catch (err) {
@@ -112,12 +119,12 @@ export default function TasksPage() {
   }
 
   return (
-    <div className="view-enter" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div className="view-enter" style={{ display: 'flex', flexDirection: 'column', gap: 24, height: '100%', overflow: 'hidden' }}>
       <PageHeader
         title="Tasks"
         subtitle="Track, prioritise, and complete your development work."
         action={
-          <button className="app-btn primary" onClick={handleOpenCreate}>
+          <button className="app-btn primary" onClick={() => handleOpenCreate('todo')}>
             <Plus size={16} />
             <span>New Task</span>
           </button>
@@ -216,27 +223,43 @@ export default function TasksPage() {
           </button>
         )}
 
-        {/* Active filter count indicator */}
-        {(hasFilters || search) && (
-          <span style={{ fontSize: 12, color: 'var(--color-app-faint)', display: 'flex', alignItems: 'center', gap: 4 }}>
-            <SlidersHorizontal size={13} />
-            {visibleTasks.length} task{visibleTasks.length !== 1 ? 's' : ''} shown
-          </span>
-        )}
+        <div style={{ display: 'flex', background: 'var(--color-app-surface)', borderRadius: 8, padding: 4, marginLeft: 'auto' }}>
+          <button
+            onClick={() => setViewMode('list')}
+            style={{ padding: '6px 12px', borderRadius: 6, background: viewMode === 'list' ? 'var(--color-app-bg)' : 'transparent', color: viewMode === 'list' ? '#fff' : 'var(--color-app-faint)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+          >
+            <LayoutList size={14} /> <span style={{ fontSize: 12, fontWeight: 500 }}>List</span>
+          </button>
+          <button
+            onClick={() => setViewMode('kanban')}
+            style={{ padding: '6px 12px', borderRadius: 6, background: viewMode === 'kanban' ? 'var(--color-app-bg)' : 'transparent', color: viewMode === 'kanban' ? '#fff' : 'var(--color-app-faint)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+          >
+            <KanbanSquare size={14} /> <span style={{ fontSize: 12, fontWeight: 500 }}>Kanban</span>
+          </button>
+        </div>
       </div>
 
-      {/* Task List */}
-      <TaskList
-        tasks={visibleTasks}
-        isLoading={isLoading}
-        onEdit={handleOpenEdit}
-        onDelete={handleDelete}
-        onComplete={handleComplete}
-        onAddSubtask={handleAddSubtask}
-        onToggleSubtask={handleToggleSubtask}
-        onDeleteSubtask={handleDeleteSubtask}
-        onCreateClick={handleOpenCreate}
-      />
+      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
+        {viewMode === 'list' ? (
+          <TaskList
+            tasks={visibleTasks}
+            isLoading={isLoading}
+            onEdit={handleOpenEdit}
+            onDelete={handleDelete}
+            onComplete={handleComplete}
+            onAddSubtask={handleAddSubtask}
+            onToggleSubtask={handleToggleSubtask}
+            onDeleteSubtask={handleDeleteSubtask}
+            onCreateClick={() => handleOpenCreate('todo')}
+          />
+        ) : (
+          <KanbanBoard
+            tasks={visibleTasks}
+            onEdit={handleOpenEdit}
+            onCreateClick={handleOpenCreate}
+          />
+        )}
+      </div>
 
       {/* Create / Edit form */}
       {formOpen && (
