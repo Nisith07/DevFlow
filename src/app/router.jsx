@@ -19,6 +19,7 @@ import PortfolioPage from '@/features/portfolio/PortfolioPage'
 import SnippetPage from '@/features/snippets/SnippetPage'
 import SettingsPage from '@/features/settings/SettingsPage'
 import DeploymentsPage from '@/features/deployments/DeploymentsPage'
+import IntegrationsPage from '@/features/integrations/IntegrationsPage'
 
 const router = createBrowserRouter([
   {
@@ -97,6 +98,10 @@ const router = createBrowserRouter([
       {
         path: 'deployments',
         element: <DeploymentsPage />,
+      },
+      {
+        path: 'integrations',
+        element: <IntegrationsPage />,
       },
       {
         path: 'settings',
