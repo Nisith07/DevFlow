@@ -24,6 +24,7 @@ const useAuthStore = create(
 
       // ── Setters ─────────────────────────────────────────────────────
       setUser: (user) => set({ user, loading: false, authError: null }),
+      updateUserSettings: (user) => set({ user }),
       setLoading: (loading) => set({ loading }),
       setAuthError: (authError) => set({ authError }),
 

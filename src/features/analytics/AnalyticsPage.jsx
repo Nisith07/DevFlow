@@ -1,9 +1,9 @@
 import PageHeader from '@/shared/components/PageHeader'
 import { useAnalytics } from './hooks/useAnalytics'
 import LoadingSpinner from '@/shared/components/LoadingSpinner'
-import { CheckCircle2, Clock, XCircle, TrendingUp, BarChart2, Target } from 'lucide-react'
-
-// ── Helpers ────────────────────────────────────────────────────────────────────
+import {
+  CheckCircle2, Clock, XCircle, TrendingUp, BarChart2, Target, Zap, Code2, AlertTriangle, HelpCircle
+} from 'lucide-react'
 
 const PRIORITY_COLORS = {
   urgent: 'var(--color-priority-urgent)',
@@ -29,36 +29,15 @@ const STATUS_LABELS = {
   cancelled:   'Cancelled',
 }
 
-// Build the last-N-days date list for the heatmap
-function buildDateRange(days) {
-  const arr = []
-  const now = new Date()
-  for (let i = days - 1; i >= 0; i--) {
-    const d = new Date(now)
-    d.setDate(d.getDate() - i)
-    arr.push(d.toLocaleDateString('en-CA')) // YYYY-MM-DD
-  }
-  return arr
-}
-
-// ── Sub-components ─────────────────────────────────────────────────────────────
-
 function StatCard({ icon: Icon, color, label, value, sub }) {
   return (
-    <div
-      className="card"
-      style={{
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: 14,
-      }}
-    >
+    <div className="card hover-lift" style={{ display: 'flex', alignItems: 'flex-start', gap: 14, background: 'var(--color-app-surface)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: '12px', padding: '16px' }}>
       <div
         style={{
           width: 38,
           height: 38,
           borderRadius: 10,
-          background: `${color}22`,
+          background: `${color}15`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -68,18 +47,10 @@ function StatCard({ icon: Icon, color, label, value, sub }) {
         <Icon size={18} style={{ color }} />
       </div>
       <div>
-        <p
-          style={{
-            margin: 0,
-            fontSize: 24,
-            fontWeight: 800,
-            color: 'var(--color-app-text)',
-            lineHeight: 1.1,
-          }}
-        >
+        <p style={{ margin: 0, fontSize: 24, fontWeight: '800', color: 'var(--color-app-text)', lineHeight: 1.1 }}>
           {value}
         </p>
-        <p style={{ margin: '3px 0 0', fontSize: 12, color: 'var(--color-app-muted)' }}>
+        <p style={{ margin: '3px 0 0', fontSize: 12, color: 'var(--color-app-muted)', fontWeight: '500' }}>
           {label}
         </p>
         {sub && (
@@ -92,103 +63,39 @@ function StatCard({ icon: Icon, color, label, value, sub }) {
   )
 }
 
-function HorizontalBar({ label, value, max, color }) {
-  const pct = max > 0 ? Math.round((value / max) * 100) : 0
+function MiniBarChart({ title, data, dataKey, color, labelKey, maxVal }) {
+  const max = maxVal || Math.max(...data.map(d => d[dataKey]), 1)
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-      <span
-        style={{
-          fontSize: 12,
-          color: 'var(--color-app-muted)',
-          width: 80,
-          flexShrink: 0,
-          textAlign: 'right',
-          textTransform: 'capitalize',
-        }}
-      >
-        {label}
-      </span>
-      <div
-        style={{
-          flex: 1,
-          height: 8,
-          background: 'var(--color-app-border)',
-          borderRadius: 4,
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          style={{
-            height: '100%',
-            width: `${pct}%`,
-            background: color,
-            borderRadius: 4,
-            transition: 'width 0.5s ease',
-          }}
-        />
-      </div>
-      <span
-        style={{
-          fontSize: 12,
-          color: 'var(--color-app-faint)',
-          width: 28,
-          textAlign: 'right',
-          flexShrink: 0,
-        }}
-      >
-        {value}
-      </span>
-    </div>
-  )
-}
-
-function Heatmap({ heatmap }) {
-  const DAYS = 30
-  const dates = buildDateRange(DAYS)
-  const countMap = Object.fromEntries(heatmap.map((h) => [h.date, h.count]))
-  const maxCount = Math.max(...heatmap.map((h) => h.count), 1)
-
-  return (
-    <div>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: `repeat(${DAYS}, 1fr)`,
-          gap: 3,
-        }}
-      >
-        {dates.map((d) => {
-          const count = countMap[d] ?? 0
-          const opacity = count === 0 ? 0.08 : 0.2 + (count / maxCount) * 0.8
+    <div className="card" style={{ flex: 1 }}>
+      <h4 style={{ margin: '0 0 16px 0', fontSize: '13px', fontWeight: '800', color: 'var(--color-app-text)', display: 'flex', alignItems: 'center', gap: 6 }}>
+        <BarChart2 size={13} style={{ color }} />
+        <span>{title}</span>
+      </h4>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', height: '140px', padding: '10px 0', gap: 8 }}>
+        {data.map((item, idx) => {
+          const val = item[dataKey]
+          const pct = Math.min((val / max) * 100, 100)
           return (
-            <div
-              key={d}
-              title={`${d}: ${count} task${count !== 1 ? 's' : ''} completed`}
-              style={{
-                height: 14,
-                borderRadius: 2,
-                background: `rgba(79,184,168,${opacity})`,
-                cursor: 'default',
-              }}
-            />
+            <div key={idx} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', justifyContent: 'flex-end' }}>
+              <span style={{ fontSize: '10px', color: '#fff', fontWeight: 'bold', marginBottom: '4px' }}>{val}</span>
+              <div
+                style={{
+                  width: '100%',
+                  height: `${pct}%`,
+                  background: color,
+                  borderRadius: '4px 4px 0 0',
+                  boxShadow: `0 2px 8px ${color}33`,
+                  transition: 'height 0.6s ease'
+                }}
+              />
+              <span style={{ fontSize: '10.5px', color: 'var(--color-app-faint)', marginTop: '6px', textTransform: 'uppercase', fontWeight: 'bold' }}>{item[labelKey]}</span>
+            </div>
           )
         })}
       </div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          marginTop: 6,
-        }}
-      >
-        <span style={{ fontSize: 10, color: 'var(--color-app-faint)' }}>30 days ago</span>
-        <span style={{ fontSize: 10, color: 'var(--color-app-faint)' }}>Today</span>
-      </div>
     </div>
   )
 }
-
-// ── Main Page ──────────────────────────────────────────────────────────────────
 
 export default function AnalyticsPage() {
   const { data, isLoading, error } = useAnalytics()
@@ -208,147 +115,176 @@ export default function AnalyticsPage() {
     )
   }
 
-  const { overview, statusBreakdown, priorities, projectStats, heatmap } = data
-  const maxPriority = Math.max(...priorities.map((p) => p.count), 1)
-  const maxStatus   = Math.max(...Object.values(statusBreakdown), 1)
+  const {
+    overview,
+    statusBreakdown,
+    priorities,
+    projectStats,
+    heatmap,
+    weeklyProgress,
+    codingTime,
+    githubCommits,
+    aiUsage,
+    sprintVelocity
+  } = data
+
+  const maxStatus = Math.max(...Object.values(statusBreakdown), 1)
 
   return (
-    <div className="view-enter" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div className="view-enter" style={{ display: 'flex', flexDirection: 'column', gap: 24, paddingBottom: 30 }}>
       <PageHeader
-        title="Analytics"
-        subtitle="Insights into your productivity and project health."
+        title="Analytics Workspace"
+        subtitle="Developer insights, sprint velocities, and live coding performance statistics."
       />
 
-      {/* ── Overview stat cards ─────────────────────────────────────────────── */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-          gap: 16,
-        }}
-      >
-        <StatCard
-          icon={Target}
-          color="var(--color-teal)"
-          label="Total Tasks"
-          value={overview.total}
-        />
-        <StatCard
-          icon={CheckCircle2}
-          color="var(--color-priority-low)"
-          label="Completed"
-          value={overview.done}
-          sub={`${overview.completionRate}% completion rate`}
-        />
-        <StatCard
-          icon={Clock}
-          color="var(--color-amber)"
-          label="Active"
-          value={overview.active}
-          sub="In progress or in review"
-        />
-        <StatCard
-          icon={XCircle}
-          color="var(--color-danger)"
-          label="Cancelled"
-          value={overview.cancelled}
-        />
-        <StatCard
-          icon={TrendingUp}
-          color="var(--color-teal)"
-          label="Completion Rate"
-          value={`${overview.completionRate}%`}
-          sub="All time"
-        />
+      {/* 1. OVERVIEW STATISTICS CARDS */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
+        <StatCard icon={Target} color="var(--color-teal)" label="Total Tasks" value={overview.total} />
+        <StatCard icon={CheckCircle2} color="var(--color-priority-low)" label="Completed Tasks" value={overview.done} sub={`${overview.completionRate}% completions`} />
+        <StatCard icon={Clock} color="var(--color-amber)" label="Active Tasks" value={overview.active} sub="In progress or in review" />
+        <StatCard icon={Code2} color="var(--color-teal)" label="Productivity Score" value={`${overview.productivityScore}%`} sub="Overall index rating" />
+        <StatCard icon={Zap} color="var(--color-priority-medium)" label="AI Assistance" value={aiUsage.queries} sub="Queries saved hours" />
       </div>
 
-      {/* ── Heatmap + Status breakdown ──────────────────────────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 16 }}>
-        <div className="card">
-          <p className="card-title" style={{ marginBottom: 14 }}>
-            <BarChart2 size={13} style={{ marginRight: 6, verticalAlign: -2 }} />
-            Task Completion — Last 30 Days
-          </p>
-          <Heatmap heatmap={heatmap} />
-        </div>
-
-        <div className="card" style={{ minWidth: 220 }}>
-          <p className="card-title" style={{ marginBottom: 14 }}>Status Breakdown</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {Object.entries(statusBreakdown).map(([status, count]) => (
-              <HorizontalBar
-                key={status}
-                label={STATUS_LABELS[status] ?? status}
-                value={count}
-                max={maxStatus}
-                color={STATUS_COLORS[status] ?? 'var(--color-app-faint)'}
-              />
-            ))}
+      {/* 2. PRODUCTIVITY SCORE & VELOCITY DIAL SECTION */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: 20 }}>
+        
+        {/* Productivity rating gauge dial */}
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '20px' }}>
+          <div>
+            <h4 style={{ margin: '0 0 4px 0', fontSize: '13.5px', fontWeight: '800', color: 'var(--color-app-text)' }}>Focus productivity Rating</h4>
+            <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--color-app-muted)' }}>Index of commits frequency, tasks completions and AI saves.</p>
           </div>
-        </div>
-      </div>
 
-      {/* ── Priority breakdown ──────────────────────────────────────────────── */}
-      <div className="card">
-        <p className="card-title" style={{ marginBottom: 14 }}>Tasks by Priority</p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {priorities.map(({ priority, count }) => (
-            <HorizontalBar
-              key={priority}
-              label={priority}
-              value={count}
-              max={maxPriority}
-              color={PRIORITY_COLORS[priority] ?? 'var(--color-app-border)'}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* ── Project stats ───────────────────────────────────────────────────── */}
-      {projectStats.length > 0 && (
-        <div className="card">
-          <p className="card-title" style={{ marginBottom: 14 }}>Project Progress</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {projectStats.map((proj) => (
-              <div key={proj.projectId}>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginBottom: 6,
-                  }}
-                >
-                  <span style={{ fontSize: 13, color: 'var(--color-app-text)', fontWeight: 600 }}>
-                    {proj.icon} {proj.name}
-                  </span>
-                  <span style={{ fontSize: 12, color: 'var(--color-app-muted)' }}>
-                    {proj.done}/{proj.total} · {proj.completion}%
-                  </span>
-                </div>
-                <div
-                  style={{
-                    height: 6,
-                    background: 'var(--color-app-border)',
-                    borderRadius: 4,
-                    overflow: 'hidden',
-                  }}
-                >
-                  <div
-                    style={{
-                      height: '100%',
-                      width: `${proj.completion}%`,
-                      background: proj.color || 'var(--color-teal)',
-                      borderRadius: 4,
-                      transition: 'width 0.5s ease',
-                    }}
-                  />
-                </div>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '20px 0', position: 'relative' }}>
+            {/* Glowing gauge ring */}
+            <div style={{ width: '130px', height: '130px', borderRadius: '50%', background: 'conic-gradient(var(--color-teal) 75%, rgba(255,255,255,0.03) 0%)', display: 'flex', alignItems: 'center', justifyContents: 'center', position: 'relative', boxShadow: 'inset 0 0 10px rgba(0,0,0,0.5)' }}>
+              <div style={{ width: '106px', height: '106px', borderRadius: '50%', background: '#0b0f19', margin: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 10 }}>
+                <span style={{ fontSize: '26px', fontWeight: '900', color: '#fff', textShadow: '0 0 10px rgba(79, 184, 168, 0.4)' }}>
+                  {overview.productivityScore}%
+                </span>
+                <span style={{ fontSize: '9px', textTransform: 'uppercase', fontWeight: 'bold', color: 'var(--color-teal)', letterSpacing: '0.04em', marginTop: '2px' }}>
+                  OPTIMAL
+                </span>
               </div>
-            ))}
+            </div>
+          </div>
+
+          <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: '10px', padding: '10px 14px', fontSize: '11.5px', color: 'var(--color-app-muted)', lineHeight: 1.4 }}>
+            🔥 <strong>Performance note:</strong> Task velocity is up 12% compared to last week. Continue applying AI auto-schedules to maintain focus blocks.
           </div>
         </div>
-      )}
+
+        {/* Sprint Velocity Comparison dial */}
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '20px' }}>
+          <div>
+            <h4 style={{ margin: '0 0 4px 0', fontSize: '13.5px', fontWeight: '800', color: 'var(--color-app-text)' }}>Sprint Velocity comparison</h4>
+            <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--color-app-muted)' }}>Comparison of completed sprint backlog cards vs target backlog cards.</p>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14, margin: '20px 0' }}>
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--color-app-muted)', marginBottom: 6 }}>
+                <span>Backlog completed ({sprintVelocity.current} of {sprintVelocity.target} cards)</span>
+                <span style={{ fontWeight: 'bold', color: '#fff' }}>{Math.round((sprintVelocity.current / sprintVelocity.target) * 100)}%</span>
+              </div>
+              <div style={{ height: 10, background: 'var(--color-app-border)', borderRadius: 5, overflow: 'hidden' }}>
+                <div style={{ height: '100%', width: `${(sprintVelocity.current / sprintVelocity.target) * 100}%`, background: 'var(--color-teal)', borderRadius: 5 }} />
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
+              {sprintVelocity.history.map((vel, idx) => (
+                <div key={idx} style={{ flex: 1, padding: '10px', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: '8px', textAlign: 'center' }}>
+                  <span style={{ fontSize: '10px', color: 'var(--color-app-muted)', textTransform: 'uppercase', display: 'block', marginBottom: 4 }}>Sprint {idx+1}</span>
+                  <strong style={{ fontSize: '15px', color: '#fff' }}>{vel} done</strong>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* 3. MULTI-BAR PERFORMANCE METRICS CHARTS */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
+        {/* Weekly progress Completed Tasks bar chart */}
+        <MiniBarChart
+          title="Weekly Progress (Tasks Completed)"
+          data={weeklyProgress}
+          dataKey="count"
+          color="var(--color-teal)"
+          labelKey="day"
+        />
+
+        {/* Coding Time bar chart */}
+        <MiniBarChart
+          title="Tracked Coding Time (Hours)"
+          data={codingTime}
+          dataKey="hours"
+          color="var(--color-amber)"
+          labelKey="day"
+        />
+
+        {/* GitHub commits bar chart */}
+        <MiniBarChart
+          title="GitHub Commits Activity"
+          data={githubCommits}
+          dataKey="commits"
+          color="var(--color-priority-medium)"
+          labelKey="day"
+        />
+      </div>
+
+      {/* 4. AI USAGE AND PROJECT HEALTH SUMMARY */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 20 }}>
+        
+        {/* AI Usage totals block */}
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <h4 style={{ margin: 0, fontSize: '13.5px', fontWeight: '800', color: 'var(--color-app-text)', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <Zap size={14} style={{ color: 'var(--color-amber)' }} />
+            <span>AI Copilot Usage Log</span>
+          </h4>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div style={{ padding: '16px', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: '10px' }}>
+              <span style={{ fontSize: '11px', color: 'var(--color-app-muted)', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>Queries Run</span>
+              <strong style={{ fontSize: '22px', color: '#fff' }}>{aiUsage.queries}</strong>
+            </div>
+
+            <div style={{ padding: '16px', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: '10px' }}>
+              <span style={{ fontSize: '11px', color: 'var(--color-app-muted)', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>Tokens Consumed</span>
+              <strong style={{ fontSize: '22px', color: '#fff' }}>{aiUsage.tokens.toLocaleString()}</strong>
+            </div>
+          </div>
+
+          <div style={{ flex: 1, padding: '12px 16px', background: 'rgba(79, 184, 168, 0.05)', border: '1px solid rgba(79, 184, 168, 0.1)', borderRadius: '10px', color: 'var(--color-teal)', fontSize: '12px', lineHeight: 1.5 }}>
+            🚀 <strong>Developer AI Savings:</strong> Estimated <strong>{Math.round(aiUsage.queries * 15 / 60 * 10) / 10} hours</strong> of typing, formatting, and debugging saved by using the AI Assistant and SQL Generator capabilities.
+          </div>
+        </div>
+
+        {/* Project Health Progress index */}
+        {projectStats.length > 0 && (
+          <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <h4 style={{ margin: 0, fontSize: '13.5px', fontWeight: '800', color: 'var(--color-app-text)' }}>Project Velocity Summary</h4>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, overflowY: 'auto', maxHeight: '180px' }}>
+              {projectStats.map((proj) => (
+                <div key={proj.projectId} style={{ borderBottom: '1px solid rgba(255,255,255,0.02)', paddingBottom: 10 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                    <span style={{ fontSize: '12.5px', color: 'var(--color-app-text)', fontWeight: '600' }}>{proj.icon} {proj.name}</span>
+                    <span style={{ fontSize: '11.5px', color: 'var(--color-app-muted)' }}>{proj.done}/{proj.total} done &middot; {proj.completion}%</span>
+                  </div>
+                  <div style={{ height: 6, background: 'var(--color-app-border)', borderRadius: 3, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${proj.completion}%`, background: proj.color || 'var(--color-teal)', borderRadius: 3 }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+      </div>
     </div>
   )
 }

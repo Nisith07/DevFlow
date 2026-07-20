@@ -104,6 +104,42 @@ export function useTasks(filters = {}) {
     addSubtask:   addSubtaskMutation.mutateAsync,
     updateSubtask: updateSubtaskMutation.mutateAsync,
     deleteSubtask: deleteSubtaskMutation.mutateAsync,
+    addComment: useMutation({
+      mutationFn: async ({ taskId, content }) => {
+        const { data } = await api.post(`/tasks/${taskId}/comments`, { content })
+        return data.data
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      },
+    }).mutateAsync,
+    deleteComment: useMutation({
+      mutationFn: async ({ taskId, commentId }) => {
+        const { data } = await api.delete(`/tasks/${taskId}/comments/${commentId}`)
+        return data.data
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      },
+    }).mutateAsync,
+    addAttachment: useMutation({
+      mutationFn: async ({ taskId, name, url }) => {
+        const { data } = await api.post(`/tasks/${taskId}/attachments`, { name, url })
+        return data.data
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      },
+    }).mutateAsync,
+    deleteAttachment: useMutation({
+      mutationFn: async ({ taskId, attachmentId }) => {
+        const { data } = await api.delete(`/tasks/${taskId}/attachments/${attachmentId}`)
+        return data.data
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      },
+    }).mutateAsync,
   }
 }
 

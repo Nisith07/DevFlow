@@ -1,7 +1,8 @@
 import { useRef, useCallback } from 'react'
 import {
   CheckCircle2, PlusCircle, Trash2, FolderPlus,
-  FileText, Activity, RefreshCcw, LoaderCircle
+  FileText, Activity, RefreshCcw, LoaderCircle,
+  GitCommit, Globe, Sparkles, Cpu, Users, AlertCircle
 } from 'lucide-react'
 import PageHeader from '@/shared/components/PageHeader'
 import { useActivity } from './hooks/useActivity'
@@ -17,11 +18,18 @@ const ACTION_CONFIG = {
   project_created:    { icon: FolderPlus,    color: 'var(--color-teal)',             label: 'Created project' },
   project_updated:    { icon: RefreshCcw,    color: 'var(--color-amber)',            label: 'Updated project' },
   project_deleted:    { icon: Trash2,        color: 'var(--color-danger)',           label: 'Deleted project' },
-  note_created:       { icon: FileText,      color: 'var(--color-priority-medium)', label: 'Created note' },
+  note_created:       { icon: FileText,      color: 'var(--color-priority-medium)',  label: 'Created note' },
   note_updated:       { icon: FileText,      color: 'var(--color-amber)',            label: 'Updated note' },
   note_deleted:       { icon: Trash2,        color: 'var(--color-danger)',           label: 'Deleted note' },
   planner_created:    { icon: PlusCircle,    color: 'var(--color-teal)',             label: 'Planned' },
   planner_completed:  { icon: CheckCircle2,  color: 'var(--color-priority-low)',     label: 'Completed block' },
+  issue_created:      { icon: AlertCircle,   color: 'var(--color-danger)',           label: 'Created issue' },
+  issue_closed:       { icon: CheckCircle2,  color: 'var(--color-teal)',             label: 'Closed issue' },
+  github_committed:   { icon: GitCommit,     color: '#a855f7',                       label: 'Committed code' },
+  portfolio_deployed: { icon: Globe,         color: 'var(--color-teal)',             label: 'Deployed site' },
+  ai_readme_generated: { icon: Sparkles,     color: 'var(--color-amber)',            label: 'Generated README' },
+  ai_component_generated: { icon: Cpu,       color: 'var(--color-amber)',            label: 'Generated component' },
+  team_joined:        { icon: Users,         color: 'var(--color-teal)',             label: 'Joined team' }
 }
 
 const DEFAULT_CONFIG = { icon: Activity, color: 'var(--color-app-muted)', label: 'Activity' }

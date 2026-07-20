@@ -67,27 +67,55 @@ export default function TaskCard({
             {task.title}
           </p>
 
-          {/* Meta badges */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 6 }}>
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 600,
-                textTransform: 'uppercase',
-                color: statusInfo.color,
-                background: `${statusInfo.color}18`,
-                padding: '2px 7px',
-                borderRadius: 10,
-              }}
-            >
-              {statusInfo.label}
-            </span>
-            <PriorityBadge priority={task.priority} showLabel />
-            <DueDateChip dueDate={task.dueDate} />
-            {hasSubtasks && (
-              <span style={{ fontSize: 11, color: 'var(--color-app-muted)' }}>
-                {subtasksDone}/{task.subtasks.length} subtasks
+          {/* Meta badges & Assignee */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              <span
+                style={{
+                  fontSize: 11,
+                  fontWeight: 650,
+                  textTransform: 'uppercase',
+                  color: statusInfo.color,
+                  background: `${statusInfo.color}15`,
+                  padding: '2px 7px',
+                  borderRadius: 10,
+                }}
+              >
+                {statusInfo.label}
               </span>
+              <PriorityBadge priority={task.priority} showLabel />
+              <DueDateChip dueDate={task.dueDate} />
+              {hasSubtasks && (
+                <span style={{ fontSize: 11, color: 'var(--color-app-muted)' }}>
+                  {subtasksDone}/{task.subtasks.length} subtasks
+                </span>
+              )}
+            </div>
+
+            {task.assignee && (
+              <div 
+                title={`Assigned to ${task.assignee.name}`}
+                style={{
+                  width: '22px',
+                  height: '22px',
+                  borderRadius: '50%',
+                  background: 'var(--color-violet)',
+                  color: '#fff',
+                  fontSize: '9px',
+                  fontWeight: 'bold',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  overflow: 'hidden',
+                  flexShrink: 0
+                }}
+              >
+                {task.assignee.avatarUrl ? (
+                  <img src={task.assignee.avatarUrl} alt={task.assignee.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  <span>{task.assignee.name.charAt(0)}</span>
+                )}
+              </div>
             )}
           </div>
 

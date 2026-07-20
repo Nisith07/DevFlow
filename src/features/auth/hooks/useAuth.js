@@ -9,6 +9,7 @@ export function useAuth() {
   const loading = useAuthStore((state) => state.loading)
   const login   = useAuthStore((state) => state.login)
   const logout  = useAuthStore((state) => state.logout)
+  const updateUserSettings = useAuthStore((state) => state.updateUserSettings)
 
   return {
     user,
@@ -16,5 +17,6 @@ export function useAuth() {
     isAuthenticated: !!user,
     login,
     logout,
+    updateUserSettings,
   }
 }

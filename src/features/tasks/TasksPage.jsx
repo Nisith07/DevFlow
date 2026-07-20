@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Plus, Search, SlidersHorizontal, X, LayoutList, KanbanSquare } from 'lucide-react'
+import { Plus, Search, SlidersHorizontal, X, LayoutList, KanbanSquare, Calendar } from 'lucide-react'
 import PageHeader from '@/shared/components/PageHeader'
 import TaskList from './components/TaskList'
 import TaskForm from './components/TaskForm'
 import KanbanBoard from './components/KanbanBoard'
+import CalendarView from './components/CalendarView'
 import { useTasks } from './hooks/useTasks'
 import { useProjects } from '@/features/projects/hooks/useProjects'
 import { PRIORITY_ORDER } from '@/shared/constants/priorities'
@@ -236,6 +237,12 @@ export default function TasksPage() {
           >
             <KanbanSquare size={14} /> <span style={{ fontSize: 12, fontWeight: 500 }}>Kanban</span>
           </button>
+          <button
+            onClick={() => setViewMode('calendar')}
+            style={{ padding: '6px 12px', borderRadius: 6, background: viewMode === 'calendar' ? 'var(--color-app-bg)' : 'transparent', color: viewMode === 'calendar' ? '#fff' : 'var(--color-app-faint)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+          >
+            <Calendar size={14} /> <span style={{ fontSize: 12, fontWeight: 500 }}>Calendar</span>
+          </button>
         </div>
       </div>
 
@@ -252,11 +259,16 @@ export default function TasksPage() {
             onDeleteSubtask={handleDeleteSubtask}
             onCreateClick={() => handleOpenCreate('todo')}
           />
-        ) : (
+        ) : viewMode === 'kanban' ? (
           <KanbanBoard
             tasks={visibleTasks}
             onEdit={handleOpenEdit}
             onCreateClick={handleOpenCreate}
+          />
+        ) : (
+          <CalendarView
+            tasks={visibleTasks}
+            onEdit={handleOpenEdit}
           />
         )}
       </div>

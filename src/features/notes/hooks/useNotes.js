@@ -9,6 +9,8 @@ export function useNotes(filters = {}) {
   if (filters.tag)     params.tag     = filters.tag
   if (filters.search)  params.search  = filters.search
   if (filters.pinned !== undefined) params.pinned = filters.pinned
+  if (filters.favorite !== undefined) params.favorite = filters.favorite
+  if (filters.folder !== undefined) params.folder = filters.folder
 
   const notesQuery = useQuery({
     queryKey: ['notes', params],

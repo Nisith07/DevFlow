@@ -139,23 +139,51 @@ export default function KanbanBoard({ tasks, onEdit, onCreateClick }) {
                               </span>
                             </div>
                             
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                              {task.priority && task.priority !== 'none' && (
-                                <span style={{ fontSize: 10, color: getPriorityColor(task.priority), border: `1px solid ${getPriorityColor(task.priority)}40`, padding: '2px 6px', borderRadius: 4 }}>
-                                  {task.priority.toUpperCase()}
-                                </span>
-                              )}
-                              
-                              {task.aiEstimate && (
-                                <span style={{ fontSize: 10, color: '#8b5cf6', display: 'flex', alignItems: 'center', gap: 3, background: 'rgba(139, 92, 246, 0.1)', padding: '2px 6px', borderRadius: 4 }}>
-                                  <Clock size={10} /> {task.aiEstimate}
-                                </span>
-                              )}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, width: '100%' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                                {task.priority && task.priority !== 'none' && (
+                                  <span style={{ fontSize: 10, color: getPriorityColor(task.priority), border: `1px solid ${getPriorityColor(task.priority)}40`, padding: '2px 6px', borderRadius: 4 }}>
+                                    {task.priority.toUpperCase()}
+                                  </span>
+                                )}
+                                
+                                {task.aiEstimate && (
+                                  <span style={{ fontSize: 10, color: '#8b5cf6', display: 'flex', alignItems: 'center', gap: 3, background: 'rgba(139, 92, 246, 0.1)', padding: '2px 6px', borderRadius: 4 }}>
+                                    <Clock size={10} /> {task.aiEstimate}
+                                  </span>
+                                )}
 
-                              {task.subtasks?.length > 0 && (
-                                <span style={{ fontSize: 10, color: 'var(--color-app-faint)', display: 'flex', alignItems: 'center', gap: 3 }}>
-                                  <CheckCircle2 size={10} /> {task.subtasks.filter(s => s.done).length}/{task.subtasks.length}
-                                </span>
+                                {task.subtasks?.length > 0 && (
+                                  <span style={{ fontSize: 10, color: 'var(--color-app-faint)', display: 'flex', alignItems: 'center', gap: 3 }}>
+                                    <CheckCircle2 size={10} /> {task.subtasks.filter(s => s.done).length}/{task.subtasks.length}
+                                  </span>
+                                )}
+                              </div>
+
+                              {task.assignee && (
+                                <div 
+                                  title={`Assigned to ${task.assignee.name}`}
+                                  style={{
+                                    width: '18px',
+                                    height: '18px',
+                                    borderRadius: '50%',
+                                    background: 'var(--color-violet)',
+                                    color: '#fff',
+                                    fontSize: '8px',
+                                    fontWeight: 'bold',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    overflow: 'hidden',
+                                    flexShrink: 0
+                                  }}
+                                >
+                                  {task.assignee.avatarUrl ? (
+                                    <img src={task.assignee.avatarUrl} alt={task.assignee.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                  ) : (
+                                    <span>{task.assignee.name.charAt(0)}</span>
+                                  )}
+                                </div>
                               )}
                             </div>
                           </div>

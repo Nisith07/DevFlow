@@ -1,14 +1,15 @@
 import { useState } from 'react'
-import { Plus, Clock, ListTodo } from 'lucide-react'
+import { Plus, Clock, ListTodo, Video, BookOpen, Briefcase, HelpCircle } from 'lucide-react'
 import { useTasks } from '@/features/tasks/hooks/useTasks'
 import LoadingSpinner from '@/shared/components/LoadingSpinner'
 
 export default function PlannerSidebar({ onScheduleTask, onCreateFreeform }) {
-  const { tasks, isLoading } = useTasks({ status: 'todo' }) // Only pull active tasks to schedule
+  const { tasks, isLoading } = useTasks()
 
   const [title, setTitle] = useState('')
   const [startTime, setStartTime] = useState('09:00')
   const [endTime, setEndTime] = useState('10:00')
+  const [type, setType] = useState('focus_task')
 
   const handleFreeformSubmit = (e) => {
     e.preventDefault()
@@ -17,6 +18,7 @@ export default function PlannerSidebar({ onScheduleTask, onCreateFreeform }) {
       title: title.trim(),
       startTime,
       endTime,
+      type,
     })
     setTitle('')
   }
@@ -24,17 +26,17 @@ export default function PlannerSidebar({ onScheduleTask, onCreateFreeform }) {
   const activeTasks = tasks.filter(t => t.status !== 'done' && t.status !== 'cancelled')
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24, width: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20, width: '100%' }}>
       {/* Quick Block Form */}
-      <div className="card">
-        <h3 className="card-title" style={{ marginBottom: 12 }}>
-          <Clock size={14} style={{ marginRight: 6, verticalAlign: -2 }} />
-          Quick Time Block
+      <div className="card" style={{ background: 'var(--color-app-surface)', border: '1px solid rgba(255,255,255,0.03)' }}>
+        <h3 className="card-title" style={{ marginBottom: 12, fontSize: '14px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <Clock size={14} style={{ color: 'var(--color-amber)' }} />
+          <span>Quick Time Block</span>
         </h3>
         <form onSubmit={handleFreeformSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           <input
             type="text"
-            placeholder="e.g. Lunch break, Gym, Standup"
+            placeholder="e.g. Team standup, Lunch, Gym"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
@@ -49,9 +51,10 @@ export default function PlannerSidebar({ onScheduleTask, onCreateFreeform }) {
               outline: 'none',
             }}
           />
+          
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
             <div>
-              <label style={{ fontSize: 10, color: 'var(--color-app-faint)', textTransform: 'uppercase' }}>Start</label>
+              <label style={{ fontSize: 10, color: 'var(--color-app-faint)', textTransform: 'uppercase', fontWeight: '600' }}>Start</label>
               <input
                 type="time"
                 value={startTime}
@@ -69,7 +72,7 @@ export default function PlannerSidebar({ onScheduleTask, onCreateFreeform }) {
               />
             </div>
             <div>
-              <label style={{ fontSize: 10, color: 'var(--color-app-faint)', textTransform: 'uppercase' }}>End</label>
+              <label style={{ fontSize: 10, color: 'var(--color-app-faint)', textTransform: 'uppercase', fontWeight: '600' }}>End</label>
               <input
                 type="time"
                 value={endTime}
@@ -87,26 +90,50 @@ export default function PlannerSidebar({ onScheduleTask, onCreateFreeform }) {
               />
             </div>
           </div>
-          <button type="submit" className="app-btn primary" style={{ width: '100%', justifyContent: 'center' }}>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <label style={{ fontSize: 10, color: 'var(--color-app-faint)', textTransform: 'uppercase', fontWeight: '600' }}>Category Type</label>
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              style={{
+                padding: '8px 10px',
+                background: 'var(--color-app-bg)',
+                border: '1px solid var(--color-app-border)',
+                borderRadius: '8px',
+                color: 'var(--color-app-text)',
+                fontSize: '13px',
+                outline: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              <option value="focus_task">Focus Task 🎯</option>
+              <option value="meeting">Meeting / Sync 👥</option>
+              <option value="routine">Routine / Admin ⚙️</option>
+              <option value="other">Other ☕</option>
+            </select>
+          </div>
+
+          <button type="submit" className="app-btn primary" style={{ width: '100%', justifyContent: 'center', marginTop: 4 }}>
             <Plus size={15} /> Add Block
           </button>
         </form>
       </div>
 
       {/* Unscheduled Tasks List */}
-      <div className="card">
-        <h3 className="card-title" style={{ marginBottom: 12 }}>
-          <ListTodo size={14} style={{ marginRight: 6, verticalAlign: -2 }} />
-          Backlog Tasks
+      <div className="card" style={{ background: 'var(--color-app-surface)', border: '1px solid rgba(255,255,255,0.03)' }}>
+        <h3 className="card-title" style={{ marginBottom: 12, fontSize: '14px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <ListTodo size={14} style={{ color: 'var(--color-teal)' }} />
+          <span>Backlog Tasks</span>
         </h3>
         {isLoading ? (
           <LoadingSpinner size={24} />
         ) : activeTasks.length === 0 ? (
-          <p style={{ fontSize: 13, color: 'var(--color-app-faint)', margin: 0, textAlign: 'center', padding: '16px 0' }}>
+          <p style={{ fontSize: 12, color: 'var(--color-app-faint)', margin: 0, textAlign: 'center', padding: '16px 0' }}>
             No active backlog tasks.
           </p>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 300, overflowY: 'auto', paddingRight: 4 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 240, overflowY: 'auto', paddingRight: 4 }}>
             {activeTasks.map((task) => (
               <div
                 key={task.id}
@@ -114,25 +141,30 @@ export default function PlannerSidebar({ onScheduleTask, onCreateFreeform }) {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  background: 'var(--color-app-surface-hover)',
+                  background: 'var(--color-app-bg)',
                   border: '1px solid var(--color-app-border)',
                   padding: '8px 10px',
-                  borderRadius: 6,
+                  borderRadius: 8,
                   gap: 8,
                 }}
               >
-                <div style={{ minWidth: 0 }}>
-                  <p style={{ fontSize: 12, fontWeight: 500, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'var(--color-app-text)' }}>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <p style={{ fontSize: 12, fontWeight: 600, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'var(--color-app-text)' }}>
                     {task.title}
                   </p>
+                  {task.project && (
+                    <span style={{ fontSize: '10px', color: 'var(--color-app-faint)' }}>
+                      {task.project.icon} {task.project.title || task.project.name}
+                    </span>
+                  )}
                 </div>
                 <button
                   className="df-check-btn"
                   onClick={() => onScheduleTask(task)}
                   title="Schedule task"
-                  style={{ color: 'var(--color-teal)' }}
+                  style={{ color: 'var(--color-teal)', padding: 4 }}
                 >
-                  <Plus size={15} />
+                  <Plus size={14} />
                 </button>
               </div>
             ))}

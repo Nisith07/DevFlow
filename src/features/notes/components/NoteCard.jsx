@@ -63,7 +63,7 @@ export default function NoteCard({ note, isActive, onSelect, onDelete, onToggleP
             whiteSpace: 'nowrap',
           }}
         >
-          {note.title || 'Untitled Note'}
+          {note.title || 'Untitled Note'} {note.isFavorite && <span style={{ color: 'var(--color-amber)', marginLeft: 4 }}>★</span>}
         </p>
 
         {/* Action buttons — shown on hover via CSS workaround */}
@@ -120,6 +120,23 @@ export default function NoteCard({ note, isActive, onSelect, onDelete, onToggleP
           flexWrap: 'wrap',
         }}
       >
+        {note.folder && (
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 3,
+              fontSize: 10,
+              fontWeight: 600,
+              color: 'var(--color-teal)',
+              background: 'rgba(79, 184, 168, 0.06)',
+              padding: '2px 6px',
+              borderRadius: 8,
+            }}
+          >
+            📂 {note.folder}
+          </span>
+        )}
         {note.tags?.slice(0, 3).map((tag) => (
           <span
             key={tag}

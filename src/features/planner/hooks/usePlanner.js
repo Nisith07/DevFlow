@@ -66,3 +66,54 @@ export function usePlanner(dateStr) {
     reorderEntries: reorderEntriesMutation.mutateAsync,
   }
 }
+
+export function useWeeklyGoals(weekIdentifier) {
+  const queryClient = useQueryClient()
+
+  const weeklyQuery = useQuery({
+    queryKey: ['weekly-goals', weekIdentifier],
+    queryFn: async () => {
+      if (!weekIdentifier) return []
+      const { data } = await api.get('/planner/weekly', { params: { weekIdentifier } })
+      return data.data
+    },
+    enabled: !!weekIdentifier,
+  })
+
+  const createGoalMutation = useMutation({
+    mutationFn: async (title) => {
+      const { data } = await api.post('/planner/weekly', { title, weekIdentifier })
+      return data.data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['weekly-goals', weekIdentifier] })
+    },
+  })
+
+  const updateGoalMutation = useMutation({
+    mutationFn: async ({ id, ...updates }) => {
+      const { data } = await api.patch(`/planner/weekly/${id}`, updates)
+      return data.data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['weekly-goals', weekIdentifier] })
+    },
+  })
+
+  const deleteGoalMutation = useMutation({
+    mutationFn: async (id) => {
+      await api.delete(`/planner/weekly/${id}`)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['weekly-goals', weekIdentifier] })
+    },
+  })
+
+  return {
+    goals: weeklyQuery.data || [],
+    isLoading: weeklyQuery.isLoading,
+    createGoal: createGoalMutation.mutateAsync,
+    updateGoal: updateGoalMutation.mutateAsync,
+    deleteGoal: deleteGoalMutation.mutateAsync,
+  }
+}
