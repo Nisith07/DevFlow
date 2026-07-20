@@ -116,17 +116,17 @@ export default function AnalyticsPage() {
   }
 
   const {
-    overview,
-    statusBreakdown,
-    priorities,
-    projectStats,
-    heatmap,
-    weeklyProgress,
-    codingTime,
-    githubCommits,
-    aiUsage,
-    sprintVelocity
-  } = data
+    overview = { total: 0, done: 0, active: 0, productivityScore: 0 },
+    statusBreakdown = {},
+    priorities = {},
+    projectStats = [],
+    heatmap = [],
+    weeklyProgress = [],
+    codingTime = [],
+    githubCommits = [],
+    aiUsage = { queries: 0, tokens: 0 },
+    sprintVelocity = { current: 0, target: 0, history: [] },
+  } = data ?? {}
 
   const maxStatus = Math.max(...Object.values(statusBreakdown), 1)
 
