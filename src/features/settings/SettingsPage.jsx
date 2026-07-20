@@ -5,6 +5,7 @@ import {
 import PageHeader from '@/shared/components/PageHeader'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { useSaveSettings } from './hooks/useSettings'
+import { getGitHubOAuthUrl } from '@/features/github/hooks/useGitHub'
 
 const TIMEZONES = ['UTC', 'GMT', 'EST', 'PST', 'IST', 'CET']
 const LANGUAGES_LIST = [
@@ -417,15 +418,24 @@ export default function SettingsPage() {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: 'var(--color-app-bg)', border: '1px solid var(--color-app-border)', borderRadius: '10px' }}>
                   <div>
                     <strong style={{ fontSize: '13px', display: 'block', color: '#fff' }}>GitHub Integration</strong>
-                    <span style={{ fontSize: '11.5px', color: 'var(--color-app-muted)' }}>Connect code commits, pull requests, and releases proxies.</span>
+                    <span style={{ fontSize: '11.5px', color: 'var(--color-app-muted)' }}>Connect via OAuth to import repositories, commits, and pull requests.</span>
                   </div>
                   <button
                     type="button"
-                    onClick={() => { setGithubConnected(!githubConnected); saveSettings.mutate({ connectedAccounts: { githubConnected: !githubConnected } }); }}
+                    onClick={() => {
+                      if (githubConnected) {
+                        // Disconnect — clear token via settings mutation
+                        setGithubConnected(false)
+                        saveSettings.mutate({ connectedAccounts: { githubConnected: false } })
+                      } else {
+                        // Redirect to GitHub OAuth
+                        window.location.href = getGitHubOAuthUrl()
+                      }
+                    }}
                     className="app-btn"
-                    style={{ color: githubConnected ? 'var(--color-danger)' : 'var(--color-teal)' }}
+                    style={{ color: githubConnected ? 'var(--color-danger)' : 'var(--color-teal)', whiteSpace: 'nowrap' }}
                   >
-                    {githubConnected ? 'Disconnect' : 'Connect Account'}
+                    {githubConnected ? 'Disconnect' : 'Connect with GitHub'}
                   </button>
                 </div>
 

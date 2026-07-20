@@ -1,26 +1,23 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '@/shared/lib/axios'
 
+const API_URL = import.meta.env.VITE_API_URL || 'https://devflow-backend-53bm.onrender.com'
+
+/**
+ * Returns the URL to redirect the browser to for GitHub OAuth.
+ * This is a full page redirect (not an axios call) — GitHub requires a real
+ * browser navigation with proper cookies/redirects.
+ */
+export function getGitHubOAuthUrl() {
+  return `${API_URL}/api/v1/github/oauth/start`
+}
+
 export function useGitHubTokenStatus() {
   return useQuery({
     queryKey: ['github-token-status'],
     queryFn: async () => {
       const { data } = await api.get('/github/token')
       return data.data
-    }
-  })
-}
-
-export function useSaveGitHubToken() {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: async (token) => {
-      const { data } = await api.post('/github/token', { token })
-      return data.data
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['github-token-status'] })
-      queryClient.invalidateQueries({ queryKey: ['github-repos'] })
     }
   })
 }
