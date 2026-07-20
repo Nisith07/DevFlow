@@ -1,321 +1,443 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Search, Plus, Bell } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import {
+  Search, Bell, Settings, LogOut, LayoutDashboard,
+  Moon, Sun, CheckCircle2, Rocket, GitPullRequest,
+  Sparkles, AlertCircle
+} from 'lucide-react'
 import { useAuth } from '@/features/auth/hooks/useAuth'
+import { getInitials } from '@/shared/lib/utils'
+import { getTheme, toggleTheme as doToggleTheme } from '@/shared/lib/theme'
 import api from '@/shared/lib/axios'
 
-export default function DashboardHeader({ onNewTask }) {
-  const { user } = useAuth()
+const GithubIcon = ({ size = 14 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+  </svg>
+)
+
+// Map notification type → icon + color + route
+function getNotifMeta(n) {
+  const t = n.type || ''
+  if (t.includes('deployment') || t.includes('deploy'))
+    return { Icon: Rocket,         color: '#2dd4bf', route: '/deployments' }
+  if (t.includes('github') || t.includes('pr') || t.includes('commit'))
+    return { Icon: GitPullRequest,  color: '#d1d5db', route: '/github' }
+  if (t.includes('task'))
+    return { Icon: CheckCircle2,    color: '#10b981', route: '/tasks' }
+  if (t.includes('issue'))
+    return { Icon: AlertCircle,     color: '#ef4444', route: '/issues' }
+  if (t.includes('ai'))
+    return { Icon: Sparkles,        color: '#f43f5e', route: '/ai' }
+  return   { Icon: Bell,            color: '#a78bfa', route: '/dashboard' }
+}
+
+function timeAgo(date) {
+  const s = Math.floor((Date.now() - new Date(date)) / 1000)
+  if (s < 60)   return 'just now'
+  if (s < 3600) return `${Math.floor(s / 60)}m ago`
+  if (s < 86400) return `${Math.floor(s / 3600)}h ago`
+  return `${Math.floor(s / 86400)}d ago`
+}
+
+export default function DashboardHeader({ onOpenPalette }) {
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
   const cleanName = user?.name ? user.name.replace(/:+$/, '') : 'Developer'
   const firstName = cleanName.split(' ')[0]
+  const [theme, setTheme] = useState(() => {
+    try { return getTheme() } catch { return 'dark' }
+  })
 
-  const [searchQuery, setSearchQuery] = useState('')
-  const [searchResults, setSearchResults] = useState({ tasks: [], projects: [] })
-  const [isSearching, setIsSearching] = useState(false)
+  const [searchQuery, setSearchQuery]             = useState('')
+  const [searchResults, setSearchResults]         = useState({ tasks: [], projects: [] })
+  const [isSearching, setIsSearching]             = useState(false)
   const [showSearchDropdown, setShowSearchDropdown] = useState(false)
   const searchRef = useRef(null)
 
-  const [notifications, setNotifications] = useState([])
+  const [notifications, setNotifications]         = useState([])
   const [showNotifications, setShowNotifications] = useState(false)
   const notifRef = useRef(null)
 
-  // Fetch notifications on mount
+  const [showProfile, setShowProfile]             = useState(false)
+  const profileRef = useRef(null)
+
+  // Fetch notifications
   useEffect(() => {
     api.get('/notifications').then(res => {
       setNotifications(res.data?.data || [])
-    }).catch(console.error)
+    }).catch(() => {})
   }, [])
 
   const unreadCount = notifications.filter(n => !n.isRead).length
 
-  // Debounced Search
+  // Debounced search
   useEffect(() => {
     if (!searchQuery.trim()) {
       setSearchResults({ tasks: [], projects: [] })
       setShowSearchDropdown(false)
       return
     }
-
     const timer = setTimeout(async () => {
       setIsSearching(true)
       try {
         const res = await api.get(`/search?q=${encodeURIComponent(searchQuery)}`)
         setSearchResults(res.data?.data || { tasks: [], projects: [] })
         setShowSearchDropdown(true)
-      } catch (e) {
-        console.error(e)
-      } finally {
-        setIsSearching(false)
-      }
+      } catch { /* silent */ }
+      finally { setIsSearching(false) }
     }, 300)
-
     return () => clearTimeout(timer)
   }, [searchQuery])
 
-  // Click outside handlers
+  // Click-outside handler (all panels)
   useEffect(() => {
-    function handleClickOutside(e) {
-      if (searchRef.current && !searchRef.current.contains(e.target)) {
-        setShowSearchDropdown(false)
-      }
-      if (notifRef.current && !notifRef.current.contains(e.target)) {
-        setShowNotifications(false)
-      }
+    const handle = (e) => {
+      if (searchRef.current && !searchRef.current.contains(e.target))   setShowSearchDropdown(false)
+      if (notifRef.current && !notifRef.current.contains(e.target))     setShowNotifications(false)
+      if (profileRef.current && !profileRef.current.contains(e.target)) setShowProfile(false)
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+    document.addEventListener('mousedown', handle)
+    return () => document.removeEventListener('mousedown', handle)
   }, [])
 
   const markAllRead = async () => {
     try {
       await api.post('/notifications/read-all')
       setNotifications(prev => prev.map(n => ({ ...n, isRead: true })))
-    } catch (e) {
-      console.error(e)
-    }
+    } catch { /* silent */ }
+  }
+
+  const markOneRead = async (id) => {
+    try {
+      await api.patch(`/notifications/${id}`, { isRead: true })
+      setNotifications(prev => prev.map(n => n._id === id ? { ...n, isRead: true } : n))
+    } catch { /* silent */ }
+  }
+
+  const handleNotifClick = (n) => {
+    markOneRead(n._id)
+    setShowNotifications(false)
+    const { route } = getNotifMeta(n)
+    navigate(route)
+  }
+
+  const handleLogout = async () => {
+    setShowProfile(false)
+    await logout()
+    navigate('/', { replace: true })
+  }
+
+  const handleToggleTheme = () => {
+    try { doToggleTheme() } catch { /* silent */ }
+    setTheme(t => t === 'dark' ? 'light' : 'dark')
+  }
+
+  const hour = new Date().getHours()
+  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
+
+  const dropdownStyle = {
+    position: 'absolute', top: '44px', right: 0,
+    background: 'var(--color-app-surface)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: '12px',
+    boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
+    zIndex: 200,
+    overflow: 'hidden',
+    animation: 'dropIn 0.15s cubic-bezier(0.16,1,0.3,1)',
   }
 
   return (
-    <header style={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: '16px',
-      flexShrink: 0
-    }}>
-      <div>
-        <h1 style={{
-          fontSize: '22px',
-          fontWeight: '800',
-          letterSpacing: '-0.02em',
-          margin: '0 0 2px',
-          color: 'var(--color-app-text)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px'
-        }}>
-          Good afternoon, {firstName}! <span style={{ animation: 'wave 2s infinite', display: 'inline-block', transformOrigin: '70% 70%' }}>👋</span>
-        </h1>
-        <p style={{ fontSize: '13px', color: 'var(--color-app-muted)', margin: 0 }}>
-          Let's ship something amazing today.
-        </p>
-      </div>
+    <>
+      <style>{`
+        @keyframes dropIn {
+          from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+      `}</style>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        {/* Search Box */}
-        <div ref={searchRef} style={{ position: 'relative' }}>
-          <div style={{
-            background: 'var(--color-app-surface-2)',
-            border: '1px solid var(--color-app-border-bright)',
-            borderRadius: '8px',
-            padding: '6px 12px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            width: '240px',
-            height: '36px',
-            boxSizing: 'border-box'
+      <header style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        marginBottom: '16px', flexShrink: 0,
+      }}>
+        {/* Greeting */}
+        <div>
+          <h1 style={{
+            fontSize: '22px', fontWeight: '800', letterSpacing: '-0.02em',
+            margin: '0 0 2px', color: 'var(--color-app-text)',
+            display: 'flex', alignItems: 'center', gap: '8px',
           }}>
-            <Search size={14} style={{ color: 'var(--color-app-faint)' }} />
-            <input
-              type="text"
-              placeholder="Search anything..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => { if (searchQuery.trim()) setShowSearchDropdown(true) }}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                outline: 'none',
-                color: 'var(--color-app-text)',
-                fontSize: '13px',
-                width: '100%'
-              }}
-            />
-            <span style={{
-              fontSize: '11px',
-              color: 'var(--color-app-faint)',
-              background: 'var(--color-app-border)',
-              padding: '2px 6px',
-              borderRadius: '4px',
-              fontFamily: 'var(--font-mono)',
-              fontWeight: 500
-            }}>⌘K</span>
-          </div>
-
-          {/* Search Dropdown */}
-          {showSearchDropdown && (
-            <div style={{
-              position: 'absolute',
-              top: '44px',
-              right: 0,
-              width: '320px',
-              background: 'var(--color-app-surface)',
-              border: '1px solid var(--color-app-border)',
-              borderRadius: '8px',
-              boxShadow: 'var(--shadow-card)',
-              zIndex: 50,
-              padding: '8px',
-              maxHeight: '400px',
-              overflowY: 'auto'
-            }}>
-              {isSearching ? (
-                <div style={{ padding: '12px', textAlign: 'center', color: 'var(--color-app-faint)', fontSize: '13px' }}>Searching...</div>
-              ) : (searchResults.tasks.length === 0 && searchResults.projects.length === 0) ? (
-                <div style={{ padding: '12px', textAlign: 'center', color: 'var(--color-app-faint)', fontSize: '13px' }}>No results found.</div>
-              ) : (
-                <>
-                  {searchResults.projects.length > 0 && (
-                    <div style={{ marginBottom: '8px' }}>
-                      <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-app-faint)', padding: '4px 8px', textTransform: 'uppercase' }}>Projects</div>
-                      {searchResults.projects.map(p => (
-                        <div key={p._id} style={{ padding: '8px', borderRadius: '6px', fontSize: '13px', color: 'var(--color-app-text)', cursor: 'pointer' }} className="hover:bg-var(--color-app-surface-2)">
-                          {p.name}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  {searchResults.tasks.length > 0 && (
-                    <div>
-                      <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-app-faint)', padding: '4px 8px', textTransform: 'uppercase' }}>Tasks</div>
-                      {searchResults.tasks.map(t => (
-                        <div key={t._id} style={{ padding: '8px', borderRadius: '6px', fontSize: '13px', color: 'var(--color-app-text)', cursor: 'pointer' }} className="hover:bg-var(--color-app-surface-2)">
-                          {t.title}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          )}
+            {greeting}, {firstName}!{' '}
+            <span style={{ animation: 'wave 2s infinite', display: 'inline-block', transformOrigin: '70% 70%' }}>👋</span>
+          </h1>
+          <p style={{ fontSize: '13px', color: 'var(--color-app-muted)', margin: 0 }}>
+            Let's ship something amazing today.
+          </p>
         </div>
 
-        {/* Plus Button */}
-        <button 
-          onClick={() => onNewTask('todo')}
-          style={{
-            background: 'rgba(139, 92, 246, 0.15)',
-            border: '1px solid rgba(139, 92, 246, 0.3)',
-            color: '#A78BFA',
-            width: '36px',
-            height: '36px',
-            borderRadius: '8px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(139, 92, 246, 0.25)'}
-          onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(139, 92, 246, 0.15)'}
-        >
-          <Plus size={18} />
-        </button>
+        {/* Right controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
 
-        {/* Notifications Button */}
-        <div ref={notifRef} style={{ position: 'relative' }}>
-          <button 
-            onClick={() => setShowNotifications(!showNotifications)}
+          {/* Search → opens Command Palette */}
+          <button
+            onClick={onOpenPalette}
+            title="Search (Ctrl+K)"
             style={{
+              display: 'flex', alignItems: 'center', gap: '8px',
               background: 'var(--color-app-surface-2)',
               border: '1px solid var(--color-app-border-bright)',
-              color: 'var(--color-app-muted)',
-              width: '36px',
-              height: '36px',
-              borderRadius: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'relative',
-              cursor: 'pointer',
-              transition: 'background 0.2s ease'
+              borderRadius: '8px', padding: '6px 12px',
+              width: '220px', height: '36px', cursor: 'pointer',
+              color: 'var(--color-app-faint)', fontSize: '13px', boxSizing: 'border-box',
             }}
-            onMouseEnter={(e) => e.currentTarget.style.background = 'var(--color-app-surface-hover)'}
-            onMouseLeave={(e) => e.currentTarget.style.background = 'var(--color-app-surface-2)'}
           >
-            <Bell size={18} />
-            {unreadCount > 0 && (
-              <span style={{
-                position: 'absolute',
-                top: '8px',
-                right: '8px',
-                width: '6px',
-                height: '6px',
-                background: '#EF4444',
-                borderRadius: '50%',
-                border: '1.5px solid var(--color-app-bg)'
-              }} />
-            )}
+            <Search size={14} />
+            <span style={{ flex: 1, textAlign: 'left' }}>Search anything…</span>
+            <kbd style={{
+              fontSize: '10px', background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.08)', borderRadius: '4px',
+              padding: '1px 5px', fontFamily: 'monospace', flexShrink: 0,
+            }}>⌘K</kbd>
           </button>
 
-          {/* Notifications Dropdown */}
-          {showNotifications && (
-            <div style={{
-              position: 'absolute',
-              top: '44px',
-              right: 0,
-              width: '300px',
-              background: 'var(--color-app-surface)',
-              border: '1px solid var(--color-app-border)',
-              borderRadius: '8px',
-              boxShadow: 'var(--shadow-card)',
-              zIndex: 50,
-              padding: '12px',
-              maxHeight: '400px',
-              overflowY: 'auto'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-app-text)' }}>Notifications</span>
-                {unreadCount > 0 && (
-                  <button onClick={markAllRead} style={{ background: 'none', border: 'none', fontSize: '11px', color: '#8B5CF6', cursor: 'pointer' }}>Mark all read</button>
-                )}
-              </div>
-              {notifications.length === 0 ? (
-                <div style={{ padding: '20px 0', textAlign: 'center', color: 'var(--color-app-faint)', fontSize: '13px' }}>
-                  No new notifications
+          {/* Notification bell */}
+          <div ref={notifRef} style={{ position: 'relative' }}>
+            <button
+              onClick={() => { setShowNotifications(o => !o); setShowProfile(false) }}
+              style={{
+                background: 'var(--color-app-surface-2)',
+                border: '1px solid var(--color-app-border-bright)',
+                color: 'var(--color-app-muted)', width: '36px', height: '36px',
+                borderRadius: '8px', display: 'flex', alignItems: 'center',
+                justifyContent: 'center', position: 'relative', cursor: 'pointer',
+              }}
+            >
+              <Bell size={16} />
+              {unreadCount > 0 && (
+                <span style={{
+                  position: 'absolute', top: '-4px', right: '-4px',
+                  minWidth: '16px', height: '16px', background: '#ef4444',
+                  borderRadius: '8px', border: '2px solid var(--color-app-bg)',
+                  fontSize: '9px', fontWeight: '800', color: '#fff',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  padding: '0 3px',
+                }}>
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </button>
+
+            {showNotifications && (
+              <div style={{ ...dropdownStyle, width: '340px' }}>
+                {/* Header */}
+                <div style={{
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)',
+                }}>
+                  <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--color-app-text)' }}>
+                    Notifications {unreadCount > 0 && <span style={{ fontSize: '11px', color: '#ef4444' }}>({unreadCount})</span>}
+                  </span>
+                  {unreadCount > 0 && (
+                    <button onClick={markAllRead} style={{
+                      background: 'none', border: 'none', fontSize: '11px',
+                      color: '#8b5cf6', cursor: 'pointer', fontWeight: '600',
+                    }}>
+                      Mark all read
+                    </button>
+                  )}
                 </div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  {notifications.map(n => (
-                    <div key={n._id} style={{ padding: '8px', borderRadius: '6px', background: n.isRead ? 'transparent' : 'var(--color-app-surface-2)', border: '1px solid var(--color-app-border)', fontSize: '12px', color: 'var(--color-app-text)' }}>
-                      <div style={{ fontWeight: 600, marginBottom: '2px' }}>{n.title}</div>
-                      <div style={{ color: 'var(--color-app-muted)', fontSize: '11px' }}>{n.message}</div>
+
+                {/* Items */}
+                <div style={{ maxHeight: '360px', overflowY: 'auto' }}>
+                  {notifications.length === 0 ? (
+                    <div style={{ padding: '32px 16px', textAlign: 'center' }}>
+                      <Bell size={28} style={{ color: 'var(--color-app-faint)', marginBottom: '10px', opacity: 0.4 }} />
+                      <div style={{ fontSize: '13px', color: 'var(--color-app-muted)' }}>All caught up!</div>
+                      <div style={{ fontSize: '11px', color: 'var(--color-app-faint)', marginTop: '4px' }}>No new notifications</div>
                     </div>
-                  ))}
+                  ) : (
+                    notifications.map(n => {
+                      const { Icon, color, route } = getNotifMeta(n)
+                      return (
+                        <div
+                          key={n._id}
+                          onClick={() => handleNotifClick(n)}
+                          style={{
+                            display: 'flex', alignItems: 'flex-start', gap: '10px',
+                            padding: '10px 16px', cursor: 'pointer',
+                            background: !n.isRead ? 'rgba(139,92,246,0.04)' : 'transparent',
+                            borderBottom: '1px solid rgba(255,255,255,0.03)',
+                            transition: 'background 0.15s',
+                          }}
+                          onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+                          onMouseLeave={e => e.currentTarget.style.background = !n.isRead ? 'rgba(139,92,246,0.04)' : 'transparent'}
+                        >
+                          <div style={{
+                            width: '28px', height: '28px', borderRadius: '8px', flexShrink: 0,
+                            background: `${color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            color, marginTop: '1px',
+                          }}>
+                            <Icon size={12} />
+                          </div>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-app-text)', marginBottom: '2px' }}>
+                              {n.title}
+                            </div>
+                            <div style={{ fontSize: '11px', color: 'var(--color-app-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {n.message}
+                            </div>
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px', flexShrink: 0 }}>
+                            <span style={{ fontSize: '10px', color: 'var(--color-app-faint)' }}>{timeAgo(n.createdAt)}</span>
+                            {!n.isRead && (
+                              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#8b5cf6' }} />
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Profile avatar */}
+          <div ref={profileRef} style={{ position: 'relative' }}>
+            <button
+              onClick={() => { setShowProfile(o => !o); setShowNotifications(false) }}
+              title="Profile menu"
+              style={{
+                width: '36px', height: '36px', borderRadius: '50%',
+                overflow: 'hidden', border: showProfile
+                  ? '2px solid #8b5cf6'
+                  : '2px solid var(--color-app-border-bright)',
+                cursor: 'pointer', flexShrink: 0, background: 'transparent', padding: 0,
+                transition: 'border-color 0.2s',
+              }}
+            >
+              {user?.avatarUrl ? (
+                <img src={user.avatarUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                <div style={{
+                  width: '100%', height: '100%',
+                  background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '13px', fontWeight: '800', color: '#fff',
+                }}>
+                  {firstName.charAt(0).toUpperCase()}
                 </div>
               )}
-            </div>
-          )}
-        </div>
+            </button>
 
-        {/* Profile Picture */}
-        <div style={{
-          width: '36px',
-          height: '36px',
-          borderRadius: '50%',
-          overflow: 'hidden',
-          border: '1.5px solid var(--color-app-border-bright)',
-          flexShrink: 0
-        }}>
-          {user?.avatarUrl ? (
-            <img src={user.avatarUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          ) : (
-            <div style={{
-              width: '100%',
-              height: '100%',
-              background: 'var(--color-app-surface-2)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '14px',
-              fontWeight: 'bold',
-              color: 'var(--color-app-text)'
-            }}>
-              {firstName.charAt(0).toUpperCase()}
-            </div>
-          )}
+            {showProfile && (
+              <div style={{ ...dropdownStyle, width: '230px', right: 0 }}>
+                {/* Identity block */}
+                <div style={{
+                  padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)',
+                  display: 'flex', alignItems: 'center', gap: '10px',
+                }}>
+                  <div style={{
+                    width: '36px', height: '36px', borderRadius: '50%', flexShrink: 0,
+                    overflow: 'hidden', border: '2px solid rgba(139,92,246,0.3)',
+                  }}>
+                    {user?.avatarUrl ? (
+                      <img src={user.avatarUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      <div style={{
+                        width: '100%', height: '100%',
+                        background: 'linear-gradient(135deg, #7c3aed, #6d28d9)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: '14px', fontWeight: '800', color: '#fff',
+                      }}>
+                        {firstName.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: '13px', fontWeight: '800', color: 'var(--color-app-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {cleanName}
+                    </div>
+                    <div style={{ fontSize: '11px', color: 'var(--color-app-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {user?.email || 'Full Stack Developer'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Menu items */}
+                {[
+                  { label: 'Dashboard',    icon: LayoutDashboard, route: '/dashboard' },
+                  { label: 'GitHub',       icon: GithubIcon,      route: '/github' },
+                  { label: 'Settings',     icon: Settings,        route: '/settings' },
+                ].map(({ label, icon: Icon, route }) => (
+                  <button
+                    key={label}
+                    onClick={() => { setShowProfile(false); navigate(route) }}
+                    style={{
+                      width: '100%', display: 'flex', alignItems: 'center', gap: '10px',
+                      padding: '9px 16px', background: 'transparent', border: 'none',
+                      color: 'var(--color-app-text)', fontSize: '13px', fontWeight: '600',
+                      cursor: 'pointer', textAlign: 'left', transition: 'background 0.1s',
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                  >
+                    <Icon size={14} style={{ color: 'var(--color-app-muted)' }} />
+                    {label}
+                  </button>
+                ))}
+
+                {/* Theme toggle */}
+                <button
+                  onClick={handleToggleTheme}
+                  style={{
+                    width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '9px 16px', background: 'transparent', border: 'none',
+                    color: 'var(--color-app-text)', fontSize: '13px', fontWeight: '600',
+                    cursor: 'pointer', transition: 'background 0.1s',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                >
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {theme === 'dark' ? <Moon size={14} style={{ color: 'var(--color-app-muted)' }} /> : <Sun size={14} style={{ color: '#f59e0b' }} />}
+                    {theme === 'dark' ? 'Dark Mode' : 'Light Mode'}
+                  </span>
+                  <span style={{
+                    width: '28px', height: '14px', borderRadius: '7px',
+                    background: theme === 'dark' ? '#7c3aed' : '#4a5568',
+                    position: 'relative', flexShrink: 0,
+                  }}>
+                    <span style={{
+                      position: 'absolute', top: '2px',
+                      left: theme === 'dark' ? '16px' : '2px',
+                      width: '10px', height: '10px', borderRadius: '50%',
+                      background: '#fff', transition: 'left 0.2s',
+                    }} />
+                  </span>
+                </button>
+
+                {/* Divider + Logout */}
+                <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', margin: '4px 0' }} />
+                <button
+                  onClick={handleLogout}
+                  style={{
+                    width: '100%', display: 'flex', alignItems: 'center', gap: '10px',
+                    padding: '9px 16px 13px', background: 'transparent', border: 'none',
+                    color: '#ef4444', fontSize: '13px', fontWeight: '600',
+                    cursor: 'pointer', textAlign: 'left', transition: 'background 0.1s',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.06)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                >
+                  <LogOut size={14} />
+                  Sign Out
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   )
 }

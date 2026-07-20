@@ -1,10 +1,25 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import Sidebar from '@/shared/components/Sidebar'
+import CommandPalette from '@/shared/components/CommandPalette'
+import QuickCreateMenu from '@/shared/components/QuickCreateMenu'
 import { Menu, X } from 'lucide-react'
 
 export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [paletteOpen, setPaletteOpen] = useState(false)
+
+  // Global Ctrl+K listener
+  useEffect(() => {
+    const handler = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault()
+        setPaletteOpen(o => !o)
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [])
 
   return (
     <div className="app-shell">
@@ -39,6 +54,13 @@ export default function AppLayout() {
           <Outlet />
         </main>
       </div>
+
+      {/* Global overlays — mounted once outside the route tree */}
+      <CommandPalette
+        isOpen={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+      />
+      <QuickCreateMenu />
     </div>
   )
 }
