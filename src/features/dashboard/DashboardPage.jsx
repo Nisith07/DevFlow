@@ -40,14 +40,20 @@ const ACTIVITY_CFG = {
   portfolio_deployed:     { Icon: Globe,    color: '#60a5fa', route: '/portfolio' },
 }
 
-// Shared card style
+// Shared card style — premium futuristic neumorphic
 const card = {
-  background: 'var(--color-app-surface)',
-  border: '1px solid var(--color-app-border)',
-  borderRadius: '10px', padding: '8px 10px',
+  background: '#0F1220',         /* solid deep navy, never transparent */
+  border: '1px solid #1E2540',
+  borderTop: '1px solid #2C3560',
+  borderLeft: '1px solid #252D55',
+  borderRadius: '12px',
+  padding: '10px 12px',
   display: 'flex', flexDirection: 'column',
   justifyContent: 'space-between',
   height: '100%', boxSizing: 'border-box', overflow: 'hidden',
+  boxShadow: '0 1px 0 rgba(255,255,255,0.045) inset, 0 8px 32px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.35), 0 0 0 1px rgba(139,92,246,0.04)',
+  transition: 'box-shadow 0.2s ease, border-color 0.2s ease',
+  position: 'relative',
 }
 
 const navLink = {

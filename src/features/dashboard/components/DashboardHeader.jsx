@@ -150,10 +150,12 @@ export default function DashboardHeader({ onOpenPalette }) {
 
   const dropdownStyle = {
     position: 'absolute', top: '44px', right: 0,
-    background: 'var(--color-app-surface)',
-    border: '1px solid rgba(255,255,255,0.08)',
-    borderRadius: '12px',
-    boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
+    background: '#0F1220',
+    border: '1px solid #1E2540',
+    borderTop: '1px solid #2C3560',
+    borderLeft: '1px solid #252D55',
+    borderRadius: '14px',
+    boxShadow: '0 1px 0 rgba(255,255,255,0.04) inset, 0 24px 64px rgba(0,0,0,0.75), 0 8px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,92,246,0.06)',
     zIndex: 200,
     overflow: 'hidden',
     animation: 'dropIn 0.15s cubic-bezier(0.16,1,0.3,1)',

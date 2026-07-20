@@ -87,21 +87,21 @@
 }
 
 :root {
-  /* Default: Dark mode values */
-  --app-bg: #090B10;
-  --app-surface: #101422;
-  --app-surface-2: #161A2D;
-  --app-surface-hover: #1C2139;
-  --app-border: #1D2336;
-  --app-border-bright: #2E3754;
-  --app-text: #E8EAF0;
-  --app-muted: #8E98B0;
-  --app-faint: #4E5670;
+  /* Default: Dark mode — deep space neumorphic */
+  --app-bg: #07090F;
+  --app-surface: #0F1220;        /* solid, rich dark navy — no transparency */
+  --app-surface-2: #141828;      /* slightly elevated layer */
+  --app-surface-hover: #1A1E34;
+  --app-border: #1E2540;
+  --app-border-bright: #2C3560;
+  --app-text: #E9EBF4;
+  --app-muted: #8A94B0;
+  --app-faint: #4A5278;
 
   --accent-color: #8B5CF6;
   --accent-bright: #A78BFA;
   --accent-dim: #1E163B;
-  --accent-glow: rgba(139, 92, 246, 0.18);
+  --accent-glow: rgba(139, 92, 246, 0.22);
 
   --blue-dim: #0F1E3D;
   --green-dim: #0A2216;
@@ -110,14 +110,28 @@
   --teal-dim: #051C22;
   --danger-dim: #2D1212;
 
-  --neu-dark: rgba(0, 0, 0, 0.65);
-  --neu-light: rgba(255, 255, 255, 0.025);
+  --neu-dark: rgba(0, 0, 0, 0.75);
+  --neu-light: rgba(255, 255, 255, 0.035);
 
-  --shadow-neu-sm-val: 4px 4px 10px rgba(0, 0, 0, 0.5), -2px -2px 6px rgba(255, 255, 255, 0.015);
-  --shadow-neu-md-val: 8px 8px 18px rgba(0, 0, 0, 0.55), -4px -4px 10px rgba(255, 255, 255, 0.02);
-  --shadow-neu-lg-val: 12px 12px 26px rgba(0, 0, 0, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.025);
-  --shadow-card-val: 0 4px 20px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.25);
-  --shadow-glow-violet-val: 0 0 20px rgba(139, 92, 246, 0.25), 0 0 40px rgba(139, 92, 246, 0.1);
+  /* Premium neumorphic shadows — deep lift + subtle highlight */
+  --shadow-neu-sm-val:
+    6px 6px 14px rgba(0, 0, 0, 0.65),
+    -3px -3px 8px rgba(255, 255, 255, 0.025),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --shadow-neu-md-val:
+    10px 10px 24px rgba(0, 0, 0, 0.7),
+    -5px -5px 12px rgba(255, 255, 255, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --shadow-neu-lg-val:
+    16px 16px 36px rgba(0, 0, 0, 0.75),
+    -8px -8px 18px rgba(255, 255, 255, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --shadow-card-val:
+    0 2px 0 rgba(255,255,255,0.04) inset,
+    0 8px 32px rgba(0, 0, 0, 0.55),
+    0 2px 8px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(139, 92, 246, 0.04);
+  --shadow-glow-violet-val: 0 0 24px rgba(139, 92, 246, 0.3), 0 0 48px rgba(139, 92, 246, 0.12);
 }
 
 .theme-light {
@@ -1136,11 +1150,25 @@ button {
 .card {
   background: var(--color-app-surface);
   border: 1px solid var(--color-app-border);
+  border-top: 1px solid var(--color-app-border-bright);
+  border-left: 1px solid var(--color-app-border-bright);
   border-radius: var(--radius-md);
   padding: 20px;
   position: relative;
   overflow: hidden;
-  box-shadow: var(--shadow-neu-sm);
+  box-shadow: var(--shadow-card-val);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 2px 0 rgba(255,255,255,0.05) inset,
+    0 12px 40px rgba(0, 0, 0, 0.6),
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(139, 92, 246, 0.08);
+  border-top-color: rgba(139, 92, 246, 0.25);
+  border-left-color: rgba(139, 92, 246, 0.15);
 }
 
 .card::before {
@@ -1150,7 +1178,7 @@ button {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), rgba(139, 92, 246, 0.15), rgba(255, 255, 255, 0.1), transparent);
   pointer-events: none;
 }
 
@@ -2498,24 +2526,24 @@ button {
 }
 
 .auth-modal {
-  /* Ultra-premium Neumorphic/Glassmorphic blend */
-  background: rgba(16, 20, 31, 0.82); /* Less transparent to fix visibility issues */
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  border-top: 1px solid rgba(255, 255, 255, 0.12); 
-  border-left: 1px solid rgba(255, 255, 255, 0.08); 
+  /* Premium solid neumorphic card — NO transparency */
+  background: #0F1220;
+  border: 1px solid #1E2540;
+  border-top: 1px solid rgba(139, 92, 246, 0.2);
+  border-left: 1px solid rgba(139, 92, 246, 0.1);
   border-radius: 24px;
   padding: 40px 36px 32px;
   width: 100%;
   max-width: 400px;
   position: relative;
-  
-  /* Neumorphic shadow lift */
+
+  /* Deep neumorphic shadow + violet accent glow */
   box-shadow:
-    -8px -8px 24px rgba(255, 255, 255, 0.015),
-    12px 12px 32px rgba(0, 0, 0, 0.7),
-    inset 1px 1px 2px rgba(255, 255, 255, 0.08);
+    0 2px 0 rgba(255,255,255,0.04) inset,
+    0 24px 64px rgba(0, 0, 0, 0.7),
+    0 8px 24px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(139, 92, 246, 0.06),
+    0 0 40px rgba(139, 92, 246, 0.08);
 }
 
 .auth-close {
@@ -3314,9 +3342,11 @@ button {
   width: 230px;
   flex-shrink: 0;
   height: 100%;
-  border-right: 1px solid var(--color-app-border);
-  box-shadow: 4px 0 16px var(--neu-dark);
-  background: var(--color-app-surface);
+  background: #0C0F1C; /* slightly deeper than surface for sidebar */
+  border-right: 1px solid #1E2540;
+  box-shadow:
+    4px 0 24px rgba(0, 0, 0, 0.6),
+    4px 0 0 rgba(139, 92, 246, 0.03) inset;
   display: flex;
   flex-direction: column;
   padding: 16px 12px;
@@ -3333,24 +3363,64 @@ button {
   gap: 10px;
 }
 
-/* Neumorphic Cards styling */
+/* ═══════════════════════════════════════════════════════════════════
+   PREMIUM NEUMORPHIC CARDS — Futuristic depth design
+   ═══════════════════════════════════════════════════════════════════ */
 .card,
 .neu-card {
-  background: var(--color-app-surface) !important;
+  background: #0F1220 !important;            /* Solid, rich — no transparency */
   border-radius: var(--radius-md) !important;
-  box-shadow: var(--shadow-card-val) !important;
-  border: 1px solid var(--color-app-border) !important;
-  padding: 12px 14px !important;
-  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-  box-sizing: border-box;
+  border: 1px solid #1E2540 !important;
+  border-top: 1px solid #2C3560 !important;  /* Highlighted top edge */
+  border-left: 1px solid #252D55 !important; /* Subtle left highlight */
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.045) inset,   /* inner top highlight */
+    0 8px 32px rgba(0, 0, 0, 0.55),           /* main depth shadow */
+    0 2px 8px rgba(0, 0, 0, 0.35),            /* close shadow */
+    0 0 0 1px rgba(139, 92, 246, 0.04) !important; /* violet rim */
+  padding: 10px 12px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+  box-sizing: border-box !important;
+  position: relative;
+}
+
+/* Shimmer highlight line at card top */
+.card::after,
+.neu-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(139, 92, 246, 0.18),
+    rgba(255, 255, 255, 0.08),
+    rgba(139, 92, 246, 0.18),
+    transparent);
+  pointer-events: none;
+}
+
+.card:hover,
+.neu-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.06) inset,
+    0 16px 48px rgba(0, 0, 0, 0.65),
+    0 4px 16px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(139, 92, 246, 0.12),
+    0 0 20px rgba(139, 92, 246, 0.06) !important;
+  border-top-color: rgba(139, 92, 246, 0.3) !important;
+  border-left-color: rgba(139, 92, 246, 0.18) !important;
 }
 
 .neu-inset,
 .neu-card-inset {
-  box-shadow: var(--neu-shadow-inset) !important;
-  background: var(--color-app-surface-2) !important;
-  border: 1px solid var(--color-app-border) !important;
+  background: #0C0F1C !important;            /* Deeper inset */
+  border: 1px solid #181D35 !important;
   border-radius: var(--radius-sm);
+  box-shadow:
+    inset 3px 3px 8px rgba(0,0,0,0.5),
+    inset -1px -1px 4px rgba(255,255,255,0.02) !important;
   box-sizing: border-box;
 }
 
