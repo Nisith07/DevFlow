@@ -358,7 +358,7 @@ export default function DashboardPage() {
               <span style={{ fontSize: '8px', color: '#10b981', background: 'rgba(16,185,129,0.1)', padding: '0px 3px', borderRadius: '3px' }}>+12%</span>
             </div>
             <div style={{ display: 'flex', gap: '2px', marginTop: '2px' }}>
-              {[3,0,5,8,2,6,1,7,4,0,8,3,9,2,6,4,0,9].map((v, i) => (
+              {(dashboardData?.githubStats?.contributionGrid || [3,0,5,8,2,6,1,7,4,0,8,3,9,2,6,4,0,9]).map((v, i) => (
                 <div key={i} style={{
                   flex: 1, height: '6px', borderRadius: '1px',
                   background: v > 6 ? '#10b981' : v > 3 ? '#047857' : v > 0 ? '#065f46' : 'var(--color-app-surface-2)',
