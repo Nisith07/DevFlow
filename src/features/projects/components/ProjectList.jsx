@@ -3,7 +3,7 @@ import LoadingSpinner from '@/shared/components/LoadingSpinner'
 import EmptyState from '@/shared/components/EmptyState'
 import { FolderKanban } from 'lucide-react'
 
-export default function ProjectList({ projects, isLoading, onEdit, onDelete, onCreateClick }) {
+export default function ProjectList({ projects, isLoading, onEdit, onDelete, onFavorite, onArchive, onOpenSprints, onCreateClick }) {
   if (isLoading) {
     return <LoadingSpinner size={40} />
   }
@@ -37,6 +37,9 @@ export default function ProjectList({ projects, isLoading, onEdit, onDelete, onC
           project={project}
           onEdit={onEdit}
           onDelete={onDelete}
+          onFavorite={onFavorite}
+          onArchive={onArchive}
+          onOpenSprints={onOpenSprints}
         />
       ))}
     </div>

@@ -3796,27 +3796,42 @@ html.theme-light .theme-switch-thumb {
   background: rgba(139, 92, 246, 0.1);
 }
 
-/* Light mode / Light background overrides (e.g. landing page or light dashboard) */
-html.theme-light .lp-cursor-dot,
-html:has(.lp-root) .lp-cursor-dot {
+/* Light mode dashboard override (dark cursor on light background) */
+html.theme-light .lp-cursor-dot {
   background: #1e293b;
 }
 
-html.theme-light .lp-cursor-ring,
-html:has(.lp-root) .lp-cursor-ring {
+html.theme-light .lp-cursor-ring {
   border-color: rgba(30, 41, 59, 0.35);
 }
 
-html.theme-light .lp-cursor-ring.is-hovering,
-html:has(.lp-root) .lp-cursor-ring.is-hovering {
+html.theme-light .lp-cursor-ring.is-hovering {
   border-color: rgba(124, 58, 237, 0.7);
   background: rgba(124, 58, 237, 0.06);
 }
 
-html.theme-light .lp-cursor-ring.is-cta,
-html:has(.lp-root) .lp-cursor-ring.is-cta {
+html.theme-light .lp-cursor-ring.is-cta {
   border-color: rgba(124, 58, 237, 0.9);
   background: rgba(124, 58, 237, 0.1);
+}
+
+/* Force white cursor on the landing page/website (since the landing page is dark) */
+html:has(.lp-root) .lp-cursor-dot {
+  background: #fff !important;
+}
+
+html:has(.lp-root) .lp-cursor-ring {
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+html:has(.lp-root) .lp-cursor-ring.is-hovering {
+  border-color: rgba(139, 92, 246, 0.7) !important;
+  background: rgba(139, 92, 246, 0.06) !important;
+}
+
+html:has(.lp-root) .lp-cursor-ring.is-cta {
+  border-color: rgba(139, 92, 246, 0.9) !important;
+  background: rgba(139, 92, 246, 0.1) !important;
 }
 
 /* Hide custom cursor on touch devices */
