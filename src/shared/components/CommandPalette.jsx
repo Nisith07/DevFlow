@@ -4,7 +4,7 @@ import {
   Search, LayoutDashboard, Briefcase, CheckSquare, AlertCircle,
   Sparkles, Calendar, Layers, BookOpen, Code, BarChart2, Activity,
   Settings, Link2, Plus, FileText, Folder, X, ArrowRight, Loader2,
-  GitBranch, Rocket, MessageSquare
+  GitBranch, Rocket, MessageSquare, Moon
 } from 'lucide-react'
 import api from '@/shared/lib/axios'
 
