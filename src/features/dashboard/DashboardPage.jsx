@@ -40,18 +40,18 @@ const ACTIVITY_CFG = {
   portfolio_deployed:     { Icon: Globe,    color: '#60a5fa', route: '/portfolio' },
 }
 
-// Shared card style — premium futuristic neumorphic
+// Shared card style — premium neumorphic, theme-aware via CSS variables
 const card = {
-  background: '#0F1220',         /* solid deep navy, never transparent */
-  border: '1px solid #1E2540',
-  borderTop: '1px solid #2C3560',
-  borderLeft: '1px solid #252D55',
+  background: 'var(--card-bg)',
+  border: '1px solid var(--card-border)',
+  borderTop: '1px solid var(--card-border-top)',
+  borderLeft: '1px solid var(--card-border-left)',
   borderRadius: '12px',
   padding: '10px 12px',
   display: 'flex', flexDirection: 'column',
   justifyContent: 'space-between',
   height: '100%', boxSizing: 'border-box', overflow: 'hidden',
-  boxShadow: '0 1px 0 rgba(255,255,255,0.045) inset, 0 8px 32px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.35), 0 0 0 1px rgba(139,92,246,0.04)',
+  boxShadow: 'var(--shadow-card-val)',
   transition: 'box-shadow 0.2s ease, border-color 0.2s ease',
   position: 'relative',
 }

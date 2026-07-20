@@ -89,8 +89,8 @@
 :root {
   /* Default: Dark mode — deep space neumorphic */
   --app-bg: #07090F;
-  --app-surface: #0F1220;        /* solid, rich dark navy — no transparency */
-  --app-surface-2: #141828;      /* slightly elevated layer */
+  --app-surface: #0F1220;
+  --app-surface-2: #141828;
   --app-surface-hover: #1A1E34;
   --app-border: #1E2540;
   --app-border-bright: #2C3560;
@@ -113,6 +113,16 @@
   --neu-dark: rgba(0, 0, 0, 0.75);
   --neu-light: rgba(255, 255, 255, 0.035);
 
+  /* ── Semantic card / sidebar / dropdown variables ── */
+  --card-bg:              #0F1220;
+  --card-bg-inset:        #0C0F1C;
+  --card-border:          #1E2540;
+  --card-border-top:      #2C3560;
+  --card-border-left:     #252D55;
+  --card-border-inset:    #181D35;
+  --sidebar-bg:           #0C0F1C;
+  --sidebar-border:       #1E2540;
+
   /* Premium neumorphic shadows — deep lift + subtle highlight */
   --shadow-neu-sm-val:
     6px 6px 14px rgba(0, 0, 0, 0.65),
@@ -131,6 +141,20 @@
     0 8px 32px rgba(0, 0, 0, 0.55),
     0 2px 8px rgba(0, 0, 0, 0.35),
     0 0 0 1px rgba(139, 92, 246, 0.04);
+  --shadow-card-hover-val:
+    0 1px 0 rgba(255,255,255,0.06) inset,
+    0 16px 48px rgba(0, 0, 0, 0.65),
+    0 4px 16px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(139, 92, 246, 0.12),
+    0 0 20px rgba(139, 92, 246, 0.06);
+  --shadow-sidebar-val:
+    4px 0 24px rgba(0, 0, 0, 0.6),
+    4px 0 0 rgba(139, 92, 246, 0.03) inset;
+  --shadow-dropdown-val:
+    0 1px 0 rgba(255,255,255,0.04) inset,
+    0 24px 64px rgba(0,0,0,0.75),
+    0 8px 24px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(139,92,246,0.06);
   --shadow-glow-violet-val: 0 0 24px rgba(139, 92, 246, 0.3), 0 0 48px rgba(139, 92, 246, 0.12);
 }
 
@@ -161,10 +185,33 @@
   --neu-dark: rgba(163, 177, 198, 0.5);
   --neu-light: rgba(255, 255, 255, 0.95);
 
+  /* ── Light-mode card / sidebar / dropdown overrides ── */
+  --card-bg:              #FFFFFF;
+  --card-bg-inset:        #F0F2F7;
+  --card-border:          #E1E4EB;
+  --card-border-top:      #CCD0D9;
+  --card-border-left:     #D8DCE5;
+  --card-border-inset:    #D4D8E2;
+  --sidebar-bg:           #F2F4F9;
+  --sidebar-border:       #E1E4EB;
+
   --shadow-neu-sm-val: 4px 4px 8px rgba(163, 177, 198, 0.45), -4px -4px 8px rgba(255, 255, 255, 0.9);
   --shadow-neu-md-val: 8px 8px 16px rgba(163, 177, 198, 0.5), -8px -8px 16px rgba(255, 255, 255, 0.95);
   --shadow-neu-lg-val: 12px 12px 24px rgba(163, 177, 198, 0.55), -12px -12px 24px rgba(255, 255, 255, 0.98);
-  --shadow-card-val: 6px 6px 12px rgba(163, 177, 198, 0.4), -6px -6px 12px rgba(255, 255, 255, 0.9);
+  --shadow-card-val:
+    6px 6px 14px rgba(163, 177, 198, 0.4),
+    -4px -4px 10px rgba(255, 255, 255, 0.85),
+    0 0 0 1px rgba(124, 58, 237, 0.03);
+  --shadow-card-hover-val:
+    8px 8px 20px rgba(163, 177, 198, 0.5),
+    -6px -6px 14px rgba(255, 255, 255, 0.95),
+    0 0 0 1px rgba(124, 58, 237, 0.1);
+  --shadow-sidebar-val:
+    4px 0 16px rgba(163, 177, 198, 0.3);
+  --shadow-dropdown-val:
+    6px 6px 20px rgba(163, 177, 198, 0.45),
+    -4px -4px 12px rgba(255, 255, 255, 0.9),
+    0 0 0 1px rgba(124, 58, 237, 0.05);
   --shadow-glow-violet-val: 0 0 20px rgba(124, 58, 237, 0.15), 0 0 40px rgba(124, 58, 237, 0.08);
 }
 
@@ -2526,24 +2573,19 @@ button {
 }
 
 .auth-modal {
-  /* Premium solid neumorphic card — NO transparency */
-  background: #0F1220;
-  border: 1px solid #1E2540;
-  border-top: 1px solid rgba(139, 92, 246, 0.2);
-  border-left: 1px solid rgba(139, 92, 246, 0.1);
+  /* Premium neumorphic card — theme-aware */
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-top: 1px solid var(--card-border-top);
+  border-left: 1px solid var(--card-border-left);
   border-radius: 24px;
   padding: 40px 36px 32px;
   width: 100%;
   max-width: 400px;
   position: relative;
 
-  /* Deep neumorphic shadow + violet accent glow */
-  box-shadow:
-    0 2px 0 rgba(255,255,255,0.04) inset,
-    0 24px 64px rgba(0, 0, 0, 0.7),
-    0 8px 24px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(139, 92, 246, 0.06),
-    0 0 40px rgba(139, 92, 246, 0.08);
+  /* Neumorphic shadow — theme-aware */
+  box-shadow: var(--shadow-dropdown-val);
 }
 
 .auth-close {
@@ -3342,11 +3384,9 @@ button {
   width: 230px;
   flex-shrink: 0;
   height: 100%;
-  background: #0C0F1C; /* slightly deeper than surface for sidebar */
-  border-right: 1px solid #1E2540;
-  box-shadow:
-    4px 0 24px rgba(0, 0, 0, 0.6),
-    4px 0 0 rgba(139, 92, 246, 0.03) inset;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
+  box-shadow: var(--shadow-sidebar-val);
   display: flex;
   flex-direction: column;
   padding: 16px 12px;
@@ -3364,20 +3404,16 @@ button {
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   PREMIUM NEUMORPHIC CARDS — Futuristic depth design
+   PREMIUM NEUMORPHIC CARDS — theme-aware, futuristic depth
    ═══════════════════════════════════════════════════════════════════ */
 .card,
 .neu-card {
-  background: #0F1220 !important;            /* Solid, rich — no transparency */
+  background: var(--card-bg) !important;
   border-radius: var(--radius-md) !important;
-  border: 1px solid #1E2540 !important;
-  border-top: 1px solid #2C3560 !important;  /* Highlighted top edge */
-  border-left: 1px solid #252D55 !important; /* Subtle left highlight */
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.045) inset,   /* inner top highlight */
-    0 8px 32px rgba(0, 0, 0, 0.55),           /* main depth shadow */
-    0 2px 8px rgba(0, 0, 0, 0.35),            /* close shadow */
-    0 0 0 1px rgba(139, 92, 246, 0.04) !important; /* violet rim */
+  border: 1px solid var(--card-border) !important;
+  border-top: 1px solid var(--card-border-top) !important;
+  border-left: 1px solid var(--card-border-left) !important;
+  box-shadow: var(--shadow-card-val) !important;
   padding: 10px 12px !important;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
   box-sizing: border-box !important;
@@ -3393,9 +3429,9 @@ button {
   height: 1px;
   background: linear-gradient(90deg,
     transparent,
-    rgba(139, 92, 246, 0.18),
+    rgba(139, 92, 246, 0.15),
     rgba(255, 255, 255, 0.08),
-    rgba(139, 92, 246, 0.18),
+    rgba(139, 92, 246, 0.15),
     transparent);
   pointer-events: none;
 }
@@ -3403,24 +3439,19 @@ button {
 .card:hover,
 .neu-card:hover {
   transform: translateY(-2px) !important;
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.06) inset,
-    0 16px 48px rgba(0, 0, 0, 0.65),
-    0 4px 16px rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(139, 92, 246, 0.12),
-    0 0 20px rgba(139, 92, 246, 0.06) !important;
+  box-shadow: var(--shadow-card-hover-val) !important;
   border-top-color: rgba(139, 92, 246, 0.3) !important;
   border-left-color: rgba(139, 92, 246, 0.18) !important;
 }
 
 .neu-inset,
 .neu-card-inset {
-  background: #0C0F1C !important;            /* Deeper inset */
-  border: 1px solid #181D35 !important;
+  background: var(--card-bg-inset) !important;
+  border: 1px solid var(--card-border-inset) !important;
   border-radius: var(--radius-sm);
   box-shadow:
-    inset 3px 3px 8px rgba(0,0,0,0.5),
-    inset -1px -1px 4px rgba(255,255,255,0.02) !important;
+    inset 3px 3px 8px rgba(0,0,0,0.12),
+    inset -1px -1px 4px rgba(255,255,255,0.5) !important;
   box-sizing: border-box;
 }
 

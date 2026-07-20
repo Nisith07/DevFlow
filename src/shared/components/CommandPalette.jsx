@@ -232,12 +232,12 @@ export default function CommandPalette({ isOpen, onClose }) {
       <div
         style={{
           width: '100%', maxWidth: '600px', margin: '0 16px',
-          background: '#0F1220',
-          border: '1px solid #1E2540',
-          borderTop: '1px solid rgba(139,92,246,0.25)',
-          borderLeft: '1px solid rgba(139,92,246,0.12)',
+          background: 'var(--card-bg)',
+          border: '1px solid var(--card-border)',
+          borderTop: '1px solid var(--card-border-top)',
+          borderLeft: '1px solid var(--card-border-left)',
           borderRadius: '18px',
-          boxShadow: '0 2px 0 rgba(255,255,255,0.04) inset, 0 32px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(139,92,246,0.08), 0 0 40px rgba(139,92,246,0.08)',
+          boxShadow: 'var(--shadow-dropdown-val)',
           overflow: 'hidden',
           animation: 'palette-in 0.15s cubic-bezier(0.16,1,0.3,1)',
         }}
