@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import {
   Search, Bell, Settings, LogOut, LayoutDashboard,
   Moon, Sun, CheckCircle2, Rocket, GitPullRequest,
-  Sparkles, AlertCircle
+  Sparkles, AlertCircle, Plus
 } from 'lucide-react'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { getInitials } from '@/shared/lib/utils'
@@ -62,6 +62,9 @@ export default function DashboardHeader({ onOpenPalette }) {
   const [showProfile, setShowProfile]             = useState(false)
   const profileRef = useRef(null)
 
+  const [showCreateMenu, setShowCreateMenu]       = useState(false)
+  const createMenuRef = useRef(null)
+
   // Fetch notifications
   useEffect(() => {
     api.get('/notifications').then(res => {
@@ -96,6 +99,7 @@ export default function DashboardHeader({ onOpenPalette }) {
       if (searchRef.current && !searchRef.current.contains(e.target))   setShowSearchDropdown(false)
       if (notifRef.current && !notifRef.current.contains(e.target))     setShowNotifications(false)
       if (profileRef.current && !profileRef.current.contains(e.target)) setShowProfile(false)
+      if (createMenuRef.current && !createMenuRef.current.contains(e.target)) setShowCreateMenu(false)
     }
     document.addEventListener('mousedown', handle)
     return () => document.removeEventListener('mousedown', handle)
@@ -120,6 +124,14 @@ export default function DashboardHeader({ onOpenPalette }) {
     setShowNotifications(false)
     const { route } = getNotifMeta(n)
     navigate(route)
+  }
+
+  const triggerPalette = () => {
+    if (typeof window.__openCommandPalette === 'function') {
+      window.__openCommandPalette()
+    } else if (onOpenPalette) {
+      onOpenPalette()
+    }
   }
 
   const handleLogout = async () => {
@@ -180,7 +192,7 @@ export default function DashboardHeader({ onOpenPalette }) {
 
           {/* Search → opens Command Palette */}
           <button
-            onClick={onOpenPalette}
+            onClick={triggerPalette}
             title="Search (Ctrl+K)"
             style={{
               display: 'flex', alignItems: 'center', gap: '8px',
@@ -199,6 +211,59 @@ export default function DashboardHeader({ onOpenPalette }) {
               padding: '1px 5px', fontFamily: 'monospace', flexShrink: 0,
             }}>⌘K</kbd>
           </button>
+
+          {/* Plus / Quick Create Button */}
+          <div ref={createMenuRef} style={{ position: 'relative' }}>
+            <button
+              onClick={() => { setShowCreateMenu(o => !o); setShowNotifications(false); setShowProfile(false) }}
+              title="Quick Add Menu"
+              style={{
+                background: 'rgba(139, 92, 246, 0.15)',
+                border: '1px solid rgba(139, 92, 246, 0.3)',
+                color: '#A78BFA',
+                width: '36px', height: '36px',
+                borderRadius: '8px', display: 'flex', alignItems: 'center',
+                justifyContent: 'center', cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(139, 92, 246, 0.25)'}
+              onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(139, 92, 246, 0.15)'}
+            >
+              <Plus size={18} />
+            </button>
+
+            {showCreateMenu && (
+              <div style={{ ...dropdownStyle, width: '180px' }}>
+                <div style={{ padding: '8px 12px', borderBottom: '1px solid rgba(255,255,255,0.06)', fontSize: '10px', fontWeight: '800', color: 'var(--color-app-faint)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Quick Add
+                </div>
+                {[
+                  { label: 'New Project',      route: '/projects' },
+                  { label: 'New Task',         route: '/tasks' },
+                  { label: 'New Note',         route: '/notes' },
+                  { label: 'New Snippet',      route: '/snippets' },
+                  { label: 'New Issue',        route: '/issues' },
+                  { label: 'AI Conversation',  route: '/ai' },
+                  { label: 'Log Deployment',   route: '/deployments' },
+                ].map((item) => (
+                  <button
+                    key={item.label}
+                    onClick={() => { setShowCreateMenu(false); navigate(item.route) }}
+                    style={{
+                      width: '100%', display: 'flex', alignItems: 'center',
+                      padding: '8px 12px', background: 'transparent', border: 'none',
+                      color: 'var(--color-app-text)', fontSize: '12px', fontWeight: '600',
+                      cursor: 'pointer', textAlign: 'left', transition: 'background 0.15s',
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Notification bell */}
           <div ref={notifRef} style={{ position: 'relative' }}>
@@ -366,9 +431,9 @@ export default function DashboardHeader({ onOpenPalette }) {
 
                 {/* Menu items */}
                 {[
-                  { label: 'Dashboard',    icon: LayoutDashboard, route: '/dashboard' },
-                  { label: 'GitHub',       icon: GithubIcon,      route: '/github' },
-                  { label: 'Settings',     icon: Settings,        route: '/settings' },
+                  { label: 'My Dashboard',    icon: LayoutDashboard, route: '/dashboard' },
+                  { label: 'GitHub Workspace',icon: GithubIcon,      route: '/github' },
+                  { label: 'Account Settings',icon: Settings,        route: '/settings' },
                 ].map(({ label, icon: Icon, route }) => (
                   <button
                     key={label}
@@ -391,7 +456,7 @@ export default function DashboardHeader({ onOpenPalette }) {
                 <button
                   onClick={handleToggleTheme}
                   style={{
-                    width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    width: '100%', display: 'flex', alignItems: 'center', justifySelf: 'space-between', justifyContent: 'space-between',
                     padding: '9px 16px', background: 'transparent', border: 'none',
                     color: 'var(--color-app-text)', fontSize: '13px', fontWeight: '600',
                     cursor: 'pointer', transition: 'background 0.1s',
@@ -417,6 +482,28 @@ export default function DashboardHeader({ onOpenPalette }) {
                   </span>
                 </button>
 
+                {/* Social Media Links Section */}
+                <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '8px 16px 4px' }}>
+                  <div style={{ fontSize: '9px', fontWeight: '800', color: 'var(--color-app-faint)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px' }}>Social Profiles</div>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <a href="https://github.com/Nisith07" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '6px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', color: 'var(--color-app-text)' }} title="GitHub">
+                      <GithubIcon size={14} />
+                    </a>
+                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '6px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', color: '#0077b5' }} title="LinkedIn">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M22.23 0H1.77C.8 0 0 .77 0 1.72v20.56C0 23.23.8 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.2 0 22.23 0zM7.12 20.45H3.56V9h3.56v11.45zM5.34 7.55c-1.14 0-2.06-.92-2.06-2.06 0-1.14.92-2.06 2.06-2.06 1.14 0 2.06.92 2.06 2.06 0 1.14-.92 2.06-2.06 2.06zm15.11 12.9H16.9v-5.61c0-1.34-.03-3.05-1.86-3.05-1.86 0-2.14 1.45-2.14 2.95v5.71H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29z"/>
+                      </svg>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '6px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', color: '#e1306c' }} title="Instagram">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+
                 {/* Divider + Logout */}
                 <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', margin: '4px 0' }} />
                 <button
@@ -441,3 +528,6 @@ export default function DashboardHeader({ onOpenPalette }) {
     </>
   )
 }
+
+
+

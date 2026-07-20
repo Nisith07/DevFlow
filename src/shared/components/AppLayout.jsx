@@ -2,12 +2,17 @@ import { useState, useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import Sidebar from '@/shared/components/Sidebar'
 import CommandPalette from '@/shared/components/CommandPalette'
-import QuickCreateMenu from '@/shared/components/QuickCreateMenu'
 import { Menu, X } from 'lucide-react'
 
 export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [paletteOpen, setPaletteOpen] = useState(false)
+
+  // Expose palette opener globally so DashboardHeader can call it
+  useEffect(() => {
+    window.__openCommandPalette = () => setPaletteOpen(true)
+    return () => { delete window.__openCommandPalette }
+  }, [])
 
   // Global Ctrl+K listener
   useEffect(() => {
@@ -32,10 +37,10 @@ export default function AppLayout() {
         />
       )}
 
-      {/* Mobile toggle button */}
+      {/* Mobile toggle */}
       <button
         className="sidebar-mobile-toggle"
-        onClick={() => setSidebarOpen((o) => !o)}
+        onClick={() => setSidebarOpen(o => !o)}
         aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
         aria-expanded={sidebarOpen}
       >
@@ -43,10 +48,7 @@ export default function AppLayout() {
       </button>
 
       {/* Sidebar */}
-      <Sidebar
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-      />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Main content */}
       <div className="app-content">
@@ -55,12 +57,11 @@ export default function AppLayout() {
         </main>
       </div>
 
-      {/* Global overlays — mounted once outside the route tree */}
+      {/* Command Palette — global overlay, no FAB (moved to header) */}
       <CommandPalette
         isOpen={paletteOpen}
         onClose={() => setPaletteOpen(false)}
       />
-      <QuickCreateMenu />
     </div>
   )
 }

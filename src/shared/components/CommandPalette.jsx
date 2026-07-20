@@ -44,18 +44,31 @@ const CREATE_CMDS = [
   { id: 'create-deploy',    label: 'Log Deployment',     sub: 'Record a deployment',            icon: Rocket,          color: '#2dd4bf', route: '/deployments', action: 'create' },
 ]
 
-// Simple fuzzy match
-function fuzzyMatch(text, query) {
-  if (!query) return true
-  const t = text.toLowerCase()
-  const q = query.toLowerCase()
-  let ti = 0
-  for (let qi = 0; qi < q.length; qi++) {
-    ti = t.indexOf(q[qi], ti)
-    if (ti === -1) return false
-    ti++
-  }
-  return true
+// Complete set of DevFlow features and functions for searching
+const DEVFLOW_FEATURES = [
+  { id: 'feat-kanban', label: 'Kanban Board / Task Board', sub: 'Interactive columns for todo, in-progress, and done tasks', icon: CheckSquare, color: '#10b981', route: '/tasks', keywords: ['kanban', 'tasks', 'board', 'status', 'workflow', 'todo', 'progress', 'done', 'cards'] },
+  { id: 'feat-sprint', label: 'Sprints & Planner', sub: 'Plan sprints, set milestones, track timelines & calendar events', icon: Calendar, color: '#60a5fa', route: '/planner', keywords: ['sprint', 'planner', 'milestone', 'calendar', 'time', 'date', 'timeline', 'sprints', 'meeting'] },
+  { id: 'feat-ai-chat', label: 'AI Copilot / Chat Assistant', sub: 'Generate code, summarize documents, debug, or chat with AI', icon: Sparkles, color: '#f43f5e', route: '/ai', keywords: ['ai', 'copilot', 'chat', 'assistant', 'generate', 'code', 'help', 'readme', 'bug', 'bot', 'gemini'] },
+  { id: 'feat-oauth', label: 'GitHub Integration & OAuth App', sub: 'Configure secure GitHub OAuth connection or delete tokens', icon: GithubIcon, color: '#d1d5db', route: '/settings', keywords: ['github', 'oauth', 'token', 'connect', 'repositories', 'integrate', 'git'] },
+  { id: 'feat-theme', label: 'Dark Mode / Focus Mode', sub: 'Toggle between dark and light appearance themes', icon: Moon, color: '#a78bfa', route: '/settings', keywords: ['theme', 'dark', 'light', 'focus', 'appearance', 'mode', 'color', 'toggle'] },
+  { id: 'feat-health', label: 'Workspace Health Score', sub: 'View overview of overdue tasks, deployment status, and database health', icon: BarChart2, color: '#10b981', route: '/dashboard', keywords: ['health', 'score', 'workspace', 'database', 'overdue', 'blocker', 'tests', 'status'] },
+  { id: 'feat-activity', label: 'Developer Activity Feed', sub: 'Unified log of commits, note creations, tasks and deployment events', icon: Activity, color: '#06b6d4', route: '/activity', keywords: ['activity', 'feed', 'history', 'event', 'log', 'developer', 'stream', 'timeline'] },
+  { id: 'feat-deploy-logs', label: 'Deployment Logs & Center', sub: 'Inspect Vercel/Render build output, view failed steps, and rollback versions', icon: Layers, color: '#2dd4bf', route: '/deployments', keywords: ['deploy', 'deployment', 'logs', 'center', 'build', 'failed', 'rollback', 'render', 'vercel', 'host'] },
+  { id: 'feat-integrations', label: 'Developer Integrations', sub: 'Manage integrations with Slack, Notion, Jira, Vercel, Render, Atlas', icon: Link2, color: '#60a5fa', route: '/settings', keywords: ['integration', 'integrations', 'services', 'slack', 'notion', 'jira', 'vercel', 'render', 'mongodb', 'atlas'] },
+  { id: 'feat-resume', label: 'Resume Builder / CV Builder', sub: 'Create a professional developer portfolio resume and export as PDF', icon: FileText, color: '#f472b6', route: '/resume', keywords: ['resume', 'cv', 'builder', 'portfolio', 'pdf', 'export', 'job', 'hire'] },
+  { id: 'feat-portfolio', label: 'Portfolio Page Designer', sub: 'Showcase projects, public social links, skills, and code repository', icon: Folder, color: '#a78bfa', route: '/portfolio', keywords: ['portfolio', 'showcase', 'skills', 'public', 'website', 'designer', 'personal'] },
+  { id: 'feat-notes', label: 'Architecture & Auth Notes', sub: 'Take notes on database schemas, logic, or system components', icon: BookOpen, color: '#fbbf24', route: '/notes', keywords: ['note', 'notes', 'docs', 'architecture', 'schema', 'auth', 'database', 'memo'] },
+  { id: 'feat-snippets', label: 'Code Snippets Library', sub: 'Store, copy, and organize useful helper functions and code blocks', icon: Code, color: '#34d399', route: '/snippets', keywords: ['snippet', 'snippets', 'code', 'library', 'helper', 'block', 'paste'] },
+]
+
+// Enhanced substring search matcher
+function matches(cmd, query) {
+  const q = query.toLowerCase().trim()
+  if (!q) return true
+  const label = (cmd.label || '').toLowerCase()
+  const sub = (cmd.sub || '').toLowerCase()
+  const keywords = (cmd.keywords || []).join(' ').toLowerCase()
+  return label.includes(q) || sub.includes(q) || keywords.includes(q)
 }
 
 function CommandItem({ cmd, isActive, onClick }) {
@@ -155,8 +168,8 @@ export default function CommandPalette({ isOpen, onClose }) {
   const allCmds = query.trim()
     ? [
         ...searchResults,
-        ...[...NAVIGATE_CMDS, ...CREATE_CMDS].filter(c =>
-          fuzzyMatch(c.label, query) || fuzzyMatch(c.sub, query)
+        ...[...NAVIGATE_CMDS, ...CREATE_CMDS, ...DEVFLOW_FEATURES].filter(c =>
+          matches(c, query)
         ),
       ]
     : null
@@ -166,6 +179,7 @@ export default function CommandPalette({ isOpen, onClose }) {
     : [
         { label: 'Navigate', items: NAVIGATE_CMDS },
         { label: 'Create', items: CREATE_CMDS },
+        { label: 'Features & Tools', items: DEVFLOW_FEATURES },
       ]
 
   // Flat list for keyboard nav
