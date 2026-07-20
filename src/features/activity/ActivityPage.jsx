@@ -1,8 +1,8 @@
-import { useRef, useCallback } from 'react'
+import { useRef, useCallback, useState } from 'react'
 import {
   CheckCircle2, PlusCircle, Trash2, FolderPlus,
   FileText, Activity, RefreshCcw, LoaderCircle,
-  GitCommit, Globe, Sparkles, Cpu, Users, AlertCircle
+  GitCommit, Globe, Sparkles, Cpu, Users, AlertCircle, Search
 } from 'lucide-react'
 import PageHeader from '@/shared/components/PageHeader'
 import { useActivity } from './hooks/useActivity'
@@ -44,6 +44,7 @@ function getDateGroup(isoString) {
 }
 
 export default function ActivityPage() {
+  const [searchQuery, setSearchQuery] = useState('')
   const {
     data,
     isLoading,
@@ -51,7 +52,7 @@ export default function ActivityPage() {
     hasNextPage,
     fetchNextPage,
     error,
-  } = useActivity()
+  } = useActivity(searchQuery)
 
   // Infinite scroll sentinel
   const observerRef = useRef(null)
@@ -101,18 +102,58 @@ export default function ActivityPage() {
   }
 
   return (
-    <div className="view-enter" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div className="view-enter" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <PageHeader
         title="Activity"
         subtitle="A chronological log of your work across tasks, projects, and notes."
       />
 
-      {events.length === 0 ? (
-        <EmptyState
-          icon={<Activity size={48} />}
-          title="No Activity Yet"
-          description="Create a task or project to start building your timeline."
+      {/* Real-time search bar */}
+      <div style={{ position: 'relative', maxWidth: '360px', flexShrink: 0 }}>
+        <Search size={14} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--color-app-faint)', pointerEvents: 'none' }} />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+          placeholder="Search activity timeline..."
+          style={{
+            width: '100%',
+            paddingLeft: 36,
+            paddingRight: 14,
+            height: 38,
+            borderRadius: 10,
+            fontSize: 13,
+            background: 'var(--card-bg)',
+            border: '1px solid var(--card-border)',
+            color: 'var(--color-app-text)',
+            outline: 'none',
+            boxSizing: 'border-box',
+            transition: 'border-color 0.15s, box-shadow 0.15s',
+          }}
+          onFocus={e => {
+            e.target.style.borderColor = 'var(--color-violet)'
+            e.target.style.boxShadow = '0 0 0 1px rgba(139,92,246,0.1)'
+          }}
+          onBlur={e => {
+            e.target.style.borderColor = 'var(--card-border)'
+            e.target.style.boxShadow = 'none'
+          }}
         />
+      </div>
+
+      {events.length === 0 ? (
+        searchQuery ? (
+          <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--color-app-faint)' }}>
+            <Search size={32} style={{ marginBottom: 12, opacity: 0.5, margin: '0 auto' }} />
+            <p style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>No matching activity events found</p>
+          </div>
+        ) : (
+          <EmptyState
+            icon={<Activity size={48} />}
+            title="No Activity Yet"
+            description="Create a task or project to start building your timeline."
+          />
+        )
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
           {grouped.map((group) => (
@@ -156,6 +197,7 @@ export default function ActivityPage() {
                   const cfg = ACTION_CONFIG[event.action] ?? DEFAULT_CONFIG
                   const Icon = cfg.icon
                   const isLast = idx === group.events.length - 1
+                  const eventTime = new Date(event.createdAt).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })
 
                   return (
                     <div
@@ -212,7 +254,7 @@ export default function ActivityPage() {
                             display: 'block',
                           }}
                         >
-                          {relativeTime(event.createdAt)}
+                          {relativeTime(event.createdAt)} • {eventTime}
                         </span>
                       </div>
                     </div>

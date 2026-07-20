@@ -7,12 +7,12 @@ const PAGE_SIZE = 20
  * Infinite-scroll hook for the activity timeline.
  * Each page fetches 20 events from /api/v1/activity?page=N&limit=20.
  */
-export function useActivity() {
+export function useActivity(searchQuery = '') {
   return useInfiniteQuery({
-    queryKey: ['activity'],
+    queryKey: ['activity', searchQuery],
     queryFn: async ({ pageParam = 1 }) => {
       const { data } = await api.get('/activity', {
-        params: { page: pageParam, limit: PAGE_SIZE },
+        params: { page: pageParam, limit: PAGE_SIZE, q: searchQuery },
       })
       return data
     },
