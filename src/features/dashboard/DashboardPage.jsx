@@ -59,20 +59,44 @@ function CircularGauge({ value, label, size = 56, strokeWidth = 5, color = '#FF7
   )
 }
 
-// Smooth Sparkline Graph
+// Smooth Sparkline Graph — all points kept away from edges so nothing clips
 function SparklineGraph() {
+  // viewBox is 210 × 52; curve lives inside a 6px inset on all sides
+  // so the 4px dot at the end (cx=204) is fully visible
+  const LINE = 'M4,40 C30,30 50,18 80,26 S120,14 150,20 S185,16 204,18'
   return (
-    <svg width="100%" height="38" viewBox="0 0 200 38" fill="none" preserveAspectRatio="none">
-      <defs>
-        <linearGradient id="sparkGradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#FF7A1A" stopOpacity="0.4" />
-          <stop offset="100%" stopColor="#FF7A1A" stopOpacity="0.0" />
-        </linearGradient>
-      </defs>
-      <path d="M0,32 Q30,10 60,26 T120,8 T160,20 T200,10 L200,38 L0,38 Z" fill="url(#sparkGradient)" />
-      <path d="M0,32 Q30,10 60,26 T120,8 T160,20 T200,10" stroke="#FF7A1A" strokeWidth="2" fill="none" strokeLinecap="round" />
-      <circle cx="200" cy="10" r="3.5" fill="#FFFFFF" stroke="#FF7A1A" strokeWidth="1.5" />
-    </svg>
+    <div style={{ width: '100%', overflow: 'hidden', borderRadius: '6px' }}>
+      <svg
+        width="100%"
+        height="44"
+        viewBox="0 0 210 52"
+        fill="none"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        <defs>
+          <linearGradient id="sparkGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#FF7A1A" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#FF7A1A" stopOpacity="0.0" />
+          </linearGradient>
+        </defs>
+        {/* Fill area under the line */}
+        <path
+          d={`${LINE} L204,48 L4,48 Z`}
+          fill="url(#sparkGradient)"
+        />
+        {/* The sparkline itself */}
+        <path
+          d={LINE}
+          stroke="#FF7A1A"
+          strokeWidth="2"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        {/* Endpoint dot — fully inside viewBox */}
+        <circle cx="204" cy="18" r="4" fill="#FFFFFF" stroke="#FF7A1A" strokeWidth="2" />
+      </svg>
+    </div>
   )
 }
 
@@ -457,7 +481,9 @@ export default function DashboardPage() {
               32h 45m <span style={{ fontSize: '9.5px', fontWeight: '500', color: 'var(--color-app-muted)' }}>Total Time</span>
             </div>
 
-            <SparklineGraph />
+            <div style={{ marginTop: '2px', overflow: 'hidden', borderRadius: '8px' }}>
+              <SparklineGraph />
+            </div>
           </div>
 
           <div style={{ marginTop: '10px', paddingTop: '6px', borderTop: '1px solid var(--card-border)' }}>
