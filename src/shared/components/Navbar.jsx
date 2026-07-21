@@ -6,9 +6,10 @@ import { useAuth } from '@/features/auth/hooks/useAuth'
 const NAV_LINKS = [
   { label: 'Home', href: '#home' },
   { label: 'Features', href: '#features' },
-  { label: 'How It Works', href: '#how-it-works' },
+  { label: 'How it Works', href: '#how-it-works' },
   { label: 'Pricing', href: '#pricing' },
   { label: 'Docs', href: '#docs' },
+  { label: 'Changelog', href: '#' },
 ]
 
 export default function Navbar() {

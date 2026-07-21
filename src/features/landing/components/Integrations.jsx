@@ -1,189 +1,216 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { GitPullRequest, Sparkles, BarChart3, ArrowRight, CheckCircle2 } from 'lucide-react'
+import { useRef } from 'react'
+import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { ArrowRight, Sparkles, Bot } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
-export default function Integrations() {
-  const [activeTab, setActiveTab] = useState('github')
+/* ─── Cute SVG Robot Mascot ─── */
+function RobotMascot() {
+  return (
+    <svg
+      width="180"
+      height="200"
+      viewBox="0 0 180 200"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {/* Body */}
+      <rect x="30" y="90" width="120" height="90" rx="24" fill="#fff" stroke="rgba(29,29,31,0.08)" strokeWidth="1.5" />
+      {/* Body sheen */}
+      <rect x="38" y="98" width="36" height="6" rx="3" fill="rgba(230,126,34,0.12)" />
+      {/* Head */}
+      <rect x="40" y="18" width="100" height="80" rx="22" fill="#fff" stroke="rgba(29,29,31,0.08)" strokeWidth="1.5" />
+      {/* Antenna base */}
+      <rect x="86" y="4" width="8" height="20" rx="4" fill="rgba(230,126,34,0.3)" />
+      {/* Antenna tip */}
+      <circle cx="90" cy="4" r="5" fill="var(--lp-orange)" />
+      <circle cx="90" cy="4" r="3" fill="rgba(255,255,255,0.6)" />
+      {/* Eyes */}
+      <rect x="54" y="36" width="26" height="22" rx="8" fill="rgba(230,126,34,0.1)" />
+      <circle cx="67" cy="47" r="7" fill="var(--lp-orange)" />
+      <circle cx="67" cy="47" r="4" fill="#1D1D1F" />
+      <circle cx="69" cy="45" r="1.5" fill="#fff" />
+      <rect x="100" y="36" width="26" height="22" rx="8" fill="rgba(230,126,34,0.1)" />
+      <circle cx="113" cy="47" r="7" fill="var(--lp-orange)" />
+      <circle cx="113" cy="47" r="4" fill="#1D1D1F" />
+      <circle cx="115" cy="45" r="1.5" fill="#fff" />
+      {/* Smile */}
+      <path d="M72 72 Q90 82 108 72" stroke="rgba(29,29,31,0.25)" strokeWidth="2" strokeLinecap="round" fill="none" />
+      {/* Cheek blush */}
+      <ellipse cx="56" cy="67" rx="8" ry="5" fill="rgba(230,126,34,0.15)" />
+      <ellipse cx="124" cy="67" rx="8" ry="5" fill="rgba(230,126,34,0.15)" />
+      {/* Neck */}
+      <rect x="78" y="96" width="24" height="8" rx="4" fill="rgba(29,29,31,0.06)" />
+      {/* Body details */}
+      <rect x="50" y="116" width="80" height="40" rx="12" fill="rgba(230,126,34,0.06)" stroke="rgba(230,126,34,0.12)" strokeWidth="1" />
+      {/* Chest screen */}
+      <rect x="58" y="124" width="64" height="24" rx="7" fill="rgba(230,126,34,0.08)" />
+      <rect x="64" y="130" width="20" height="3" rx="1.5" fill="rgba(230,126,34,0.4)" />
+      <rect x="64" y="136" width="32" height="3" rx="1.5" fill="rgba(230,126,34,0.25)" />
+      <rect x="64" y="142" width="14" height="3" rx="1.5" fill="rgba(230,126,34,0.2)" />
+      {/* Arms */}
+      <rect x="2" y="100" width="30" height="14" rx="7" fill="#fff" stroke="rgba(29,29,31,0.08)" strokeWidth="1.5" />
+      <rect x="148" y="100" width="30" height="14" rx="7" fill="#fff" stroke="rgba(29,29,31,0.08)" strokeWidth="1.5" />
+      {/* Hands */}
+      <circle cx="8" cy="107" r="7" fill="rgba(230,126,34,0.15)" stroke="rgba(230,126,34,0.2)" strokeWidth="1" />
+      <circle cx="172" cy="107" r="7" fill="rgba(230,126,34,0.15)" stroke="rgba(230,126,34,0.2)" strokeWidth="1" />
+      {/* Legs */}
+      <rect x="55" y="176" width="26" height="20" rx="8" fill="#fff" stroke="rgba(29,29,31,0.08)" strokeWidth="1.5" />
+      <rect x="99" y="176" width="26" height="20" rx="8" fill="#fff" stroke="rgba(29,29,31,0.08)" strokeWidth="1.5" />
+      {/* Feet */}
+      <rect x="50" y="192" width="34" height="8" rx="4" fill="rgba(230,126,34,0.2)" />
+      <rect x="96" y="192" width="34" height="8" rx="4" fill="rgba(230,126,34,0.2)" />
+    </svg>
+  )
+}
 
-  const tabs = [
-    {
-      id: 'github',
-      label: 'GitHub Integration',
-      icon: GitPullRequest,
-      title: 'Automatic Standups from Git Commits',
-      description: 'DevFlow parses your commit history directly, filtering out noise, refactoring branches, and draft summaries. Focus on building while DevFlow handles your updates.',
-      visual: (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14, background: '#FFFFFF', padding: 24, borderRadius: 20, border: '1px solid rgba(29, 29, 31, 0.06)', boxShadow: 'var(--lp-shadow-md)' }}>
-          <div style={{ borderBottom: '1px solid rgba(29, 29, 31, 0.05)', paddingBottom: 12, marginBottom: 4 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(29, 29, 31, 0.4)', textTransform: 'uppercase' }}>Recent Commits</span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {[
-              { ref: 'a39f02', desc: 'fix(auth): solved jwt expiry token crash', time: '10m ago' },
-              { ref: 'c12d45', desc: 'feat(planner): implemented calendar sync integration', time: '1h ago' }
-            ].map((c) => (
-              <div key={c.ref} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 12 }}>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  <span style={{ fontFamily: 'var(--font-mono)', background: 'var(--lp-gray)', padding: '2px 6px', borderRadius: 4, fontWeight: 700 }}>{c.ref}</span>
-                  <span style={{ fontWeight: 500 }}>{c.desc}</span>
-                </div>
-                <span style={{ color: 'rgba(29, 29, 31, 0.4)' }}>{c.time}</span>
-              </div>
-            ))}
-          </div>
-          
-          <div style={{ height: 1, background: 'rgba(29, 29, 31, 0.05)', margin: '4px 0' }} />
-          
-          <div>
-            <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--lp-orange)', textTransform: 'uppercase' }}>Standup Draft Compiled</span>
-            <p style={{ margin: '6px 0 0 0', fontSize: 12, color: 'rgba(29, 29, 31, 0.65)', lineHeight: 1.4 }}>
-              "Fixed validation crashes on JWT middleware and connected the external calendar syncing module."
-            </p>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'ai',
-      label: 'AI Copilot',
-      icon: Sparkles,
-      title: 'Context-Aware AI Workspace Agent',
-      description: 'Ask anything, draft releases, or automate standups. DevFlow reads your locally stored task cards, notes, and repository stats to supply suggestions when you need them.',
-      visual: (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14, background: '#FFFFFF', padding: 24, borderRadius: 20, border: '1px solid rgba(29, 29, 31, 0.06)', boxShadow: 'var(--lp-shadow-md)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, borderBottom: '1px solid rgba(29, 29, 31, 0.05)', paddingBottom: 12 }}>
-            <Sparkles size={16} color="var(--lp-orange)" />
-            <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(29, 29, 31, 0.4)', textTransform: 'uppercase' }}>AI Workspace Analysis</span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <div style={{ background: 'rgba(230, 126, 34, 0.05)', padding: 12, borderRadius: 10, border: '1px solid rgba(230, 126, 34, 0.1)', fontSize: 12, lineHeight: 1.4 }}>
-              <span style={{ fontWeight: 700, color: 'var(--lp-orange)' }}>Recommendation:</span> You spend 40% of focus hours debugging auth layers. Let me setup test suites to save time.
-            </div>
-            <div style={{ background: 'rgba(29, 29, 31, 0.02)', padding: 12, borderRadius: 10, border: '1px solid rgba(29, 29, 31, 0.04)', fontSize: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span>Generate Standup draft</span>
-              <ArrowRight size={13} style={{ color: 'rgba(29,29,31,0.4)' }} />
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'analytics',
-      label: 'Flow Analytics',
-      icon: BarChart3,
-      title: 'Actionable Performance Insights',
-      description: 'Track week-by-week milestones, standup frequency, and coding sprint velocity. Understand exactly what factors maximize your flow state and focus blocks.',
-      visual: (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14, background: '#FFFFFF', padding: 24, borderRadius: 20, border: '1px solid rgba(29, 29, 31, 0.06)', boxShadow: 'var(--lp-shadow-md)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(29, 29, 31, 0.05)', paddingBottom: 12 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(29, 29, 31, 0.4)', textTransform: 'uppercase' }}>Weekly Focus Efficiency</span>
-            <span style={{ fontSize: 11, fontWeight: 600, color: '#10B981' }}>+4.2h recovered</span>
-          </div>
-          
-          <div style={{ display: 'flex', height: 100, alignItems: 'flex-end', gap: 10, padding: '10px 0 4px 0' }}>
-            {[
-              { day: 'Mon', val: 50 },
-              { day: 'Tue', val: 70 },
-              { day: 'Wed', val: 90 },
-              { day: 'Thu', val: 65 },
-              { day: 'Fri', val: 80 }
-            ].map((d) => (
-              <div key={d.day} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-                <div style={{ width: '100%', height: `${d.val}px`, background: 'rgba(230, 126, 34, 0.2)', borderRadius: 4, transition: 'all 0.5s' }} />
-                <span style={{ fontSize: 10, color: 'rgba(29, 29, 31, 0.4)', fontFamily: 'var(--font-mono)' }}>{d.day}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )
-    }
+/* ─── AI Copilot Chat UI ─── */
+function CopilotPanel() {
+  const messages = [
+    { type: 'ai', text: 'Found 3 improvements for your code.' },
+    { type: 'ai', text: 'Optimize AI response time by caching prompt results.' },
+    { type: 'user', text: 'Refactor authentication page' },
+    { type: 'ai', text: 'Add more boundary checks' },
   ]
 
-  const active = tabs.find((t) => t.id === activeTab)
+  const suggestions = [
+    'Audit AI Suggestions',
+    'Generate daily standup',
+    'Review PR recommendations',
+  ]
 
   return (
-    <section className="lp-section" id="integrations">
+    <div className="lp-ai-chat">
+      <div className="lp-ai-chat-header">
+        <div style={{ width: 30, height: 30, borderRadius: 8, background: 'linear-gradient(135deg,#E67E22,#F0A050)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Sparkles size={14} color="#fff" />
+        </div>
+        <div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--lp-charcoal)' }}>DevFlow Copilot</div>
+          <div style={{ fontSize: 10, color: 'rgba(29,29,31,0.4)' }}>AI-powered workspace assistant</div>
+        </div>
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 600, color: '#22c55e' }}>
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', display: 'block' }} />
+          Online
+        </div>
+      </div>
+
+      <div className="lp-ai-chat-body">
+        {messages.map((m, i) => (
+          <motion.div
+            key={i}
+            className={`lp-ai-msg ${m.type}`}
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 + i * 0.12, duration: 0.4 }}
+          >
+            {m.text}
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="lp-ai-suggestions">
+        {suggestions.map((s, i) => (
+          <motion.div
+            key={s}
+            className="lp-ai-suggestion-item"
+            initial={{ opacity: 0, x: -8 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.8 + i * 0.1, duration: 0.4 }}
+          >
+            <span>{s}</span>
+            <ArrowRight size={13} color="rgba(29,29,31,0.3)" />
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export default function Integrations() {
+  const containerRef = useRef(null)
+  const isInView = useInView(containerRef, { once: true, margin: '-80px' })
+  const navigate = useNavigate()
+
+  return (
+    <section className="lp-ai-section" id="ai-copilot" ref={containerRef} style={{ background: 'var(--lp-gray)' }}>
       <div className="lp-wrap">
-        
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
-          
-          {/* Left Block: Info & Selector Tabs */}
-          <div>
-            <div className="lp-label">Core Modules</div>
-            <h2 className="lp-h2" style={{ marginBottom: 24 }}>Everything you need to <em>reclaim</em> your flow</h2>
+        <div className="lp-ai-grid">
+
+          {/* Left: copy + chat UI */}
+          <motion.div
+            initial={{ opacity: 0, x: -32 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="lp-label">
+              <Bot size={12} />
+              AI Copilot
+            </div>
+            <h2 className="lp-h2" style={{ marginBottom: 16 }}>
+              Your AI pair that<br />
+              <em>works 24/7</em>
+            </h2>
             <p className="lp-section-sub" style={{ marginBottom: 36 }}>
-              DevFlow combines your code repos, automated standups, and developer focus charts into a unified workspace.
+              DevFlow Copilot understands your codebase, suggests improvements, and keeps you moving forward — around the clock.
             </p>
 
-            {/* Tab Selectors */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {tabs.map((tab) => {
-                const TabIcon = tab.icon
-                const isSelected = activeTab === tab.id
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 16,
-                      background: isSelected ? '#FFFFFF' : 'transparent',
-                      border: '1px solid',
-                      borderColor: isSelected ? 'var(--lp-border)' : 'transparent',
-                      borderRadius: 14,
-                      padding: '16px 20px',
-                      textAlign: 'left',
-                      cursor: 'pointer',
-                      width: '100%',
-                      boxShadow: isSelected ? 'var(--lp-shadow-sm)' : 'none',
-                      transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
-                    }}
-                  >
-                    <div style={{ 
-                      background: isSelected ? 'rgba(230,126,34,0.1)' : 'var(--lp-gray)', 
-                      color: isSelected ? 'var(--lp-orange)' : 'rgba(29,29,31,0.4)',
-                      width: 38,
-                      height: 38,
-                      borderRadius: 10,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      transition: 'all 0.3s'
-                    }}>
-                      <TabIcon size={18} />
-                    </div>
-                    <span style={{ fontSize: 15, fontWeight: 700, color: isSelected ? 'var(--lp-charcoal)' : 'rgba(29,29,31,0.6)' }}>
-                      {tab.label}
-                    </span>
-                  </button>
-                )
-              })}
-            </div>
-          </div>
+            <CopilotPanel />
 
-          {/* Right Block: Animated Tab Visuals */}
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <AnimatePresence mode="wait">
+            <motion.button
+              onClick={() => navigate('/ai')}
+              className="lp-btn lp-btn-primary"
+              style={{ marginTop: 24, display: 'inline-flex', padding: '12px 24px', fontSize: 14 }}
+              whileHover={{ scale: 1.04, y: -2 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Explore AI Copilot <ArrowRight size={14} />
+            </motion.button>
+          </motion.div>
+
+          {/* Right: Robot mascot */}
+          <motion.div
+            className="lp-robot-wrap"
+            initial={{ opacity: 0, x: 32 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {/* Orbit ring */}
+            <div className="lp-robot-orbit">
+              <div className="lp-robot-orbit-dot" />
+            </div>
+            {/* Second orbit */}
+            <div className="lp-robot-orbit" style={{ width: 320, height: 320, animationDuration: '22s', animationDirection: 'reverse', borderColor: 'rgba(230,126,34,0.1)' }}>
+              <div className="lp-robot-orbit-dot" style={{ width: 6, height: 6, background: 'rgba(230,126,34,0.5)', boxShadow: 'none', top: -3 }} />
+            </div>
+
+            {/* Sparkle particles */}
+            {[
+              { top: '15%', left: '20%', delay: 0 },
+              { top: '70%', left: '15%', delay: 0.8 },
+              { top: '25%', right: '18%', delay: 1.6 },
+              { top: '65%', right: '22%', delay: 0.4 },
+            ].map((pos, i) => (
               <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.4 }}
-                style={{ width: '100%', maxWidth: '420px' }}
+                key={i}
+                style={{ position: 'absolute', ...pos }}
+                animate={{ scale: [0.6, 1, 0.6], opacity: [0.4, 1, 0.4] }}
+                transition={{ duration: 2.5 + i * 0.4, repeat: Infinity, delay: pos.delay }}
               >
-                <div style={{ marginBottom: 20 }}>
-                  <h3 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 10px 0' }}>{active.title}</h3>
-                  <p style={{ fontSize: 14.5, color: 'rgba(29,29,31,0.6)', margin: 0, lineHeight: 1.5 }}>{active.description}</p>
-                </div>
-                {active.visual}
+                <Sparkles size={14} color="rgba(230,126,34,0.6)" />
               </motion.div>
-            </AnimatePresence>
-          </div>
+            ))}
+
+            {/* Robot */}
+            <div className="lp-robot">
+              <RobotMascot />
+            </div>
+            {/* Soft glow */}
+            <div className="lp-robot-glow" />
+          </motion.div>
 
         </div>
-
       </div>
     </section>
   )

@@ -19,37 +19,72 @@ export default function LandingPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
 
-  /* Redirect authenticated users to the dashboard */
+  /* Redirect authenticated users */
   useEffect(() => {
     if (!loading && isAuthenticated) {
       navigate('/dashboard', { replace: true })
     }
   }, [isAuthenticated, loading, navigate])
 
-  /* Handle OAuth error query param */
+  /* Handle OAuth error */
   useEffect(() => {
     if (searchParams.get('authError')) {
       navigate('/login', { replace: true })
     }
   }, [searchParams, navigate])
 
+  /* Lenis smooth scrolling */
+  useEffect(() => {
+    let lenis
+
+    const initLenis = async () => {
+      try {
+        const LenisModule = await import('lenis')
+        const Lenis = LenisModule.default
+
+        lenis = new Lenis({
+          lerp: 0.09,
+          smoothWheel: true,
+          wheelMultiplier: 0.9,
+          touchMultiplier: 1.5,
+          infinite: false,
+        })
+
+        const raf = (time) => {
+          lenis.raf(time)
+          requestAnimationFrame(raf)
+        }
+        requestAnimationFrame(raf)
+      } catch (e) {
+        // Lenis not available — graceful degradation
+        console.warn('Lenis smooth scroll not available:', e.message)
+      }
+    }
+
+    initLenis()
+
+    return () => {
+      if (lenis) lenis.destroy()
+    }
+  }, [])
+
   return (
     <div className="lp-root">
-      {/* Background patterns */}
+      {/* Background */}
       <div className="lp-bg-canvas" />
       <div className="lp-bg-glow-3" />
 
-      {/* Navbar — fixed, scroll-aware */}
+      {/* Nav */}
       <Navbar />
 
-      {/* Page sections — normal document scroll */}
+      {/* Sections */}
       <main>
         <Hero />
         <HowItWorks />
         <Features />
         <DashboardPreview />
-        <Integrations />
         <About />
+        <Integrations />
         <Testimonials />
         <Pricing />
         <Faq />
@@ -57,7 +92,6 @@ export default function LandingPage() {
         <Footer />
       </main>
 
-      {/* Login / Register modals render here */}
       <Outlet />
     </div>
   )
