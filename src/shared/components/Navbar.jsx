@@ -4,19 +4,20 @@ import { Menu, X } from 'lucide-react'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 
 const NAV_LINKS = [
-  { label: 'Home',        href: '#home' },
-  { label: 'Features',    href: '#features' },
+  { label: 'Home', href: '#home' },
+  { label: 'Features', href: '#features' },
   { label: 'How It Works', href: '#how-it-works' },
-  { label: 'About',       href: '#about' },
+  { label: 'Pricing', href: '#pricing' },
+  { label: 'Docs', href: '#docs' },
 ]
 
 export default function Navbar() {
-  const [scrolled, setScrolled]       = useState(false)
-  const [mobileOpen, setMobileOpen]   = useState(false)
-  const [activeSection, setActive]    = useState('home')
-  const { isAuthenticated }           = useAuth()
-  const navigate                      = useNavigate()
-  const location                      = useLocation()
+  const [scrolled, setScrolled] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [activeSection, setActive] = useState('home')
+  const { isAuthenticated } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   /* ── Scroll tracking ─────────────────────────────────────────────── */
   useEffect(() => {
@@ -61,14 +62,9 @@ export default function Navbar() {
         <div className="lp-nav-inner">
 
           {/* Brand */}
-          <button className="lp-brand" onClick={(e) => scrollTo('#home', e)} aria-label="DevFlow home">
-            <img
-              src="/logo-icon.svg"
-              alt=""
-              aria-hidden="true"
-              style={{ width: 30, height: 30, borderRadius: 7, flexShrink: 0 }}
-            />
-            DevFlow
+          <button className="lp-brand" onClick={(e) => scrollTo('#home', e)} aria-label="Devflow home">
+            <div className="lp-brand-icon">D</div>
+            <span>DevFlow</span>
           </button>
 
           {/* Desktop links */}
@@ -104,7 +100,7 @@ export default function Navbar() {
                   className="lp-btn lp-btn-ghost"
                   onClick={() => navigate('/login')}
                 >
-                  Log in
+                  Login
                 </button>
                 <button
                   className="lp-btn lp-btn-primary"
@@ -143,7 +139,7 @@ export default function Navbar() {
             </button>
           ) : (
             <>
-              <button className="lp-btn lp-btn-ghost" style={{ width: '100%', justifyContent: 'center' }} onClick={() => { setMobileOpen(false); navigate('/login') }}>Log in</button>
+              <button className="lp-btn lp-btn-ghost" style={{ width: '100%', justifyContent: 'center' }} onClick={() => { setMobileOpen(false); navigate('/login') }}>Login</button>
               <button className="lp-btn lp-btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => { setMobileOpen(false); navigate('/register') }}>Get Started</button>
             </>
           )}

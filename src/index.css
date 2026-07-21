@@ -114,14 +114,14 @@
   --neu-light: rgba(255, 255, 255, 0.035);
 
   /* ── Semantic card / sidebar / dropdown variables ── */
-  --card-bg:              #0F1220;
-  --card-bg-inset:        #0C0F1C;
-  --card-border:          #1E2540;
-  --card-border-top:      #2C3560;
-  --card-border-left:     #252D55;
-  --card-border-inset:    #181D35;
-  --sidebar-bg:           #0C0F1C;
-  --sidebar-border:       #1E2540;
+  --card-bg: #0F1220;
+  --card-bg-inset: #0C0F1C;
+  --card-border: #1E2540;
+  --card-border-top: #2C3560;
+  --card-border-left: #252D55;
+  --card-border-inset: #181D35;
+  --sidebar-bg: #0C0F1C;
+  --sidebar-border: #1E2540;
 
   /* Premium neumorphic shadows — deep lift + subtle highlight */
   --shadow-neu-sm-val:
@@ -137,12 +137,12 @@
     -8px -8px 18px rgba(255, 255, 255, 0.035),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
   --shadow-card-val:
-    0 2px 0 rgba(255,255,255,0.04) inset,
+    0 2px 0 rgba(255, 255, 255, 0.04) inset,
     0 8px 32px rgba(0, 0, 0, 0.55),
     0 2px 8px rgba(0, 0, 0, 0.35),
     0 0 0 1px rgba(139, 92, 246, 0.04);
   --shadow-card-hover-val:
-    0 1px 0 rgba(255,255,255,0.06) inset,
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
     0 16px 48px rgba(0, 0, 0, 0.65),
     0 4px 16px rgba(0, 0, 0, 0.45),
     0 0 0 1px rgba(139, 92, 246, 0.12),
@@ -151,10 +151,10 @@
     4px 0 24px rgba(0, 0, 0, 0.6),
     4px 0 0 rgba(139, 92, 246, 0.03) inset;
   --shadow-dropdown-val:
-    0 1px 0 rgba(255,255,255,0.04) inset,
-    0 24px 64px rgba(0,0,0,0.75),
-    0 8px 24px rgba(0,0,0,0.5),
-    0 0 0 1px rgba(139,92,246,0.06);
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 24px 64px rgba(0, 0, 0, 0.75),
+    0 8px 24px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(139, 92, 246, 0.06);
   --shadow-glow-violet-val: 0 0 24px rgba(139, 92, 246, 0.3), 0 0 48px rgba(139, 92, 246, 0.12);
 }
 
@@ -186,14 +186,14 @@
   --neu-light: rgba(255, 255, 255, 0.95);
 
   /* ── Light-mode card / sidebar / dropdown overrides ── */
-  --card-bg:              #FFFFFF;
-  --card-bg-inset:        #F0F2F7;
-  --card-border:          #E1E4EB;
-  --card-border-top:      #CCD0D9;
-  --card-border-left:     #D8DCE5;
-  --card-border-inset:    #D4D8E2;
-  --sidebar-bg:           #F2F4F9;
-  --sidebar-border:       #E1E4EB;
+  --card-bg: #FFFFFF;
+  --card-bg-inset: #F0F2F7;
+  --card-border: #E1E4EB;
+  --card-border-top: #CCD0D9;
+  --card-border-left: #D8DCE5;
+  --card-border-inset: #D4D8E2;
+  --sidebar-bg: #F2F4F9;
+  --sidebar-border: #E1E4EB;
 
   --shadow-neu-sm-val: 4px 4px 8px rgba(163, 177, 198, 0.45), -4px -4px 8px rgba(255, 255, 255, 0.9);
   --shadow-neu-md-val: 8px 8px 16px rgba(163, 177, 198, 0.5), -8px -8px 16px rgba(255, 255, 255, 0.95);
@@ -1210,7 +1210,7 @@ button {
 .card:hover {
   transform: translateY(-1px);
   box-shadow:
-    0 2px 0 rgba(255,255,255,0.05) inset,
+    0 2px 0 rgba(255, 255, 255, 0.05) inset,
     0 12px 40px rgba(0, 0, 0, 0.6),
     0 4px 12px rgba(0, 0, 0, 0.4),
     0 0 0 1px rgba(139, 92, 246, 0.08);
@@ -3372,12 +3372,15 @@ button {
   box-sizing: border-box;
   overflow-y: auto;
   min-height: 0;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
 }
 
 .app-main::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, and Opera */
+  display: none;
+  /* Chrome, Safari, and Opera */
 }
 
 /* Force App Main to hide overflow when showing the fit dashboard */
@@ -3431,14 +3434,16 @@ button {
 .neu-card::after {
   content: '';
   position: absolute;
-  top: 0; left: 10%; right: 10%;
+  top: 0;
+  left: 10%;
+  right: 10%;
   height: 1px;
   background: linear-gradient(90deg,
-    transparent,
-    rgba(139, 92, 246, 0.15),
-    rgba(255, 255, 255, 0.08),
-    rgba(139, 92, 246, 0.15),
-    transparent);
+      transparent,
+      rgba(139, 92, 246, 0.15),
+      rgba(255, 255, 255, 0.08),
+      rgba(139, 92, 246, 0.15),
+      transparent);
   pointer-events: none;
 }
 
@@ -3456,8 +3461,8 @@ button {
   border: 1px solid var(--card-border-inset) !important;
   border-radius: var(--radius-sm);
   box-shadow:
-    inset 3px 3px 8px rgba(0,0,0,0.12),
-    inset -1px -1px 4px rgba(255,255,255,0.5) !important;
+    inset 3px 3px 8px rgba(0, 0, 0, 0.12),
+    inset -1px -1px 4px rgba(255, 255, 255, 0.5) !important;
   box-sizing: border-box;
 }
 
@@ -3864,41 +3869,48 @@ html.theme-light .theme-switch-thumb {
   position: fixed;
   pointer-events: none;
   z-index: 99999;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
 }
 
 /* Outer ring — trails behind */
 .lp-cursor-ring {
   position: fixed;
-  width: 36px; height: 36px;
-  border: 1px solid rgba(255,255,255,0.4);
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   transition: width 0.35s ease, height 0.35s ease, border-color 0.25s ease, background 0.25s ease;
   pointer-events: none;
   z-index: 99998;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
 }
 
 .lp-cursor-dot {
   position: fixed;
-  width: 5px; height: 5px;
+  width: 5px;
+  height: 5px;
   background: #fff;
   border-radius: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
   z-index: 99999;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
 }
 
 .lp-cursor-ring.is-hovering {
-  width: 56px; height: 56px;
+  width: 56px;
+  height: 56px;
   border-color: rgba(139, 92, 246, 0.7);
   background: rgba(139, 92, 246, 0.06);
 }
 
 .lp-cursor-ring.is-cta {
-  width: 70px; height: 70px;
+  width: 70px;
+  height: 70px;
   border-color: rgba(139, 92, 246, 0.9);
   background: rgba(139, 92, 246, 0.1);
 }
@@ -3922,40 +3934,61 @@ html.theme-light .lp-cursor-ring.is-cta {
   background: rgba(124, 58, 237, 0.1);
 }
 
-/* Force white cursor on the landing page/website (since the landing page is dark) */
+/* Force dark charcoal cursor with premium orange accents on the light landing page */
 html:has(.lp-root) .lp-cursor-dot {
-  background: #fff !important;
+  background: #1D1D1F !important;
 }
 
 html:has(.lp-root) .lp-cursor-ring {
-  border-color: rgba(255, 255, 255, 0.4) !important;
+  border-color: rgba(29, 29, 31, 0.3) !important;
 }
 
 html:has(.lp-root) .lp-cursor-ring.is-hovering {
-  border-color: rgba(139, 92, 246, 0.7) !important;
-  background: rgba(139, 92, 246, 0.06) !important;
+  border-color: rgba(230, 126, 34, 0.7) !important;
+  background: rgba(230, 126, 34, 0.06) !important;
 }
 
 html:has(.lp-root) .lp-cursor-ring.is-cta {
-  border-color: rgba(139, 92, 246, 0.9) !important;
-  background: rgba(139, 92, 246, 0.1) !important;
+  border-color: rgba(230, 126, 34, 0.9) !important;
+  background: rgba(230, 126, 34, 0.1) !important;
 }
 
 /* Hide custom cursor on touch devices */
 @media (hover: none) {
-  body { cursor: auto; }
-  .lp-cursor-ring, .lp-cursor-dot { display: none; }
+  body {
+    cursor: auto;
+  }
+
+  .lp-cursor-ring,
+  .lp-cursor-dot {
+    display: none;
+  }
 }
 
 @media (max-width: 768px) {
+
   /* Disable custom cursor on mobile */
-  .lp-cursor-ring, .lp-cursor-dot { display: none; }
-  body { cursor: auto !important; }
+  .lp-cursor-ring,
+  .lp-cursor-dot {
+    display: none;
+  }
+
+  body {
+    cursor: auto !important;
+  }
 }
 
 @media (pointer: fine) {
-  body, .app-root, .lp-root,
-  a, button, [role="button"], input, textarea, select {
+
+  body,
+  .app-root,
+  .lp-root,
+  a,
+  button,
+  [role="button"],
+  input,
+  textarea,
+  select {
     cursor: none !important;
   }
 }
