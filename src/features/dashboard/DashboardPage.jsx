@@ -5,529 +5,601 @@ import {
   Layers, CheckCircle2, Code, Bell, GitCommit,
   Activity, BarChart2, Calendar, Briefcase,
   PlusCircle, FolderPlus, RefreshCcw, Trash2,
-  GitPullRequest, Globe, Rocket
+  GitPullRequest, Globe, Rocket, Plus, Zap, Focus
 } from 'lucide-react'
 import DashboardHeader from './components/DashboardHeader'
-import QuickActions from './components/QuickActions'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { useDashboard, useCompleteTask } from '@/features/dashboard/hooks/useDashboard'
 import { useProjects } from '@/features/projects/hooks/useProjects'
 import { useDeployments } from '@/features/deployments/hooks/useDeployments'
 import { useActivity } from '@/features/activity/hooks/useActivity'
 import { useIssues } from '@/features/issues/hooks/useIssues'
-import { relativeTime } from '@/shared/lib/utils'
 
-// ── Mini helpers ──────────────────────────────────────────────────────────────
-const GithubIcon = ({ size = 12 }) => (
+const GithubIcon = ({ size = 14 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
   </svg>
 )
 
-const ACTIVITY_CFG = {
-  task_created:    { Icon: PlusCircle,  color: '#2dd4bf', route: '/tasks' },
-  task_completed:  { Icon: CheckCircle2,color: '#10b981', route: '/tasks' },
-  task_updated:    { Icon: RefreshCcw,  color: '#f59e0b', route: '/tasks' },
-  task_deleted:    { Icon: Trash2,      color: '#ef4444', route: '/tasks' },
-  project_created: { Icon: FolderPlus, color: '#a78bfa', route: '/projects' },
-  project_updated: { Icon: RefreshCcw, color: '#f59e0b', route: '/projects' },
-  project_deleted: { Icon: Trash2,     color: '#ef4444', route: '/projects' },
-  github_committed:{ Icon: GitCommit,  color: '#d1d5db', route: '/github' },
-  issue_created:   { Icon: AlertCircle,color: '#ef4444', route: '/issues' },
-  issue_closed:    { Icon: CheckCircle2,color:'#10b981', route: '/issues' },
-  ai_readme_generated:    { Icon: Sparkles, color: '#f43f5e', route: '/ai' },
-  ai_component_generated: { Icon: Sparkles, color: '#f43f5e', route: '/ai' },
-  portfolio_deployed:     { Icon: Globe,    color: '#60a5fa', route: '/portfolio' },
+// SVG Brain Illustration for AI Daily Brief card
+function BrainGraphic() {
+  return (
+    <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ opacity: 0.85 }}>
+      <path d="M30 10C22 10 16 16 16 24C16 28 18 31 20 34C18 38 18 42 22 46C26 50 30 50 30 50C30 50 34 50 38 46C42 42 42 38 40 34C42 31 44 28 44 24C44 16 38 10 30 10Z" stroke="#FF7A1A" strokeWidth="1.5" strokeDasharray="3 3" />
+      <circle cx="30" cy="30" r="14" stroke="#FF7A1A" strokeWidth="1.5" />
+      <path d="M22 30H38M30 22V38" stroke="#FF7A1A" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="24" cy="24" r="2" fill="#FF7A1A" />
+      <circle cx="36" cy="24" r="2" fill="#FF7A1A" />
+      <circle cx="36" cy="36" r="2" fill="#FF7A1A" />
+      <circle cx="24" cy="36" r="2" fill="#FF7A1A" />
+    </svg>
+  )
 }
 
-// Shared card style — premium neumorphic, theme-aware via CSS variables
-const card = {
-  background: 'var(--card-bg)',
-  border: '1px solid var(--card-border)',
-  borderTop: '1px solid var(--card-border-top)',
-  borderLeft: '1px solid var(--card-border-left)',
-  borderRadius: '12px',
-  padding: '10px 12px',
-  display: 'flex', flexDirection: 'column',
-  justifyContent: 'space-between',
-  height: '100%', boxSizing: 'border-box', overflow: 'hidden',
-  boxShadow: 'var(--shadow-card-val)',
-  transition: 'box-shadow 0.2s ease, border-color 0.2s ease',
-  position: 'relative',
+// Circular Gauge Component
+function CircularGauge({ value, label, size = 68, strokeWidth = 6, color = '#FF7A1A' }) {
+  const radius = (size - strokeWidth) / 2
+  const circumference = 2 * Math.PI * radius
+  const strokeDashoffset = circumference - (value / 100) * circumference
+
+  return (
+    <div style={{ position: 'relative', width: size, height: size, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx={size / 2} cy={size / 2} r={radius} stroke="var(--card-bg-inset)" strokeWidth={strokeWidth} fill="none" />
+        <circle
+          cx={size / 2} cy={size / 2} r={radius}
+          stroke={color} strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          strokeLinecap="round"
+          fill="none"
+          style={{ transition: 'stroke-dashoffset 0.8s ease' }}
+        />
+      </svg>
+      <div style={{ position: 'absolute', textAlign: 'center' }}>
+        <div style={{ fontSize: '13px', fontWeight: '800', color: 'var(--color-app-text)', lineHeight: 1 }}>{value}%</div>
+        {label && <div style={{ fontSize: '8px', color: 'var(--color-app-muted)', marginTop: '2px' }}>{label}</div>}
+      </div>
+    </div>
+  )
 }
 
-const navLink = {
-  display: 'flex', alignItems: 'center', gap: '2px',
-  fontSize: '9px', color: '#8b5cf6', textDecoration: 'none', fontWeight: '700',
+// Smooth Sparkline Graph for Coding Time
+function SparklineGraph() {
+  return (
+    <svg width="100%" height="42" viewBox="0 0 200 42" fill="none" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="sparkGradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#FF7A1A" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#FF7A1A" stopOpacity="0.0" />
+        </linearGradient>
+      </defs>
+      <path d="M0,35 Q30,10 60,28 T120,8 T160,22 T200,12 L200,42 L0,42 Z" fill="url(#sparkGradient)" />
+      <path d="M0,35 Q30,10 60,28 T120,8 T160,22 T200,12" stroke="#FF7A1A" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+      <circle cx="200" cy="12" r="3.5" fill="#FF7A1A" stroke="#FFFFFF" strokeWidth="1.5" />
+    </svg>
+  )
 }
 
-const sectionLabel = (color = '#8b5cf6') => ({
-  fontSize: '9px', fontWeight: '800', textTransform: 'uppercase',
-  letterSpacing: '0.08em', color: 'var(--color-app-muted)',
-})
-
-// ── Main Page ─────────────────────────────────────────────────────────────────
 export default function DashboardPage() {
   const { user } = useAuth()
   const navigate = useNavigate()
-  const [paletteOpen, setPaletteOpen] = useState(false)
+  const cleanName = (user?.name || 'Nisith').replace(/:+$/, '')
+  const firstName = cleanName.split(' ')[0]
 
-  // Data
-  const { data: dashboardData } = useDashboard()
-  const { projects } = useProjects()
-  const completeTaskMutation = useCompleteTask()
-  const { data: deploymentsData } = useDeployments()
-  const activityQuery = useActivity()
-  const { issues } = useIssues({ status: 'open' })
-
-  // Mock fallback tasks
-  const [mockTasks] = useState([
-    { id: 'mock-1', title: 'Finish Authentication', priority: 'High', status: 'todo' },
-    { id: 'mock-2', title: 'Fix Render Deployment', priority: 'High', status: 'todo' },
-    { id: 'mock-3', title: 'Push Backend Changes', priority: 'Medium', status: 'todo' },
-    { id: 'mock-4', title: 'Review PR #14', priority: 'Medium', status: 'todo' },
+  // Task state
+  const [tasks, setTasks] = useState([
+    { id: 1, title: 'Finish authentication flow', done: true },
+    { id: 2, title: 'Fix responsive issues', done: true },
+    { id: 3, title: 'Update dashboard UI', done: true },
+    { id: 4, title: 'Review pull request #42', done: false },
   ])
-  const [localMockTasks, setLocalMockTasks] = useState(mockTasks)
 
-  const dbTasks = dashboardData?.todayTasks || []
-  const displayTasks = dbTasks.length > 0 ? dbTasks : localMockTasks
-
-  const toggleTask = async (id) => {
-    if (String(id).startsWith('mock-')) {
-      setLocalMockTasks(prev => prev.map(t =>
-        t.id === id ? { ...t, status: t.status === 'done' ? 'todo' : 'done' } : t
-      ))
-      return
-    }
-    try { await completeTaskMutation.mutateAsync(id) } catch { /* silent */ }
+  const toggleTask = (id) => {
+    setTasks(prev => prev.map(t => t.id === id ? { ...t, done: !t.done } : t))
   }
 
-  const completedCount = displayTasks.filter(t => t.status === 'done' || t.completed).length
-  const totalTasks = displayTasks.length
+  const completedTasks = tasks.filter(t => t.done).length
+  const taskPercent = Math.round((completedTasks / tasks.length) * 100)
 
-  // Deployments data
-  const deployments = deploymentsData || []
-  const liveDeployment = deployments.find(d => d.isProduction) || deployments[0]
-  const failedDeployments = deployments.filter(d => d.status === 'failed').length
-  const successDeployments = deployments.filter(d => d.status === 'success').length
-
-  // Activity feed (flatten infinite pages)
-  const activityItems = activityQuery.data?.pages?.flatMap(p => p.data) || []
-
-  // Active projects list
-  const activeProjects = (projects || []).slice(0, 3)
-
-  // Issues
-  const openIssues = (issues || []).slice(0, 3)
-
-  // Workspace health score (0–100)
-  const overdueTasks = dashboardData?.overdueTasks || 0
-  const openPRs = 2 // static placeholder (no PR API yet)
-  const healthScore = Math.max(0, Math.min(100,
-    100
-    - (failedDeployments * 20)
-    - (Math.min(overdueTasks, 4) * 5)
-    - (openIssues.length > 5 ? 15 : 0)
-  ))
-  const healthColor = healthScore >= 80 ? '#10b981' : healthScore >= 60 ? '#f59e0b' : '#ef4444'
-
-  // Open command palette from header
-  const openPalette = () => setPaletteOpen(true)
+  // Card container style matching reference images
+  const cardStyle = {
+    background: 'var(--card-bg)',
+    border: '1px solid var(--card-border)',
+    borderRadius: '18px',
+    padding: '16px 18px',
+    boxShadow: 'var(--shadow-card-val)',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    position: 'relative',
+    overflow: 'hidden',
+    transition: 'all 0.2s ease',
+  }
 
   return (
-    <div className="dashboard-viewport-fit" style={{
-      background: 'var(--color-app-bg)',
+    <div style={{
+      background: 'var(--app-bg)',
       color: 'var(--color-app-text)',
-      height: 'calc(100vh - 24px)',
-      padding: '4px 12px 10px',
-      display: 'flex', flexDirection: 'column',
-      justifyContent: 'space-between',
-      overflow: 'hidden',
+      minHeight: '100vh',
+      padding: '16px 24px 32px',
       fontFamily: "'Inter', sans-serif",
       boxSizing: 'border-box',
     }}>
+      {/* ── HEADER BAR ── */}
+      <DashboardHeader />
 
-      <DashboardHeader onOpenPalette={openPalette} />
-      <QuickActions />
-
-      {/* ── DASHBOARD GRID ──────────────────────────────────────────── */}
-      <div style={{
-        flex: 1, display: 'grid',
-        gridTemplateRows: 'repeat(4, 1fr)',
-        gap: '10px', minHeight: 0,
-      }}>
-
-        {/* ── ROW 1 ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', minHeight: 0 }}>
-
-          {/* TODAY'S FOCUS */}
-          <div className="card" style={card}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <CheckSquare size={12} style={{ color: '#8b5cf6' }} />
-              <span style={sectionLabel()}>Today's Focus</span>
-            </div>
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flex: 1, minHeight: 0 }}>
-              <div style={{ position: 'relative', width: '44px', height: '44px', flexShrink: 0 }}>
-                <svg width="44" height="44" viewBox="0 0 36 36">
-                  <circle cx="18" cy="18" r="15.915" fill="none" stroke="var(--color-app-border)" strokeWidth="3" />
-                  <circle cx="18" cy="18" r="15.915" fill="none" stroke="#8b5cf6" strokeWidth="3"
-                    strokeDasharray={`${totalTasks > 0 ? (completedCount / totalTasks) * 100 : 0} 100`}
-                    strokeDashoffset="25" />
-                </svg>
-                <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ fontSize: '10px', fontWeight: '900', color: 'var(--color-app-text)' }}>{totalTasks}</span>
-                  <span style={{ fontSize: '6px', color: 'var(--color-app-muted)' }}>Tasks</span>
-                </div>
-              </div>
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '3px', minWidth: 0, overflow: 'hidden' }}>
-                {displayTasks.slice(0, 4).map(t => {
-                  const isDone = t.status === 'done' || !!t.completed
-                  return (
-                    <label key={t.id || t._id} style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', minWidth: 0 }}>
-                      <input type="checkbox" checked={isDone}
-                        onChange={() => toggleTask(t.id || t._id)}
-                        style={{ accentColor: '#8b5cf6', width: '10px', height: '10px', cursor: 'pointer', flexShrink: 0 }}
-                      />
-                      <span style={{
-                        fontSize: '9px',
-                        textDecoration: isDone ? 'line-through' : 'none',
-                        color: isDone ? 'var(--color-app-faint)' : 'var(--color-app-text)',
-                        overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', width: '100%',
-                      }}>{t.title}</span>
-                    </label>
-                  )
-                })}
-              </div>
-            </div>
-            <Link to="/tasks" style={navLink}>View all tasks <ArrowRight size={9} /></Link>
-          </div>
-
-          {/* CONTINUE WORKING */}
-          <div className="card" style={{ ...card, cursor: 'pointer' }} onClick={() => navigate('/projects')}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <Code size={12} style={{ color: '#06b6d4' }} />
-              <span style={sectionLabel()}>Continue Working</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--color-app-surface-2)', padding: '5px 6px', borderRadius: '6px', border: '1px solid var(--color-app-border)' }}>
-              <img src="/logo-icon.svg" alt="" style={{ width: 16, height: 16 }} />
-              <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: '10px', fontWeight: '700', color: 'var(--color-app-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {activeProjects[0]?.name || 'DevFlow'}
-                </div>
-                <div style={{ fontSize: '7.5px', color: 'var(--color-app-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {activeProjects[0]?.description || 'All-in-one Workspace'}
-                </div>
-              </div>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9.5px' }}>
-                <span style={{ color: 'var(--color-app-muted)' }}>Current Branch</span>
-                <span style={{ color: 'var(--color-app-text)', fontWeight: '600', fontFamily: 'monospace' }}>main</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9.5px' }}>
-                <span style={{ color: 'var(--color-app-muted)' }}>Status</span>
-                <span style={{ color: '#10b981', fontWeight: '600' }}>Active</span>
-              </div>
-            </div>
-            <span style={{ ...navLink }}>Open Projects <ArrowRight size={9} /></span>
-          </div>
-
-          {/* AI DAILY BRIEF */}
-          <div className="card" style={card}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <Sparkles size={12} style={{ color: '#ef4444' }} />
-                <span style={sectionLabel()}>AI Daily Brief</span>
-              </div>
-              <span style={{ fontSize: '7.5px', fontWeight: '700', color: '#a78bfa', background: 'rgba(167,139,250,0.15)', padding: '0px 3px', borderRadius: '3px' }}>BETA</span>
-            </div>
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '2px', overflow: 'hidden', justifyContent: 'center' }}>
-              <div style={{ fontSize: '9px', color: 'var(--color-app-text)', fontStyle: 'italic', lineHeight: '1.4', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                {dashboardData?.streak > 0
-                  ? `🔥 ${dashboardData.streak}-day streak! Complete ${dashboardData.todayTasks?.filter(t => t.status !== 'done').length || 0} remaining tasks to maintain it.`
-                  : '"Focus on your highest-priority tasks. You have a great setup here — let\'s ship something today."'
-                }
-              </div>
-            </div>
-            <Link to="/ai" style={navLink}>Open AI Copilot <ArrowRight size={9} /></Link>
-          </div>
-        </div>
-
-        {/* ── ROW 2 ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', minHeight: 0 }}>
-
-          {/* SPRINT PROGRESS */}
-          <div className="card" style={{ ...card, cursor: 'pointer' }} onClick={() => navigate('/tasks')}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-              <span style={{ fontSize: '10px', fontWeight: '700', color: 'var(--color-app-text)' }}>Sprint Progress</span>
-              <span style={{ fontSize: '8px', color: 'var(--color-app-muted)' }}>
-                {dashboardData?.completedToday || 0}/{totalTasks} done today
-              </span>
-            </div>
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', marginBottom: '2px' }}>
-                <span style={{ color: 'var(--color-app-muted)' }}>Progress</span>
-                <span style={{ color: 'var(--color-app-text)', fontWeight: '700' }}>
-                  {totalTasks > 0 ? Math.round((completedCount / totalTasks) * 100) : 0}%
-                </span>
-              </div>
-              <div style={{ height: '3px', background: 'var(--color-app-border)', borderRadius: '2px', overflow: 'hidden' }}>
-                <div style={{
-                  width: `${totalTasks > 0 ? (completedCount / totalTasks) * 100 : 0}%`,
-                  height: '100%', background: '#8b5cf6',
-                  transition: 'width 0.3s ease',
-                }} />
-              </div>
-            </div>
-            <span style={{ ...navLink }}>Open Tasks <ArrowRight size={9} /></span>
-          </div>
-
-          {/* ACTIVE PROJECTS */}
-          <div className="card" style={card}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-              <span style={sectionLabel()}>Active Projects</span>
-              <Link to="/projects" style={{ fontSize: '8.5px', color: '#8b5cf6', textDecoration: 'none' }}>View all</Link>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', flex: 1, justifyContent: 'center' }}>
-              {activeProjects.length > 0 ? activeProjects.map(p => (
-                <div
-                  key={p._id}
-                  onClick={() => navigate('/projects')}
-                  style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', padding: '2px 4px', borderRadius: '4px', transition: 'background 0.1s' }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                >
-                  <div style={{ width: '12px', height: '12px', background: p.color || '#8b5cf6', borderRadius: '3px', flexShrink: 0 }} />
-                  <span style={{ fontSize: '10px', color: 'var(--color-app-text)', fontWeight: '700', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {p.name}
-                  </span>
-                </div>
-              )) : (
-                <>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <div style={{ width: '12px', height: '12px', background: '#a78bfa', borderRadius: '3px' }} />
-                    <span style={{ fontSize: '10px', color: 'var(--color-app-text)', fontWeight: '700' }}>DevFlow</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <div style={{ width: '12px', height: '12px', background: '#f59e0b', borderRadius: '3px' }} />
-                    <span style={{ fontSize: '10px', color: 'var(--color-app-text)', fontWeight: '700' }}>Portfolio</span>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* OPEN ISSUES */}
-          <div className="card" style={card}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-              <span style={sectionLabel()}>Open Issues</span>
-              <Link to="/issues" style={{ fontSize: '8.5px', color: '#8b5cf6', textDecoration: 'none' }}>View all</Link>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', flex: 1, minHeight: 0, overflow: 'hidden', justifyContent: 'center' }}>
-              {openIssues.length > 0 ? openIssues.map(issue => (
-                <div
-                  key={issue._id}
-                  onClick={() => navigate('/issues')}
-                  style={{ fontSize: '9.5px', color: 'var(--color-app-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'pointer', padding: '2px 0' }}
-                >
-                  <span style={{ color: '#ef4444' }}>• </span>{issue.title}
-                </div>
-              )) : (
-                <>
-                  <div style={{ fontSize: '9.5px', color: 'var(--color-app-text)' }}>• Auth Error on Login</div>
-                  <div style={{ fontSize: '9.5px', color: 'var(--color-app-text)' }}>• Render Deploy Failing</div>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* ── ROW 3 ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', minHeight: 0 }}>
-
-          {/* GITHUB ACTIVITY */}
-          <div className="card" style={{ ...card, cursor: 'pointer' }} onClick={() => navigate('/github')}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-              <span style={sectionLabel()}>GitHub Activity</span>
-              <span style={{ fontSize: '8.5px', color: '#8b5cf6' }}>This Week</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '11px', fontWeight: '800', color: 'var(--color-app-text)' }}>
-                {dashboardData?.githubStats?.commits || 23} Commits
-              </span>
-              <span style={{ fontSize: '8px', color: '#10b981', background: 'rgba(16,185,129,0.1)', padding: '0px 3px', borderRadius: '3px' }}>+12%</span>
-            </div>
-            <div style={{ display: 'flex', gap: '2px', marginTop: '2px' }}>
-              {(dashboardData?.githubStats?.contributionGrid || [3,0,5,8,2,6,1,7,4,0,8,3,9,2,6,4,0,9]).map((v, i) => (
-                <div key={i} style={{
-                  flex: 1, height: '6px', borderRadius: '1px',
-                  background: v > 6 ? '#10b981' : v > 3 ? '#047857' : v > 0 ? '#065f46' : 'var(--color-app-surface-2)',
-                }} />
-              ))}
-            </div>
-            <span style={{ ...navLink }}>Open GitHub <ArrowRight size={9} /></span>
-          </div>
-
-          {/* CODING TIME */}
-          <div className="card" style={{ ...card, cursor: 'pointer' }} onClick={() => navigate('/analytics')}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-              <span style={sectionLabel()}>Coding Time</span>
-              <span style={{ fontSize: '8.5px', color: '#8b5cf6' }}>This Week</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flex: 1 }}>
-              <span style={{ fontSize: '12px', fontWeight: '900', color: 'var(--color-app-text)' }}>30h 45m</span>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', fontSize: '8px', color: 'var(--color-app-muted)' }}>
-                <span>• React: 14h</span>
-                <span>• Node: 9h</span>
-                <span>• AI: 4h</span>
-              </div>
-            </div>
-            <span style={{ ...navLink }}>View Analytics <ArrowRight size={9} /></span>
-          </div>
-
-          {/* UPCOMING EVENTS */}
-          <div className="card" style={{ ...card, cursor: 'pointer' }} onClick={() => navigate('/planner')}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-              <span style={sectionLabel()}>Upcoming Events</span>
-              <span style={{ fontSize: '8.5px', color: '#8b5cf6' }}>This Week</span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', flex: 1, minHeight: 0, overflow: 'hidden', justifyContent: 'center' }}>
-              <div style={{ fontSize: '9.5px', color: 'var(--color-app-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>📅 Team Standup — Today</div>
-              <div style={{ fontSize: '9.5px', color: 'var(--color-app-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>🚀 Deploy Backend — Tomorrow</div>
-            </div>
-            <span style={{ ...navLink }}>Open Planner <ArrowRight size={9} /></span>
-          </div>
-        </div>
-
-        {/* ── ROW 4 ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', minHeight: 0 }}>
-
-          {/* DEPLOYMENTS */}
-          <div className="card" style={{ ...card, cursor: 'pointer' }} onClick={() => navigate('/deployments')}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <Layers size={12} style={{ color: '#10b981' }} />
-              <span style={sectionLabel()}>Deployments</span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', flex: 1, justifyContent: 'center' }}>
-              {liveDeployment ? (
-                <>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div>
-                      <div style={{ fontSize: '10px', fontWeight: '700', color: 'var(--color-app-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '110px' }}>
-                        {liveDeployment.projectName}
-                      </div>
-                      <div style={{ fontSize: '7.5px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '3px' }}>
-                        <span style={{ width: '3px', height: '3px', borderRadius: '50%', background: '#10b981' }} />
-                        {liveDeployment.status}
-                      </div>
-                    </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '7.5px', color: 'var(--color-app-muted)' }}>{liveDeployment.environment}</div>
-                      <div style={{ fontSize: '7.5px', color: 'var(--color-app-faint)' }}>{liveDeployment.duration}s build</div>
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', gap: '6px', fontSize: '8px' }}>
-                    <span style={{ color: '#10b981' }}>✓ {successDeployments} success</span>
-                    {failedDeployments > 0 && <span style={{ color: '#ef4444' }}>✗ {failedDeployments} failed</span>}
-                  </div>
-                </>
-              ) : (
-                <div style={{ fontSize: '9px', color: 'var(--color-app-muted)' }}>No deployments yet</div>
-              )}
-            </div>
-            <span style={{ ...navLink }}>View Logs <ArrowRight size={9} /></span>
-          </div>
-
-          {/* DEVELOPER FEED */}
-          <div className="card" style={card}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <Activity size={12} style={{ color: '#60a5fa' }} />
-                <span style={sectionLabel()}>Developer Feed</span>
-              </div>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', flex: 1, minHeight: 0, overflow: 'hidden', justifyContent: 'center' }}>
-              {activityItems.length > 0 ? activityItems.slice(0, 3).map(item => {
-                const cfg = ACTIVITY_CFG[item.action] || { Icon: Activity, color: '#60a5fa', route: '/activity' }
-                const { Icon } = cfg
-                return (
-                  <div
-                    key={item._id}
-                    onClick={() => navigate(cfg.route)}
-                    style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', padding: '1px 3px', borderRadius: '3px', transition: 'background 0.1s' }}
-                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                  >
-                    <Icon size={9} style={{ color: cfg.color, flexShrink: 0 }} />
-                    <span style={{ fontSize: '9px', color: 'var(--color-app-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
-                      {item.summary}
-                    </span>
-                  </div>
-                )
-              }) : (
-                <>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                    <GitPullRequest size={9} style={{ color: '#d1d5db' }} />
-                    <span style={{ fontSize: '9px', color: 'var(--color-app-text)' }}>PR #24 Approved</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                    <Rocket size={9} style={{ color: '#10b981' }} />
-                    <span style={{ fontSize: '9px', color: 'var(--color-app-text)' }}>Deployment Successful</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                    <Sparkles size={9} style={{ color: '#f43f5e' }} />
-                    <span style={{ fontSize: '9px', color: 'var(--color-app-text)' }}>AI Generated API docs</span>
-                  </div>
-                </>
-              )}
-            </div>
-            <Link to="/activity" style={navLink}>View Feed <ArrowRight size={9} /></Link>
-          </div>
-
-          {/* WORKSPACE HEALTH */}
-          <div className="card" style={card}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <BarChart2 size={12} style={{ color: healthColor }} />
-                <span style={sectionLabel()}>Workspace Health</span>
-              </div>
-              <span style={{
-                fontSize: '10px', fontWeight: '900', color: healthColor,
-                background: `${healthColor}18`, padding: '0 5px', borderRadius: '4px',
+      {/* ── TOP STATS ROW (4 METRIC PILLS) ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px', marginBottom: '20px' }}>
+        {[
+          { label: 'Active Projects', value: '3', icon: Briefcase, color: '#A78BFA' },
+          { label: 'Open Tasks', value: '12', icon: CheckSquare, color: '#10B981' },
+          { label: 'PRs Waiting', value: '2', icon: GitPullRequest, color: '#A78BFA' },
+          { label: 'Day Streak', value: '7', icon: Zap, color: '#FF7A1A', isFire: true },
+        ].map((stat) => {
+          const Icon = stat.icon
+          return (
+            <div key={stat.label} style={{
+              background: 'var(--card-bg)',
+              border: '1px solid var(--card-border)',
+              borderRadius: '16px',
+              padding: '12px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              boxShadow: 'var(--shadow-card-val)',
+            }}>
+              <div style={{
+                width: '34px',
+                height: '34px',
+                borderRadius: '10px',
+                background: `${stat.color}15`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: stat.color,
+                flexShrink: 0,
               }}>
-                {healthScore}%
-              </span>
+                {stat.isFire ? <span style={{ fontSize: '16px' }}>🔥</span> : <Icon size={17} />}
+              </div>
+              <div>
+                <div style={{ fontSize: '18px', fontWeight: '800', color: 'var(--color-app-text)', lineHeight: 1 }}>{stat.value}</div>
+                <div style={{ fontSize: '11px', color: 'var(--color-app-muted)', marginTop: '3px', fontWeight: '500' }}>{stat.label}</div>
+              </div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', flex: 1, justifyContent: 'center' }}>
-              {[
-                { ok: liveDeployment?.status === 'success', label: 'Deployment Live', route: '/deployments' },
-                { ok: failedDeployments === 0, label: failedDeployments > 0 ? `${failedDeployments} Failed Deploys` : 'No Failed Deploys', route: '/deployments' },
-                { ok: openIssues.length <= 3, label: `${openIssues.length || 2} Open Issues`, route: '/issues' },
-                { ok: overdueTasks === 0, label: overdueTasks > 0 ? `${overdueTasks} Overdue Tasks` : 'No Overdue Tasks', route: '/tasks' },
-              ].map(({ ok, label, route }) => (
-                <div
-                  key={label}
-                  onClick={() => navigate(route)}
-                  style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer', fontSize: '9px', padding: '1px 2px', borderRadius: '3px' }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                >
-                  <span style={{ color: ok ? '#10b981' : '#f59e0b', fontSize: '10px' }}>{ok ? '✔' : '⚠'}</span>
-                  <span style={{ color: ok ? 'var(--color-app-muted)' : 'var(--color-app-text)' }}>{label}</span>
-                </div>
-              ))}
-            </div>
-            <Link to="/analytics" style={navLink}>Full Report <ArrowRight size={9} /></Link>
-          </div>
-        </div>
+          )
+        })}
       </div>
 
-      <style>{`
-        @keyframes wave {
-          0%, 100% { transform: rotate(0deg); }
-          50% { transform: rotate(15deg); }
-        }
-      `}</style>
+      {/* ── QUICK ACTIONS ROW (6 PILL BUTTONS) ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '12px', marginBottom: '24px' }}>
+        {[
+          { title: 'New Project', sub: 'Create new project', route: '/projects', icon: Plus, color: '#FF7A1A' },
+          { title: 'New Task', sub: 'Add a new task', route: '/tasks', icon: CheckSquare, color: '#10B981' },
+          { title: 'Generate Code', sub: 'AI Code Generation', route: '/ai', icon: Code, color: '#EC4899' },
+          { title: 'Deploy', sub: 'Deploy to production', route: '/deployments', icon: Rocket, color: '#3B82F6' },
+          { title: 'Open GitHub', sub: 'View Repositories', route: '/github', icon: GithubIcon, color: '#F4F4F6' },
+          { title: 'Focus Mode', sub: 'Start a session', route: '/planner', icon: Focus, color: '#A78BFA' },
+        ].map((act) => {
+          const Icon = act.icon
+          return (
+            <div
+              key={act.title}
+              onClick={() => navigate(act.route)}
+              style={{
+                background: 'var(--card-bg)',
+                border: '1px solid var(--card-border)',
+                borderRadius: '16px',
+                padding: '12px 14px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                cursor: 'pointer',
+                boxShadow: 'var(--shadow-card-val)',
+                transition: 'transform 0.15s, border-color 0.15s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = 'var(--accent-color)' }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--card-border)' }}
+            >
+              <div style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '10px',
+                background: 'var(--card-bg-inset)',
+                border: '1px solid var(--card-border)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: act.color,
+                flexShrink: 0,
+              }}>
+                <Icon size={16} />
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-app-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{act.title}</div>
+                <div style={{ fontSize: '9.5px', color: 'var(--color-app-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{act.sub}</div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* ── MAIN GRID ROW 1 (3 CARDS) ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1.2fr 1fr', gap: '16px', marginBottom: '20px' }}>
+        
+        {/* Card 1: Today's Focus */}
+        <div style={cardStyle}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '14px' }}>
+              <Zap size={14} color="#FF7A1A" />
+              <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-app-text)' }}>Today's Focus</span>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <CircularGauge value={taskPercent} label="Completed" size={72} strokeWidth={6} color="#FF7A1A" />
+              
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '7px' }}>
+                {tasks.map((t) => (
+                  <div
+                    key={t.id}
+                    onClick={() => toggleTask(t.id)}
+                    style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '11.5px' }}
+                  >
+                    <div style={{
+                      width: '14px', height: '14px', borderRadius: '4px',
+                      background: t.done ? '#FF7A1A' : 'transparent',
+                      border: t.done ? 'none' : '1.5px solid var(--color-app-muted)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff',
+                      flexShrink: 0,
+                    }}>
+                      {t.done && <CheckCircle2 size={12} />}
+                    </div>
+                    <span style={{
+                      color: t.done ? 'var(--color-app-muted)' : 'var(--color-app-text)',
+                      textDecoration: t.done ? 'line-through' : 'none',
+                      whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                    }}>
+                      {t.title}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div style={{ marginTop: '14px', paddingTop: '10px', borderTop: '1px solid var(--card-border)', display: 'flex', justifyContent: 'flex-start' }}>
+            <Link to="/tasks" style={{ fontSize: '11px', fontWeight: '700', color: '#FF7A1A', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              View all tasks →
+            </Link>
+          </div>
+        </div>
+
+        {/* Card 2: Continue Working */}
+        <div style={cardStyle}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Code size={14} color="#FF7A1A" />
+                <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-app-text)' }}>Continue Working</span>
+              </div>
+              <GithubIcon size={14} />
+            </div>
+
+            <div style={{
+              background: 'var(--card-bg-inset)',
+              border: '1px solid var(--card-border)',
+              borderRadius: '14px',
+              padding: '12px 14px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '14px',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: 'linear-gradient(135deg, #7C3AED, #A78BFA)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+                  <Briefcase size={16} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '13px', fontWeight: '800', color: 'var(--color-app-text)' }}>DevFlow Platform</div>
+                  <div style={{ fontSize: '10px', color: 'var(--color-app-muted)' }}>Current Project</div>
+                </div>
+              </div>
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22C55E' }} />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <div style={{ background: 'var(--card-bg-inset)', borderRadius: '10px', padding: '8px 10px', border: '1px solid var(--card-border)' }}>
+                <div style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-app-text)' }}>main</div>
+                <div style={{ fontSize: '9px', color: 'var(--color-app-muted)', marginTop: '2px' }}>Current Branch</div>
+              </div>
+              <div style={{ background: 'var(--card-bg-inset)', borderRadius: '10px', padding: '8px 10px', border: '1px solid var(--card-border)' }}>
+                <div style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-app-text)', fontFamily: 'var(--font-mono)' }}>a1b2c3d</div>
+                <div style={{ fontSize: '9px', color: 'var(--color-app-muted)', marginTop: '2px' }}>Last Commit</div>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ marginTop: '14px', paddingTop: '10px', borderTop: '1px solid var(--card-border)' }}>
+            <Link to="/projects" style={{ fontSize: '11px', fontWeight: '700', color: '#FF7A1A', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              Open Project →
+            </Link>
+          </div>
+        </div>
+
+        {/* Card 3: AI Daily Brief */}
+        <div style={cardStyle}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ fontSize: '10px', fontWeight: '800', background: '#FF7A1A', color: '#fff', padding: '2px 6px', borderRadius: '4px' }}>AI</span>
+                <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-app-text)' }}>AI Daily Brief ✨</span>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '10px' }}>
+              <p style={{ fontSize: '11.5px', color: 'var(--color-app-muted)', lineHeight: 1.5, margin: 0, flex: 1 }}>
+                Good progress today! You've completed 75% of your focused tasks. The authentication module is ready for testing.
+              </p>
+              <div style={{ flexShrink: 0 }}>
+                <BrainGraphic />
+              </div>
+            </div>
+          </div>
+
+          <div style={{ marginTop: '14px', paddingTop: '10px', borderTop: '1px solid var(--card-border)' }}>
+            <Link to="/ai" style={{ fontSize: '11px', fontWeight: '700', color: '#FF7A1A', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              Open AI Copilot →
+            </Link>
+          </div>
+        </div>
+
+      </div>
+
+      {/* ── MAIN GRID ROW 2 (4 CARDS) ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1.1fr 1.1fr', gap: '16px', marginBottom: '20px' }}>
+        
+        {/* Card 1: Sprint Progress */}
+        <div style={cardStyle}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+              <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-app-text)' }}>Sprint Progress</span>
+              <span style={{ fontSize: '9.5px', color: 'var(--color-app-muted)' }}>4 days remaining</span>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '12px' }}>
+              <CircularGauge value={62} label="Sprint 12" size={60} strokeWidth={5} color="#FF7A1A" />
+              <div>
+                <div style={{ fontSize: '14px', fontWeight: '800', color: 'var(--color-app-text)' }}>Sprint 12</div>
+                <div style={{ fontSize: '10px', color: 'var(--color-app-muted)', marginTop: '2px' }}>31 / 50 tasks completed</div>
+              </div>
+            </div>
+
+            <div style={{ width: '100%', height: '6px', background: 'var(--card-bg-inset)', borderRadius: '3px', overflow: 'hidden' }}>
+              <div style={{ width: '62%', height: '100%', background: '#FF7A1A', borderRadius: '3px' }} />
+            </div>
+          </div>
+
+          <div style={{ marginTop: '14px', paddingTop: '8px', borderTop: '1px solid var(--card-border)' }}>
+            <Link to="/planner" style={{ fontSize: '11px', fontWeight: '700', color: '#FF7A1A', textDecoration: 'none' }}>View sprint →</Link>
+          </div>
+        </div>
+
+        {/* Card 2: Active Projects */}
+        <div style={cardStyle}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+              <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-app-text)' }}>Active Projects</span>
+              <Link to="/projects" style={{ fontSize: '10px', color: '#FF7A1A', fontWeight: '700', textDecoration: 'none' }}>View all →</Link>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {[
+                { name: 'DevFlow Platform', icon: Briefcase, color: '#7C3AED', members: '+2' },
+                { name: 'AI Copilot', icon: Sparkles, color: '#EC4899', members: '+2' },
+                { name: 'Landing Page', icon: Globe, color: '#10B981', members: '+1' },
+              ].map((p) => {
+                const Icon = p.icon
+                return (
+                  <div key={p.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <div style={{ width: '18px', height: '18px', borderRadius: '5px', background: p.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+                        <Icon size={11} />
+                      </div>
+                      <span style={{ fontWeight: '600', color: 'var(--color-app-text)' }}>{p.name}</span>
+                    </div>
+                    <span style={{ fontSize: '9px', color: 'var(--color-app-muted)', background: 'var(--card-bg-inset)', padding: '1px 5px', borderRadius: '4px' }}>{p.members}</span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Card 3: GitHub Activity */}
+        <div style={cardStyle}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <GithubIcon size={14} />
+                <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-app-text)' }}>GitHub Activity</span>
+              </div>
+              <span style={{ fontSize: '9.5px', color: 'var(--color-app-muted)' }}>This Week ▼</span>
+            </div>
+
+            <div style={{ fontSize: '16px', fontWeight: '800', color: 'var(--color-app-text)', marginBottom: '8px' }}>
+              128 <span style={{ fontSize: '10px', fontWeight: '500', color: 'var(--color-app-muted)' }}>Total Commits</span>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: '4px', height: '36px' }}>
+              {[35, 60, 42, 85, 95, 40, 70].map((h, i) => (
+                <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', height: '100%', justifyContent: 'flex-end' }}>
+                  <div style={{ width: '100%', height: `${h}%`, background: i === 4 ? '#FF7A1A' : 'rgba(255, 122, 26, 0.25)', borderRadius: '2px 2px 0 0' }} />
+                  <span style={{ fontSize: '7.5px', color: 'var(--color-app-muted)', fontFamily: 'var(--font-mono)' }}>{['M','T','W','T','F','S','S'][i]}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ marginTop: '10px', paddingTop: '6px', borderTop: '1px solid var(--card-border)' }}>
+            <Link to="/github" style={{ fontSize: '11px', fontWeight: '700', color: '#FF7A1A', textDecoration: 'none' }}>View GitHub →</Link>
+          </div>
+        </div>
+
+        {/* Card 4: Coding Time */}
+        <div style={cardStyle}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <BarChart2 size={14} color="#FF7A1A" />
+                <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-app-text)' }}>Coding Time</span>
+              </div>
+              <span style={{ fontSize: '9.5px', color: 'var(--color-app-muted)' }}>This Week ▼</span>
+            </div>
+
+            <div style={{ fontSize: '16px', fontWeight: '800', color: 'var(--color-app-text)', marginBottom: '4px' }}>
+              32h 45m <span style={{ fontSize: '10px', fontWeight: '500', color: 'var(--color-app-muted)' }}>Total Time</span>
+            </div>
+
+            <SparklineGraph />
+          </div>
+
+          <div style={{ marginTop: '10px', paddingTop: '6px', borderTop: '1px solid var(--card-border)' }}>
+            <Link to="/analytics" style={{ fontSize: '11px', fontWeight: '700', color: '#FF7A1A', textDecoration: 'none' }}>View Analytics →</Link>
+          </div>
+        </div>
+
+      </div>
+
+      {/* ── MAIN GRID ROW 3 (4 CARDS) ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1.1fr 1fr', gap: '16px' }}>
+        
+        {/* Card 1: Upcoming Events */}
+        <div style={cardStyle}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '12px' }}>
+              <Calendar size={14} color="#FF7A1A" />
+              <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-app-text)' }}>Upcoming Events</span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {[
+                { title: 'Team Standup', time: 'Today, 10:00 AM', color: '#3B82F6' },
+                { title: 'Deploy to Production', time: 'Tomorrow, 2:00 PM', color: '#FF7A1A' },
+                { title: 'UI/UX Review', time: 'Fri, 11:00 AM', color: '#A78BFA' },
+              ].map((evt) => (
+                <div key={evt.title} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px' }}>
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: evt.color, flexShrink: 0 }} />
+                  <div>
+                    <div style={{ fontWeight: '600', color: 'var(--color-app-text)' }}>{evt.title}</div>
+                    <div style={{ fontSize: '9px', color: 'var(--color-app-muted)' }}>{evt.time}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ marginTop: '12px', paddingTop: '6px', borderTop: '1px solid var(--card-border)' }}>
+            <Link to="/planner" style={{ fontSize: '11px', fontWeight: '700', color: '#FF7A1A', textDecoration: 'none' }}>View Calendar →</Link>
+          </div>
+        </div>
+
+        {/* Card 2: Deployments */}
+        <div style={cardStyle}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '12px' }}>
+              <Rocket size={14} color="#FF7A1A" />
+              <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-app-text)' }}>Deployments</span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {[
+                { env: 'Production', status: 'Live', badge: '• Healthy', color: '#22C55E' },
+                { env: 'Staging', status: '2h ago', badge: '• Healthy', color: '#22C55E' },
+                { env: 'Preview', status: '5h ago', badge: '• Building', color: '#FF7A1A' },
+              ].map((d) => (
+                <div key={d.env} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <GithubIcon size={12} />
+                    <span style={{ fontWeight: '600', color: 'var(--color-app-text)' }}>{d.env}</span>
+                    <span style={{ fontSize: '9px', color: 'var(--color-app-muted)' }}>{d.status}</span>
+                  </div>
+                  <span style={{ fontSize: '9px', fontWeight: '700', color: d.color, background: `${d.color}15`, padding: '1px 6px', borderRadius: '4px' }}>{d.badge}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ marginTop: '12px', paddingTop: '6px', borderTop: '1px solid var(--card-border)' }}>
+            <Link to="/deployments" style={{ fontSize: '11px', fontWeight: '700', color: '#FF7A1A', textDecoration: 'none' }}>View All →</Link>
+          </div>
+        </div>
+
+        {/* Card 3: Developer Feed */}
+        <div style={cardStyle}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '12px' }}>
+              <Activity size={14} color="#FF7A1A" />
+              <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-app-text)' }}>Developer Feed</span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '7px', fontSize: '10.5px' }}>
+              {[
+                { act: 'Nisith pushed 3 commits', time: '2m ago' },
+                { act: 'PR #42 opened', time: '15m ago' },
+                { act: 'AI Copilot suggested changes', time: '1h ago' },
+                { act: 'Code review completed', time: '2h ago' },
+              ].map((feed, i) => (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: 'var(--color-app-text)', fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{feed.act}</span>
+                  <span style={{ color: 'var(--color-app-muted)', fontSize: '8.5px', fontFamily: 'var(--font-mono)', flexShrink: 0 }}>{feed.time}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ marginTop: '12px', paddingTop: '6px', borderTop: '1px solid var(--card-border)' }}>
+            <Link to="/activity" style={{ fontSize: '11px', fontWeight: '700', color: '#FF7A1A', textDecoration: 'none' }}>View All Activity →</Link>
+          </div>
+        </div>
+
+        {/* Card 4: Workspace Health */}
+        <div style={cardStyle}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
+              <AlertCircle size={14} color="#FF7A1A" />
+              <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-app-text)' }}>Workspace Health</span>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <CircularGauge value={86} label="Healthy" size={56} strokeWidth={5} color="#22C55E" />
+              
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '10px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--color-app-muted)' }}>Build Status</span>
+                  <span style={{ color: '#22C55E', fontWeight: '700' }}>Healthy</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--color-app-muted)' }}>Deployments</span>
+                  <span style={{ color: '#22C55E', fontWeight: '700' }}>Healthy</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--color-app-muted)' }}>Open Issues</span>
+                  <span style={{ color: '#FF7A1A', fontWeight: '700' }}>3</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--color-app-muted)' }}>Performance</span>
+                  <span style={{ color: '#22C55E', fontWeight: '700' }}>Good</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ marginTop: '10px', paddingTop: '6px', borderTop: '1px solid var(--card-border)' }}>
+            <Link to="/analytics" style={{ fontSize: '11px', fontWeight: '700', color: '#FF7A1A', textDecoration: 'none' }}>View Full Report →</Link>
+          </div>
+        </div>
+
+      </div>
     </div>
   )
 }

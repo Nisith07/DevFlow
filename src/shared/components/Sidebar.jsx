@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard,
   Briefcase,
@@ -17,11 +17,17 @@ import {
   Link2,
   LogOut,
   Moon,
-  Sun
+  Sun,
+  ChevronDown,
+  Search,
+  Grid,
+  Zap,
+  Check,
+  Star
 } from 'lucide-react'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { getInitials } from '@/shared/lib/utils'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { getTheme, toggleTheme } from '@/shared/lib/theme'
 
 const GithubIcon = ({ size = 13 }) => (
@@ -30,11 +36,70 @@ const GithubIcon = ({ size = 13 }) => (
   </svg>
 )
 
+// Complete list of Workspaces categorized
+const WORKSPACE_CATEGORIES = [
+  {
+    category: 'Development',
+    items: [
+      { name: 'Projects', route: '/projects', icon: Briefcase, badge: 'Active' },
+      { name: 'Tasks', route: '/tasks', icon: CheckSquare },
+      { name: 'GitHub', route: '/github', icon: GithubIcon },
+      { name: 'Deployments', route: '/deployments', icon: Layers },
+      { name: 'Issues', route: '/issues', icon: AlertCircle },
+    ]
+  },
+  {
+    category: 'AI & Automation',
+    items: [
+      { name: 'AI Copilot', route: '/ai', icon: Sparkles, badge: '24/7' },
+      { name: 'Planner', route: '/planner', icon: Calendar },
+    ]
+  },
+  {
+    category: 'Workspace Tools',
+    items: [
+      { name: 'Notes', route: '/notes', icon: BookOpen },
+      { name: 'Portfolio', route: '/portfolio', icon: Folder },
+      { name: 'Resume Builder', route: '/resume', icon: FileText },
+      { name: 'Snippets', route: '/snippets', icon: Code },
+    ]
+  },
+  {
+    category: 'System & Analytics',
+    items: [
+      { name: 'Analytics', route: '/analytics', icon: BarChart2 },
+      { name: 'Activity', route: '/activity', icon: Activity },
+      { name: 'Integrations', route: '/integrations', icon: Link2 },
+      { name: 'Settings', route: '/settings', icon: Settings },
+    ]
+  }
+]
+
+// Flat list of all workspaces
+const ALL_WORKSPACES = [
+  { name: 'Dashboard', route: '/dashboard', icon: LayoutDashboard },
+  ...WORKSPACE_CATEGORIES.flatMap(c => c.items)
+]
+
 export default function Sidebar({ isOpen, onClose }) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const cleanName = (user?.name || 'Nisith').replace(/:+$/, '')
   const [theme, setTheme] = useState(getTheme())
+  
+  const [workspaceOpen, setWorkspaceOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [focusMode, setFocusMode] = useState(true)
+  const dropdownRef = useRef(null)
+
+  // Find currently active workspace item
+  const currentWorkspace = ALL_WORKSPACES.find(w => w.route === location.pathname) || ALL_WORKSPACES[0]
+
+  useEffect(() => {
+    // Update document title dynamically when workspace changes
+    document.title = `${currentWorkspace.name} — DevFlow`
+  }, [currentWorkspace])
 
   useEffect(() => {
     const handleThemeChange = () => {
@@ -44,180 +109,482 @@ export default function Sidebar({ isOpen, onClose }) {
     return () => window.removeEventListener('themechange', handleThemeChange)
   }, [])
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setWorkspaceOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleOutsideClick)
+    return () => document.removeEventListener('mousedown', handleOutsideClick)
+  }, [])
+
   const handleLogout = async () => {
     await logout()
     navigate('/', { replace: true })
     onClose?.()
   }
 
-  return (
-    <aside className={`sidebar ${isOpen ? 'open' : ''}`} aria-label="App sidebar" style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
+  const handleSelectWorkspace = (route, name) => {
+    setWorkspaceOpen(false)
+    setSearchQuery('')
+    navigate(route)
+    onClose?.()
+  }
 
-      {/* Brand logo - permanently fixed at the top */}
-      <div className="sidebar-brand" style={{ flexShrink: 0, borderBottom: 'none', padding: '16px 20px 6px' }}>
-        <img src="/logo-icon.svg" alt="" style={{ width: 20, height: 20 }} />
-        <span className="sidebar-brand-text" style={{ fontSize: '14px' }}>
-          Dev<span>Flow</span>
-        </span>
+  // Filter workspaces by search query
+  const filteredCategories = WORKSPACE_CATEGORIES.map(cat => ({
+    ...cat,
+    items: cat.items.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()))
+  })).filter(cat => cat.items.length > 0)
+
+  return (
+    <aside className={`sidebar ${isOpen ? 'open' : ''}`} aria-label="App sidebar" style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', background: 'var(--sidebar-bg)', borderRight: '1px solid var(--sidebar-border)' }}>
+
+      {/* Brand logo */}
+      <div className="sidebar-brand" style={{ flexShrink: 0, padding: '16px 18px 8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }} onClick={() => navigate('/dashboard')}>
+          <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'linear-gradient(135deg, #FF7A1A, #E66A0D)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(255,122,26,0.3)' }}>
+            <span style={{ fontSize: '15px', fontWeight: '900', color: '#FFFFFF' }}>D</span>
+          </div>
+          <span className="sidebar-brand-text" style={{ fontSize: '16px', fontWeight: '800', color: 'var(--color-app-text)', letterSpacing: '-0.02em' }}>
+            Dev<span style={{ color: 'var(--accent-color)' }}>Flow</span>
+          </span>
+        </div>
       </div>
 
-      {/* Developer Identity (Top Profile Block) */}
-      <div className="sidebar-identity" style={{ flexShrink: 0, padding: '10px 16px 12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <div style={{ position: 'relative', flexShrink: 0 }}>
-          {user?.avatarUrl ? (
-            <img src={user.avatarUrl} alt={cleanName} style={{ width: '34px', height: '34px', borderRadius: '50%', objectFit: 'cover' }} />
-          ) : (
-            <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'var(--color-app-surface-2)', display: 'flex', alignItems: 'center', justifySelf: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 'bold' }}>
-              {getInitials(cleanName)}
-            </div>
-          )}
-          <span style={{ position: 'absolute', bottom: '0px', right: '0px', width: '7px', height: '7px', background: '#10b981', borderRadius: '50%', border: '2px solid var(--color-app-bg)' }} />
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span style={{ fontSize: '12.5px', fontWeight: '700', color: 'var(--color-app-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{cleanName}</span>
-            <span style={{ fontSize: '8px', fontWeight: '700', color: '#a78bfa', background: 'rgba(167, 139, 250, 0.15)', padding: '0px 4px', borderRadius: '3px', flexShrink: 0 }}>PRO</span>
+      {/* Developer Identity Card */}
+      <div style={{ flexShrink: 0, padding: '6px 14px 10px' }}>
+        <div style={{
+          background: 'var(--card-bg-inset)',
+          border: '1px solid var(--card-border)',
+          borderRadius: '14px',
+          padding: '8px 12px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          boxShadow: 'var(--shadow-neu-sm-val)',
+        }}>
+          <div style={{ position: 'relative', flexShrink: 0 }}>
+            {user?.avatarUrl ? (
+              <img src={user.avatarUrl} alt={cleanName} style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
+            ) : (
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #FF7A1A 0%, #E66A0D 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '800', color: '#FFF' }}>
+                {getInitials(cleanName)}
+              </div>
+            )}
+            <span style={{ position: 'absolute', bottom: '0px', right: '0px', width: '7px', height: '7px', background: '#22C55E', borderRadius: '50%', border: '2px solid var(--sidebar-bg)' }} />
           </div>
-          <div style={{ fontSize: '10px', color: 'var(--color-app-muted)', marginTop: '1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Full Stack Dev</div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-app-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{cleanName}</span>
+              <span style={{ fontSize: '8px', fontWeight: '800', color: '#FF7A1A', background: 'rgba(255, 122, 26, 0.15)', padding: '1px 5px', borderRadius: '4px', flexShrink: 0 }}>PRO</span>
+            </div>
+            <div style={{ fontSize: '10px', color: 'var(--color-app-muted)', marginTop: '1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Full Stack Developer</div>
+          </div>
+          
+          <button
+            onClick={handleLogout}
+            title="Logout"
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--color-app-muted)',
+              borderRadius: '6px',
+              padding: '4px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              flexShrink: 0,
+            }}
+          >
+            <LogOut size={13} />
+          </button>
         </div>
-        
-        {/* Logout Button */}
+      </div>
+
+      {/* Dev Workspace Dropdown Selector (Top of Navigation) */}
+      <div ref={dropdownRef} style={{ flexShrink: 0, padding: '0 14px 10px', position: 'relative' }}>
         <button
-          onClick={handleLogout}
-          title="Logout"
-          aria-label="Logout"
+          onClick={() => setWorkspaceOpen(o => !o)}
           style={{
-            background: 'rgba(239, 68, 68, 0.08)',
-            border: '1px solid rgba(239, 68, 68, 0.2)',
-            color: '#f87171',
-            borderRadius: '6px',
-            width: '26px',
-            height: '26px',
+            width: '100%',
+            background: workspaceOpen ? 'rgba(255, 122, 26, 0.12)' : 'var(--card-bg)',
+            border: workspaceOpen ? '1px solid var(--accent-color)' : '1px solid var(--card-border)',
+            borderRadius: '14px',
+            padding: '9px 12px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'space-between',
             cursor: 'pointer',
-            flexShrink: 0,
-            transition: 'all 0.15s ease'
+            boxShadow: workspaceOpen ? '0 0 16px rgba(255, 122, 26, 0.2)' : 'var(--shadow-neu-sm-val)',
+            transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         >
-          <LogOut size={12} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+            <div style={{ width: '22px', height: '22px', borderRadius: '6px', background: 'rgba(255, 122, 26, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FF7A1A', flexShrink: 0 }}>
+              <Grid size={13} />
+            </div>
+            <div style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', textAlign: 'left' }}>
+              <span style={{ fontSize: '12.5px', fontWeight: '700', color: 'var(--color-app-text)', display: 'block', lineHeight: 1.2 }}>
+                {location.pathname === '/dashboard' ? 'Dev Workspace' : currentWorkspace.name}
+              </span>
+            </div>
+          </div>
+          <ChevronDown size={14} style={{ color: 'var(--color-app-muted)', transform: workspaceOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }} />
         </button>
+
+        {/* Workspace Overlay Dropdown Modal */}
+        {workspaceOpen && (
+          <div style={{
+            position: 'absolute',
+            top: '48px',
+            left: '14px',
+            right: '14px',
+            width: '280px',
+            background: 'var(--card-bg)',
+            border: '1px solid var(--accent-color)',
+            borderRadius: '20px',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(255,122,26,0.15)',
+            zIndex: 999,
+            overflow: 'hidden',
+            backdropFilter: 'blur(16px)',
+            animation: 'dropdownFadeIn 0.2s cubic-bezier(0.16,1,0.3,1)',
+          }}>
+            <style>{`
+              @keyframes dropdownFadeIn {
+                from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+                to   { opacity: 1; transform: translateY(0) scale(1); }
+              }
+            `}</style>
+
+            {/* Search Input inside Dropdown */}
+            <div style={{ padding: '12px 14px', borderBottom: '1px solid var(--card-border)' }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: 'var(--card-bg-inset)',
+                border: '1px solid var(--card-border)',
+                borderRadius: '10px',
+                padding: '6px 10px',
+              }}>
+                <Search size={13} color="var(--color-app-muted)" />
+                <input
+                  type="text"
+                  placeholder="Search workspace..."
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  autoFocus
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    outline: 'none',
+                    color: 'var(--color-app-text)',
+                    fontSize: '12px',
+                    width: '100%',
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Workspaces Scrollable List */}
+            <div style={{ maxHeight: '340px', overflowY: 'auto', padding: '8px' }}>
+
+              {/* Dashboard quick item */}
+              {!searchQuery && (
+                <div style={{ marginBottom: '8px' }}>
+                  <div
+                    onClick={() => handleSelectWorkspace('/dashboard', 'Dashboard')}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '8px 12px',
+                      borderRadius: '10px',
+                      background: location.pathname === '/dashboard' ? 'var(--accent-color)' : 'transparent',
+                      color: location.pathname === '/dashboard' ? '#FFFFFF' : 'var(--color-app-text)',
+                      cursor: 'pointer',
+                      fontSize: '12.5px',
+                      fontWeight: '700',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <LayoutDashboard size={14} />
+                      <span>Dashboard</span>
+                    </div>
+                    {location.pathname === '/dashboard' && <Check size={14} />}
+                  </div>
+                </div>
+              )}
+
+              {filteredCategories.map((cat) => (
+                <div key={cat.category} style={{ marginBottom: '12px' }}>
+                  <div style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-app-muted)', padding: '4px 10px 4px' }}>
+                    {cat.category}
+                  </div>
+                  {cat.items.map((item) => {
+                    const Icon = item.icon
+                    const isActive = location.pathname === item.route
+                    return (
+                      <div
+                        key={item.name}
+                        onClick={() => handleSelectWorkspace(item.route, item.name)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '7px 10px',
+                          borderRadius: '10px',
+                          background: isActive ? 'var(--accent-color)' : 'transparent',
+                          color: isActive ? '#FFFFFF' : 'var(--color-app-text)',
+                          cursor: 'pointer',
+                          fontSize: '12px',
+                          fontWeight: isActive ? '700' : '500',
+                          transition: 'background 0.15s ease',
+                        }}
+                        onMouseEnter={e => {
+                          if (!isActive) e.currentTarget.style.background = 'rgba(255, 122, 26, 0.1)'
+                        }}
+                        onMouseLeave={e => {
+                          if (!isActive) e.currentTarget.style.background = 'transparent'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
+                          <Icon size={14} color={isActive ? '#FFFFFF' : 'var(--color-app-muted)'} />
+                          <span>{item.name}</span>
+                        </div>
+                        {isActive && <Check size={13} />}
+                      </div>
+                    )
+                  })}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Nav Area */}
-      <div className="sidebar-top-container" style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: '0 12px 10px', gap: '10px' }}>
+      {/* Main Navigation Items */}
+      <div className="sidebar-top-container" style={{ flex: 1, overflowY: 'auto', padding: '0 14px 10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
         
-        {/* MAIN */}
-        <div>
-          <div style={{ fontSize: '9px', fontWeight: '700', textTransform: 'uppercase', color: 'var(--color-app-faint)', letterSpacing: '0.05em', padding: '0 8px', marginBottom: '4px' }}>Main</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
-            <NavLink to="/dashboard" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} style={{ padding: '5px 8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', borderRadius: '5px' }} onClick={onClose}>
-              <LayoutDashboard size={13} />
-              <span>Dashboard</span>
-            </NavLink>
-            <NavLink to="/projects" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} style={{ padding: '5px 8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', borderRadius: '5px' }} onClick={onClose}>
-              <Briefcase size={13} />
-              <span>Projects</span>
-            </NavLink>
-            <NavLink to="/tasks" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} style={{ padding: '5px 8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', borderRadius: '5px' }} onClick={onClose}>
-              <CheckSquare size={13} />
-              <span>Tasks</span>
-            </NavLink>
-            <NavLink to="/issues" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} style={{ padding: '5px 8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', borderRadius: '5px' }} onClick={onClose}>
-              <AlertCircle size={13} />
-              <span>Issues</span>
-            </NavLink>
-            <NavLink to="/ai" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} style={{ padding: '5px 8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', borderRadius: '5px' }} onClick={onClose}>
-              <Sparkles size={13} />
-              <span>AI Copilot</span>
-            </NavLink>
-            <NavLink to="/planner" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} style={{ padding: '5px 8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', borderRadius: '5px' }} onClick={onClose}>
-              <Calendar size={13} />
-              <span>Planner</span>
-            </NavLink>
-            <NavLink to="/deployments" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} style={{ padding: '5px 8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', borderRadius: '5px' }} onClick={onClose}>
-              <Layers size={13} />
-              <span>Deployments</span>
-            </NavLink>
-            <NavLink to="/github" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} style={{ padding: '5px 8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', borderRadius: '5px' }} onClick={onClose}>
-              <GithubIcon size={13} />
-              <span>GitHub</span>
-            </NavLink>
-          </div>
-        </div>
+        {/* Permanent Item 1: 🏠 Dashboard */}
+        <NavLink
+          to="/dashboard"
+          className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
+          style={{
+            padding: '9px 12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            fontSize: '13px',
+            fontWeight: '700',
+            borderRadius: '12px',
+            color: location.pathname === '/dashboard' ? '#FFFFFF' : 'var(--color-app-text)',
+            background: location.pathname === '/dashboard' ? 'var(--accent-color)' : 'transparent',
+            boxShadow: location.pathname === '/dashboard' ? '0 4px 14px rgba(255,122,26,0.3)' : 'none',
+          }}
+          onClick={onClose}
+        >
+          <LayoutDashboard size={16} />
+          <span>Dashboard</span>
+        </NavLink>
 
-        {/* TOOLS */}
-        <div>
-          <div style={{ fontSize: '9px', fontWeight: '700', textTransform: 'uppercase', color: 'var(--color-app-faint)', letterSpacing: '0.05em', padding: '0 8px', marginBottom: '4px' }}>Tools</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
-            <NavLink to="/resume" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} style={{ padding: '5px 8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', borderRadius: '5px' }} onClick={onClose}>
-              <FileText size={13} />
-              <span>Resume Builder</span>
-            </NavLink>
-            <NavLink to="/portfolio" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} style={{ padding: '5px 8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', borderRadius: '5px' }} onClick={onClose}>
-              <Folder size={13} />
-              <span>Portfolio</span>
-            </NavLink>
-            <NavLink to="/notes" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} style={{ padding: '5px 8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', borderRadius: '5px' }} onClick={onClose}>
-              <BookOpen size={13} />
-              <span>Notes</span>
-            </NavLink>
-            <NavLink to="/snippets" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} style={{ padding: '5px 8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', borderRadius: '5px' }} onClick={onClose}>
-              <Code size={13} />
-              <span>Snippets</span>
-            </NavLink>
-          </div>
-        </div>
+        {/* Selected Workspace Nav Link (shown cleanly if active) */}
+        {location.pathname !== '/dashboard' && (
+          <NavLink
+            to={currentWorkspace.route}
+            className="sidebar-link active"
+            style={{
+              padding: '9px 12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              fontSize: '13px',
+              fontWeight: '700',
+              borderRadius: '12px',
+              color: '#FFFFFF',
+              background: 'var(--accent-color)',
+              boxShadow: '0 4px 14px rgba(255,122,26,0.3)',
+            }}
+            onClick={onClose}
+          >
+            {(() => {
+              const Icon = currentWorkspace.icon
+              return <Icon size={16} />
+            })()}
+            <span>{currentWorkspace.name}</span>
+          </NavLink>
+        )}
 
-        {/* ANALYTICS */}
-        <div>
-          <div style={{ fontSize: '9px', fontWeight: '700', textTransform: 'uppercase', color: 'var(--color-app-faint)', letterSpacing: '0.05em', padding: '0 8px', marginBottom: '4px' }}>Analytics</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
-            <NavLink to="/analytics" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} style={{ padding: '5px 8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', borderRadius: '5px' }} onClick={onClose}>
-              <BarChart2 size={13} />
-              <span>Analytics</span>
-            </NavLink>
-            <NavLink to="/activity" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} style={{ padding: '5px 8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', borderRadius: '5px' }} onClick={onClose}>
-              <Activity size={13} />
-              <span>Activity</span>
-            </NavLink>
+        {/* Quick Nav Section: Core Modules */}
+        <div style={{ marginTop: '12px' }}>
+          <div style={{ fontSize: '9px', fontWeight: '800', textTransform: 'uppercase', color: 'var(--color-app-faint)', letterSpacing: '0.08em', padding: '0 10px', marginBottom: '6px' }}>
+            Workspaces
           </div>
-        </div>
-
-        {/* SETTINGS */}
-        <div>
-          <div style={{ fontSize: '9px', fontWeight: '700', textTransform: 'uppercase', color: 'var(--color-app-faint)', letterSpacing: '0.05em', padding: '0 8px', marginBottom: '4px' }}>Settings</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
-            <NavLink to="/settings" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} style={{ padding: '5px 8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', borderRadius: '5px' }} onClick={onClose}>
-              <Settings size={13} />
-              <span>Settings</span>
-            </NavLink>
-            <NavLink to="/integrations" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} style={{ padding: '5px 8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', borderRadius: '5px' }} onClick={onClose}>
-              <Link2 size={13} />
-              <span>Integrations</span>
-            </NavLink>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            {[
+              { name: 'Projects', route: '/projects', icon: Briefcase },
+              { name: 'Tasks', route: '/tasks', icon: CheckSquare },
+              { name: 'GitHub', route: '/github', icon: GithubIcon },
+              { name: 'AI Copilot', route: '/ai', icon: Sparkles },
+              { name: 'Planner', route: '/planner', icon: Calendar },
+              { name: 'Deployments', route: '/deployments', icon: Layers },
+              { name: 'Analytics', route: '/analytics', icon: BarChart2 },
+            ].map((item) => {
+              const Icon = item.icon
+              const isActive = location.pathname === item.route
+              return (
+                <NavLink
+                  key={item.name}
+                  to={item.route}
+                  className={`sidebar-link ${isActive ? 'active' : ''}`}
+                  style={{
+                    padding: '7px 10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '9px',
+                    fontSize: '12.5px',
+                    fontWeight: isActive ? '700' : '500',
+                    borderRadius: '10px',
+                    color: isActive ? 'var(--accent-color)' : 'var(--color-app-muted)',
+                    background: isActive ? 'rgba(255,122,26,0.1)' : 'transparent',
+                  }}
+                  onClick={onClose}
+                >
+                  <Icon size={15} color={isActive ? 'var(--accent-color)' : 'var(--color-app-muted)'} />
+                  <span>{item.name}</span>
+                </NavLink>
+              )
+            })}
           </div>
         </div>
 
       </div>
 
-      {/* Focus Mode Control (pinned to bottom) */}
-      <div className="sidebar-footer" style={{ flexShrink: 0, marginTop: 'auto', borderTop: '1px solid var(--color-app-border)', padding: '8px 14px' }}>
-        <button
-          className="sidebar-theme-toggle"
-          onClick={toggleTheme}
-          aria-label="Toggle theme"
-          style={{ height: '30px', padding: '4px 10px', border: '1px solid var(--color-app-border)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', background: 'transparent' }}
+      {/* Focus Mode & Theme Controls (Pinned to Bottom) */}
+      <div style={{ flexShrink: 0, marginTop: 'auto', borderTop: '1px solid var(--sidebar-border)', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        
+        {/* Focus Mode Card */}
+        <div style={{
+          background: 'var(--card-bg-inset)',
+          border: '1px solid var(--card-border)',
+          borderRadius: '14px',
+          padding: '10px 12px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'rgba(255, 122, 26, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FF7A1A' }}>
+              <Zap size={12} />
+            </div>
+            <div>
+              <div style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-app-text)' }}>Focus Mode</div>
+              <div style={{ fontSize: '9.5px', color: 'var(--color-app-muted)' }}>Stay in deep work</div>
+            </div>
+          </div>
+          <div
+            onClick={() => setFocusMode(f => !f)}
+            style={{
+              width: '32px',
+              height: '18px',
+              borderRadius: '9px',
+              background: focusMode ? 'var(--accent-color)' : 'rgba(255,255,255,0.1)',
+              position: 'relative',
+              cursor: 'pointer',
+              transition: 'background 0.2s',
+            }}
+          >
+            <div style={{
+              width: '14px',
+              height: '14px',
+              borderRadius: '50%',
+              background: '#FFFFFF',
+              position: 'absolute',
+              top: '2px',
+              left: focusMode ? '16px' : '2px',
+              transition: 'left 0.2s',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+            }} />
+          </div>
+        </div>
+
+        {/* Theme Segmented Switch */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          background: 'var(--card-bg-inset)',
+          border: '1px solid var(--card-border)',
+          borderRadius: '12px',
+          padding: '4px 6px',
+        }}>
+          <span style={{ fontSize: '11px', fontWeight: '600', color: 'var(--color-app-muted)', paddingLeft: '6px' }}>Theme</span>
+          <div style={{ display: 'flex', gap: '4px' }}>
+            <button
+              onClick={() => { if (theme !== 'light') toggleTheme() }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                padding: '4px 8px',
+                borderRadius: '8px',
+                fontSize: '11px',
+                fontWeight: '600',
+                border: 'none',
+                background: theme === 'light' ? 'var(--card-bg)' : 'transparent',
+                color: theme === 'light' ? 'var(--accent-color)' : 'var(--color-app-muted)',
+                boxShadow: theme === 'light' ? '0 2px 6px rgba(0,0,0,0.06)' : 'none',
+                cursor: 'pointer',
+              }}
+            >
+              <Sun size={12} />
+            </button>
+            <button
+              onClick={() => { if (theme !== 'dark') toggleTheme() }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                padding: '4px 8px',
+                borderRadius: '8px',
+                fontSize: '11px',
+                fontWeight: '600',
+                border: 'none',
+                background: theme === 'dark' ? 'var(--card-bg)' : 'transparent',
+                color: theme === 'dark' ? 'var(--accent-color)' : 'var(--color-app-muted)',
+                boxShadow: theme === 'dark' ? '0 2px 6px rgba(0,0,0,0.2)' : 'none',
+                cursor: 'pointer',
+              }}
+            >
+              <Moon size={12} />
+            </button>
+          </div>
+        </div>
+
+        {/* Settings button */}
+        <NavLink
+          to="/settings"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '6px 8px',
+            fontSize: '12px',
+            fontWeight: '600',
+            color: 'var(--color-app-muted)',
+            textDecoration: 'none',
+            borderRadius: '8px',
+          }}
+          onClick={onClose}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: 'var(--color-app-muted)', fontSize: 11, fontWeight: 500 }}>
-            {theme === 'dark' ? <Moon size={11} /> : <Sun size={11} />}
-            Focus Mode
-          </div>
-          <div className={`toggle-track ${theme === 'dark' ? 'on' : 'off'}`} style={{ width: '28px', height: '14px', borderRadius: '7px', background: theme === 'dark' ? 'var(--color-violet)' : '#4a5568' }}>
-            <div className="toggle-thumb" style={{ width: '10px', height: '10px' }} />
-          </div>
-        </button>
+          <Settings size={14} />
+          <span>Settings</span>
+        </NavLink>
+
       </div>
     </aside>
   )
