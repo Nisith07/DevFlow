@@ -295,45 +295,38 @@ export default function AIAssistantPage() {
         />
 
         {/* Tab Selection */}
-        <div style={{ display: 'flex', background: 'var(--color-app-surface)', borderRadius: 8, padding: 4, border: '1px solid var(--color-app-border)' }}>
-          <button
-            onClick={() => setActiveTab('chat')}
-            style={{
-              padding: '6px 14px',
-              borderRadius: 6,
-              background: activeTab === 'chat' ? 'var(--color-app-bg)' : 'transparent',
-              color: activeTab === 'chat' ? '#fff' : 'var(--color-app-faint)',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              fontSize: '12.5px',
-              fontWeight: '600'
-            }}
-          >
-            <MessageSquare size={13} />
-            <span>Workspace Chat</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('copilot')}
-            style={{
-              padding: '6px 14px',
-              borderRadius: 6,
-              background: activeTab === 'copilot' ? 'var(--color-app-bg)' : 'transparent',
-              color: activeTab === 'copilot' ? '#fff' : 'var(--color-app-faint)',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              fontSize: '12.5px',
-              fontWeight: '600'
-            }}
-          >
-            <Code size={13} />
-            <span>Developer Copilot</span>
-          </button>
+        <div style={{ display: 'inline-flex', background: 'var(--card-bg-inset)', borderRadius: '10px', padding: '3px', border: '1px solid var(--card-border)' }}>
+          {[
+            { id: 'chat', label: 'Workspace Chat', icon: MessageSquare },
+            { id: 'copilot', label: 'Developer Copilot', icon: Code },
+          ].map(tab => {
+            const Icon = tab.icon
+            const isActive = activeTab === tab.id
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '8px',
+                  fontSize: '12.5px',
+                  fontWeight: isActive ? '700' : '600',
+                  cursor: 'pointer',
+                  border: 'none',
+                  background: isActive ? 'var(--accent-color)' : 'transparent',
+                  color: isActive ? '#FFFFFF' : 'var(--color-app-muted)',
+                  boxShadow: isActive ? '0 3px 10px rgba(255,122,26,0.3)' : 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <Icon size={13} />
+                <span>{tab.label}</span>
+              </button>
+            )
+          })}
         </div>
       </div>
 
