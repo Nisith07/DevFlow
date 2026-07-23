@@ -143,14 +143,15 @@ export default function SettingsPage() {
   }
 
   const selectStyle = {
-    padding: '8px 12px',
-    background: 'var(--color-app-bg)',
-    border: '1px solid var(--color-app-border)',
+    padding: '9px 12px',
+    background: 'var(--card-bg-inset)',
+    border: '1px solid var(--card-border)',
     borderRadius: '8px',
-    color: '#fff',
+    color: 'var(--color-app-text)',
     fontSize: '13px',
     outline: 'none',
-    width: '100%'
+    width: '100%',
+    boxSizing: 'border-box',
   }
 
   return (
@@ -415,9 +416,9 @@ export default function SettingsPage() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 
                 {/* GitHub */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: 'var(--color-app-bg)', border: '1px solid var(--color-app-border)', borderRadius: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: 'var(--card-bg-inset)', border: '1px solid var(--card-border)', borderRadius: '10px' }}>
                   <div>
-                    <strong style={{ fontSize: '13px', display: 'block', color: '#fff' }}>GitHub Integration</strong>
+                    <strong style={{ fontSize: '13px', display: 'block', color: 'var(--color-app-text)' }}>GitHub Integration</strong>
                     <span style={{ fontSize: '11.5px', color: 'var(--color-app-muted)' }}>Connect via OAuth to import repositories, commits, and pull requests.</span>
                   </div>
                   <button
@@ -440,9 +441,9 @@ export default function SettingsPage() {
                 </div>
 
                 {/* Google */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: 'var(--color-app-bg)', border: '1px solid var(--color-app-border)', borderRadius: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: 'var(--card-bg-inset)', border: '1px solid var(--card-border)', borderRadius: '10px' }}>
                   <div>
-                    <strong style={{ fontSize: '13px', display: 'block', color: '#fff' }}>Google Authentication</strong>
+                    <strong style={{ fontSize: '13px', display: 'block', color: 'var(--color-app-text)' }}>Google Authentication</strong>
                     <span style={{ fontSize: '11.5px', color: 'var(--color-app-muted)' }}>Login with one-click Google OAuth single sign-on credentials.</span>
                   </div>
                   <button
@@ -456,9 +457,9 @@ export default function SettingsPage() {
                 </div>
 
                 {/* LinkedIn */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: 'var(--color-app-bg)', border: '1px solid var(--color-app-border)', borderRadius: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: 'var(--card-bg-inset)', border: '1px solid var(--card-border)', borderRadius: '10px' }}>
                   <div>
-                    <strong style={{ fontSize: '13px', display: 'block', color: '#fff' }}>LinkedIn Profile Sync</strong>
+                    <strong style={{ fontSize: '13px', display: 'block', color: 'var(--color-app-text)' }}>LinkedIn Profile Sync</strong>
                     <span style={{ fontSize: '11.5px', color: 'var(--color-app-muted)' }}>Sync career credentials for automated Resume Builder profiles.</span>
                   </div>
                   <button
