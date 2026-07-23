@@ -224,25 +224,39 @@ export default function TasksPage() {
           </button>
         )}
 
-        <div style={{ display: 'flex', background: 'var(--color-app-surface)', borderRadius: 8, padding: 4, marginLeft: 'auto' }}>
-          <button
-            onClick={() => setViewMode('list')}
-            style={{ padding: '6px 12px', borderRadius: 6, background: viewMode === 'list' ? 'var(--color-app-bg)' : 'transparent', color: viewMode === 'list' ? '#fff' : 'var(--color-app-faint)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
-          >
-            <LayoutList size={14} /> <span style={{ fontSize: 12, fontWeight: 500 }}>List</span>
-          </button>
-          <button
-            onClick={() => setViewMode('kanban')}
-            style={{ padding: '6px 12px', borderRadius: 6, background: viewMode === 'kanban' ? 'var(--color-app-bg)' : 'transparent', color: viewMode === 'kanban' ? '#fff' : 'var(--color-app-faint)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
-          >
-            <KanbanSquare size={14} /> <span style={{ fontSize: 12, fontWeight: 500 }}>Kanban</span>
-          </button>
-          <button
-            onClick={() => setViewMode('calendar')}
-            style={{ padding: '6px 12px', borderRadius: 6, background: viewMode === 'calendar' ? 'var(--color-app-bg)' : 'transparent', color: viewMode === 'calendar' ? '#fff' : 'var(--color-app-faint)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
-          >
-            <Calendar size={14} /> <span style={{ fontSize: 12, fontWeight: 500 }}>Calendar</span>
-          </button>
+        <div style={{ display: 'inline-flex', background: 'var(--card-bg-inset)', borderRadius: '10px', padding: '3px', border: '1px solid var(--card-border)', marginLeft: 'auto' }}>
+          {[
+            { id: 'list', label: 'List', icon: LayoutList },
+            { id: 'kanban', label: 'Kanban', icon: KanbanSquare },
+            { id: 'calendar', label: 'Calendar', icon: Calendar },
+          ].map(tab => {
+            const Icon = tab.icon
+            const isActive = viewMode === tab.id
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setViewMode(tab.id)}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '8px',
+                  fontSize: '12px',
+                  fontWeight: isActive ? '700' : '600',
+                  cursor: 'pointer',
+                  border: 'none',
+                  background: isActive ? 'var(--accent-color)' : 'transparent',
+                  color: isActive ? '#FFFFFF' : 'var(--color-app-muted)',
+                  boxShadow: isActive ? '0 3px 10px rgba(255,122,26,0.3)' : 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <Icon size={14} />
+                <span>{tab.label}</span>
+              </button>
+            )
+          })}
         </div>
       </div>
 
