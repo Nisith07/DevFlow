@@ -29,6 +29,7 @@ import { useAuth } from '@/features/auth/hooks/useAuth'
 import { getInitials } from '@/shared/lib/utils'
 import { useState, useEffect, useRef } from 'react'
 import { getTheme, toggleTheme } from '@/shared/lib/theme'
+import FocusTimer from './FocusTimer'
 
 const GithubIcon = ({ size = 13 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -90,7 +91,7 @@ export default function Sidebar({ isOpen, onClose }) {
   
   const [workspaceOpen, setWorkspaceOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [focusMode, setFocusMode] = useState(true)
+  const [showFocusTimer, setShowFocusTimer] = useState(false)
   const dropdownRef = useRef(null)
 
   // Find currently active workspace item
@@ -584,6 +585,41 @@ export default function Sidebar({ isOpen, onClose }) {
           <Settings size={14} />
           <span>Settings</span>
         </NavLink>
+
+        {/* Focus Timer Button */}
+        <div style={{ position: 'relative' }}>
+          {showFocusTimer && (
+            <div style={{
+              position: 'absolute',
+              bottom: '44px',
+              left: '0',
+              zIndex: 1000,
+            }}>
+              <FocusTimer onClose={() => setShowFocusTimer(false)} />
+            </div>
+          )}
+          <button
+            onClick={() => setShowFocusTimer(prev => !prev)}
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '7px 8px',
+              fontSize: '12px',
+              fontWeight: '700',
+              color: showFocusTimer ? 'var(--accent-color)' : 'var(--color-app-muted)',
+              background: showFocusTimer ? 'var(--accent-color)18' : 'transparent',
+              border: `1px solid ${showFocusTimer ? 'var(--accent-color)40' : 'transparent'}`,
+              borderRadius: '8px',
+              cursor: 'pointer',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            <Zap size={14} />
+            <span>Focus Timer</span>
+          </button>
+        </div>
 
       </div>
     </aside>

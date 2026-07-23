@@ -71,3 +71,47 @@ export function useUpdateTaskStatus() {
   })
 }
 
+/**
+ * Fetches the AI-generated daily briefing.
+ * Cached for 4 hours so it only re-generates once per morning.
+ */
+export function useDailyBriefing() {
+  return useQuery({
+    queryKey: ['ai', 'briefing'],
+    queryFn: async () => {
+      const { data } = await api.post('/ai/briefing')
+      return data.data
+    },
+    staleTime: 1000 * 60 * 60 * 4, // 4-hour cache
+    retry: false,
+  })
+}
+
+/**
+ * Focus session stats hook.
+ */
+export function useFocusStats() {
+  return useQuery({
+    queryKey: ['focus', 'stats'],
+    queryFn: async () => {
+      const { data } = await api.get('/focus/stats')
+      return data.data
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  })
+}
+
+/**
+ * Active focus session hook.
+ */
+export function useActiveSession() {
+  return useQuery({
+    queryKey: ['focus', 'active'],
+    queryFn: async () => {
+      const { data } = await api.get('/focus/active')
+      return data.data
+    },
+    refetchInterval: 10_000, // poll every 10s while mounted
+    staleTime: 0,
+  })
+}

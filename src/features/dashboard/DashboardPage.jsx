@@ -4,10 +4,11 @@ import {
   Sparkles, AlertCircle, CheckSquare,
   Layers, CheckCircle2, Code, GitCommit,
   Activity, BarChart2, Calendar, Briefcase,
-  GitPullRequest, Globe, Rocket, Plus, Zap, Focus
+  GitPullRequest, Globe, Rocket, Plus, Zap, Focus, RefreshCw, Loader2
 } from 'lucide-react'
 import DashboardHeader from './components/DashboardHeader'
 import { useAuth } from '@/features/auth/hooks/useAuth'
+import { useDashboard, useCompleteTask, useDailyBriefing } from './hooks/useDashboard'
 
 const GithubIcon = ({ size = 13 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
@@ -104,20 +105,23 @@ export default function DashboardPage() {
   const { user } = useAuth()
   const navigate = useNavigate()
 
-  // Tasks state
-  const [tasks, setTasks] = useState([
-    { id: 1, title: 'Finish authentication flow', done: true },
-    { id: 2, title: 'Fix responsive issues', done: true },
-    { id: 3, title: 'Update dashboard UI', done: true },
-    { id: 4, title: 'Review pull request #42', done: false },
-  ])
+  // Real data from backend
+  const { data: dashData, isLoading: dashLoading } = useDashboard()
+  const completeTask = useCompleteTask()
+  const { data: briefingData, isLoading: briefingLoading, refetch: refetchBriefing } = useDailyBriefing()
 
-  const toggleTask = (id) => {
-    setTasks(prev => prev.map(t => t.id === id ? { ...t, done: !t.done } : t))
+  // Derive real values from API
+  const todayTasks = dashData?.todayTasks || []
+  const stats = dashData?.stats || { total: 0, done: 0, active: 0, overdue: 0 }
+  const streak = dashData?.streak || 0
+
+  const completedTodayCount = todayTasks.filter(t => t.status === 'done').length
+  const taskPercent = todayTasks.length > 0 ? Math.round((completedTodayCount / todayTasks.length) * 100) : 0
+
+  const handleToggleTask = async (task) => {
+    if (task.status === 'done') return
+    await completeTask.mutateAsync(task.id || task._id)
   }
-
-  const completedTasks = tasks.filter(t => t.done).length
-  const taskPercent = Math.round((completedTasks / tasks.length) * 100)
 
   // Card container style — compact & elegant
   const cardStyle = {
@@ -146,10 +150,10 @@ export default function DashboardPage() {
       {/* ── TOP STATS ROW (4 METRIC PILLS) ── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '14px' }}>
         {[
-          { label: 'Active Projects', value: '3', icon: Briefcase, color: '#A78BFA' },
-          { label: 'Open Tasks', value: '12', icon: CheckSquare, color: '#10B981' },
-          { label: 'PRs Waiting', value: '2', icon: GitPullRequest, color: '#A78BFA' },
-          { label: 'Day Streak', value: '7', icon: Zap, color: '#FF7A1A', isFire: true },
+          { label: 'Open Tasks', value: dashLoading ? '—' : String(stats.active), icon: CheckSquare, color: '#10B981' },
+          { label: 'Completed', value: dashLoading ? '—' : String(stats.done), icon: CheckCircle2, color: '#A78BFA' },
+          { label: 'Overdue', value: dashLoading ? '—' : String(stats.overdue), icon: AlertCircle, color: '#EF4444' },
+          { label: 'Day Streak', value: dashLoading ? '—' : String(streak), icon: Zap, color: '#FF7A1A', isFire: true },
         ].map((stat) => {
           const Icon = stat.icon
           return (
@@ -259,31 +263,37 @@ export default function DashboardPage() {
               <CircularGauge value={taskPercent} label="Completed" size={62} strokeWidth={5} color="#FF7A1A" />
               
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                {tasks.map((t) => (
-                  <div
-                    key={t.id}
-                    onClick={() => toggleTask(t.id)}
-                    style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '11px' }}
-                  >
-                    <div style={{
-                      width: '13px', height: '13px', borderRadius: '4px',
-                      background: t.done ? '#FF7A1A' : 'transparent',
-                      border: t.done ? 'none' : '1.5px solid var(--color-app-muted)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff',
-                      flexShrink: 0,
-                    }}>
-                      {t.done && <CheckCircle2 size={11} />}
+                {dashLoading ? (
+                  <div style={{ color: 'var(--color-app-muted)', fontSize: '11px' }}>Loading tasks...</div>
+                ) : todayTasks.length === 0 ? (
+                  <div style={{ color: 'var(--color-app-muted)', fontSize: '11px' }}>No tasks today. <Link to="/tasks" style={{ color: '#FF7A1A' }}>Add one</Link></div>
+                ) : (
+                  todayTasks.slice(0, 4).map((t) => (
+                    <div
+                      key={t.id || t._id}
+                      onClick={() => handleToggleTask(t)}
+                      style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: t.status === 'done' ? 'default' : 'pointer', fontSize: '11px' }}
+                    >
+                      <div style={{
+                        width: '13px', height: '13px', borderRadius: '4px',
+                        background: t.status === 'done' ? '#FF7A1A' : 'transparent',
+                        border: t.status === 'done' ? 'none' : '1.5px solid var(--color-app-muted)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff',
+                        flexShrink: 0,
+                      }}>
+                        {t.status === 'done' && <CheckCircle2 size={11} />}
+                      </div>
+                      <span style={{
+                        color: t.status === 'done' ? 'var(--color-app-muted)' : 'var(--color-app-text)',
+                        textDecoration: t.status === 'done' ? 'line-through' : 'none',
+                        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                        fontWeight: t.status === 'done' ? '500' : '600',
+                      }}>
+                        {t.title}
+                      </span>
                     </div>
-                    <span style={{
-                      color: t.done ? 'var(--color-app-muted)' : 'var(--color-app-text)',
-                      textDecoration: t.done ? 'line-through' : 'none',
-                      whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                      fontWeight: t.done ? '500' : '600',
-                    }}>
-                      {t.title}
-                    </span>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           </div>
@@ -353,18 +363,44 @@ export default function DashboardPage() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span style={{ fontSize: '9.5px', fontWeight: '800', background: '#FF7A1A', color: '#fff', padding: '1px 5px', borderRadius: '4px' }}>AI</span>
-                <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-app-text)' }}>AI Daily Brief ✨</span>
+                <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-app-text)' }}>Daily Briefing ✨</span>
               </div>
+              <button
+                onClick={() => refetchBriefing()}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-app-muted)', display: 'flex', alignItems: 'center', padding: '2px' }}
+                title="Regenerate briefing"
+              >
+                <RefreshCw size={11} />
+              </button>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '10px' }}>
-              <p style={{ fontSize: '11px', color: 'var(--color-app-muted)', lineHeight: 1.5, margin: 0, flex: 1 }}>
-                Good progress today! You've completed 75% of your focused tasks. The authentication module is ready for testing.
-              </p>
+              {briefingLoading ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--color-app-muted)', fontSize: '11px' }}>
+                  <Loader2 size={12} style={{ animation: 'spin 1s linear infinite' }} />
+                  Generating your briefing...
+                </div>
+              ) : briefingData?.briefing ? (
+                <p style={{ fontSize: '10.5px', color: 'var(--color-app-muted)', lineHeight: 1.6, margin: 0, flex: 1 }}>
+                  {briefingData.briefing.replace(/^#+\s+/gm, '').replace(/\*\*/g, '').slice(0, 220)}
+                  {briefingData.briefing.length > 220 ? '...' : ''}
+                </p>
+              ) : (
+                <p style={{ fontSize: '10.5px', color: 'var(--color-app-muted)', lineHeight: 1.6, margin: 0, flex: 1 }}>
+                  Your AI briefing will appear here each morning with your tasks, planner, and project updates.
+                </p>
+              )}
               <div style={{ flexShrink: 0 }}>
                 <BrainGraphic />
               </div>
             </div>
+            {briefingData?.meta && (
+              <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
+                {briefingData.meta.todayTaskCount > 0 && <span style={{ fontSize: '9px', background: '#10B98115', color: '#10B981', padding: '2px 6px', borderRadius: '4px', fontWeight: '600' }}>{briefingData.meta.todayTaskCount} tasks</span>}
+                {briefingData.meta.overdueCount > 0 && <span style={{ fontSize: '9px', background: '#EF444415', color: '#EF4444', padding: '2px 6px', borderRadius: '4px', fontWeight: '600' }}>⚠️ {briefingData.meta.overdueCount} overdue</span>}
+                {briefingData.meta.plannerBlockCount > 0 && <span style={{ fontSize: '9px', background: '#7C3AED15', color: '#7C3AED', padding: '2px 6px', borderRadius: '4px', fontWeight: '600' }}>{briefingData.meta.plannerBlockCount} blocks</span>}
+              </div>
+            )}
           </div>
 
           <div style={{ marginTop: '12px', paddingTop: '8px', borderTop: '1px solid var(--card-border)' }}>
