@@ -550,7 +550,7 @@ export default function PortfolioPage() {
                         {/* Download Resume Link simulator */}
                         {resume?.personalInfo?.name && (
                           <button
-                            onClick={() => alert('Downloading resume generated in Resume Builder...')}
+                            onClick={() => window.print()}
                             style={{
                               background: theme === 'neo_brutalist' ? '#fff' : pStyles.accent,
                               color: theme === 'neo_brutalist' ? '#000' : '#fff',
