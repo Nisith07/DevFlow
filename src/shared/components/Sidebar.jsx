@@ -280,7 +280,7 @@ export default function Sidebar({ isOpen, onClose }) {
             </div>
 
             {/* Workspaces Scrollable List */}
-            <div style={{ maxHeight: '340px', overflowY: 'auto', padding: '8px' }}>
+            <div className="no-scrollbar" style={{ maxHeight: '340px', overflowY: 'auto', padding: '8px' }}>
 
               {/* Dashboard quick item */}
               {!searchQuery && (

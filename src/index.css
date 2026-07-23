@@ -472,14 +472,16 @@ button {
 }
 
 .sidebar::-webkit-scrollbar,
-.sidebar-top-container::-webkit-scrollbar {
+.sidebar-top-container::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
   display: none !important;
   width: 0 !important;
   height: 0 !important;
 }
 
 .sidebar,
-.sidebar-top-container {
+.sidebar-top-container,
+.no-scrollbar {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
 }
