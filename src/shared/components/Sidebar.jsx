@@ -466,18 +466,33 @@ export default function Sidebar({ isOpen, onClose }) {
       </div>
 
       {/* Focus Mode & Theme Controls (Pinned to Bottom) */}
-      <div style={{ flexShrink: 0, marginTop: 'auto', borderTop: '1px solid var(--sidebar-border)', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <div style={{ flexShrink: 0, marginTop: 'auto', borderTop: '1px solid var(--sidebar-border)', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: '10px', position: 'relative' }}>
         
+        {/* Focus Timer Popup (Strictly Inside Sidebar) */}
+        {showFocusTimer && (
+          <div style={{
+            marginBottom: '4px',
+            animation: 'fadeInUp 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+          }}>
+            <FocusTimer onClose={() => setShowFocusTimer(false)} />
+          </div>
+        )}
+
         {/* Focus Mode Card */}
-        <div style={{
-          background: 'var(--card-bg-inset)',
-          border: '1px solid var(--card-border)',
-          borderRadius: '14px',
-          padding: '10px 12px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
+        <div
+          onClick={() => setShowFocusTimer(f => !f)}
+          style={{
+            background: showFocusTimer ? 'var(--accent-color)15' : 'var(--card-bg-inset)',
+            border: `1px solid ${showFocusTimer ? 'var(--accent-color)40' : 'var(--card-border)'}`,
+            borderRadius: '14px',
+            padding: '10px 12px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            cursor: 'pointer',
+            transition: 'all 0.15s ease',
+          }}
+        >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'rgba(255, 122, 26, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FF7A1A' }}>
               <Zap size={12} />
@@ -488,14 +503,12 @@ export default function Sidebar({ isOpen, onClose }) {
             </div>
           </div>
           <div
-            onClick={() => setShowFocusTimer(f => !f)}
             style={{
               width: '32px',
               height: '18px',
               borderRadius: '9px',
               background: showFocusTimer ? 'var(--accent-color)' : 'rgba(255,255,255,0.1)',
               position: 'relative',
-              cursor: 'pointer',
               transition: 'background 0.2s',
             }}
           >
@@ -586,43 +599,8 @@ export default function Sidebar({ isOpen, onClose }) {
           <span>Settings</span>
         </NavLink>
 
-        {/* Focus Timer Button */}
-        <div>
-          {showFocusTimer && (
-            <div style={{
-              position: 'fixed',
-              bottom: '20px',
-              left: '268px',
-              zIndex: 99999,
-              animation: 'fadeInUp 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-            }}>
-              <FocusTimer onClose={() => setShowFocusTimer(false)} />
-            </div>
-          )}
-          <button
-            onClick={() => setShowFocusTimer(prev => !prev)}
-            style={{
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '7px 8px',
-              fontSize: '12px',
-              fontWeight: '700',
-              color: showFocusTimer ? 'var(--accent-color)' : 'var(--color-app-muted)',
-              background: showFocusTimer ? 'var(--accent-color)18' : 'transparent',
-              border: `1px solid ${showFocusTimer ? 'var(--accent-color)40' : 'transparent'}`,
-              borderRadius: '8px',
-              cursor: 'pointer',
-              transition: 'all 0.15s ease',
-            }}
-          >
-            <Zap size={14} />
-            <span>Focus Timer</span>
-          </button>
-        </div>
-
       </div>
     </aside>
   )
+}
 }
