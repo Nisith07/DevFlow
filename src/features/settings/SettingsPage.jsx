@@ -6,6 +6,7 @@ import PageHeader from '@/shared/components/PageHeader'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { useSaveSettings } from './hooks/useSettings'
 import { getGitHubOAuthUrl } from '@/features/github/hooks/useGitHub'
+import { THEMES, applyTheme, getTheme } from '@/shared/lib/theme'
 
 const TIMEZONES = ['UTC', 'GMT', 'EST', 'PST', 'IST', 'CET']
 const LANGUAGES_LIST = [
@@ -303,28 +304,40 @@ export default function SettingsPage() {
           {/* D. THEME SELECTION */}
           {activeTab === 'theme' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800' }}>Themes configurations</h3>
+              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: 'var(--color-app-text)' }}>Themes configurations</h3>
               
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <div onClick={() => { setTheme('dark'); saveSettings.mutate({ theme: 'dark' }); }} style={{ padding: '16px', background: 'var(--color-app-bg)', border: theme === 'dark' ? '2px solid var(--color-teal)' : '1px solid var(--color-app-border)', borderRadius: '10px', cursor: 'pointer', textAlign: 'center' }}>
-                  <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#fff', display: 'block', marginBottom: 4 }}>Dark charcoal</span>
-                  <span style={{ fontSize: '11px', color: 'var(--color-app-muted)' }}>Traditional dark developer workspace theme.</span>
-                </div>
-
-                <div onClick={() => { setTheme('light'); saveSettings.mutate({ theme: 'light' }); }} style={{ padding: '16px', background: '#fff', border: theme === 'light' ? '2px solid var(--color-teal)' : '1px solid var(--color-app-border)', borderRadius: '10px', cursor: 'pointer', textAlign: 'center' }}>
-                  <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#000', display: 'block', marginBottom: 4 }}>Snow Minimalist</span>
-                  <span style={{ fontSize: '11px', color: '#4b5563' }}>Clean white styling dashboard theme.</span>
-                </div>
-
-                <div onClick={() => { setTheme('cyberpunk'); saveSettings.mutate({ theme: 'cyberpunk' }); }} style={{ padding: '16px', background: '#170c30', border: theme === 'cyberpunk' ? '2px solid var(--color-teal)' : '1px solid var(--color-app-border)', borderRadius: '10px', cursor: 'pointer', textAlign: 'center' }}>
-                  <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#00ffcc', display: 'block', marginBottom: 4 }}>Cyberpunk Neon</span>
-                  <span style={{ fontSize: '11px', color: '#a855f7' }}>Retro arcade cyberpunk borders style.</span>
-                </div>
-
-                <div onClick={() => { setTheme('neo_brutalist'); saveSettings.mutate({ theme: 'neo_brutalist' }); }} style={{ padding: '16px', background: '#fef08a', border: theme === 'neo_brutalist' ? '2px solid var(--color-teal)' : '1px solid var(--color-app-border)', borderRadius: '10px', cursor: 'pointer', textAlign: 'center' }}>
-                  <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#000', display: 'block', marginBottom: 4 }}>Neo-Brutalist</span>
-                  <span style={{ fontSize: '11px', color: '#000' }}>Vibrant comic colors and thick offset lines.</span>
-                </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                {THEMES.map(t => {
+                  const currentActive = getTheme()
+                  const isSelected = (theme === t.id) || (currentActive === t.id)
+                  return (
+                    <div
+                      key={t.id}
+                      onClick={() => {
+                        setTheme(t.id)
+                        applyTheme(t.id)
+                        saveSettings.mutate({ theme: t.id })
+                      }}
+                      style={{
+                        padding: '18px 16px',
+                        background: t.cardBg,
+                        border: isSelected ? `2.5px solid ${t.id === 'neobrutalist' ? '#000000' : 'var(--accent-color)'}` : '1px solid var(--card-border)',
+                        borderRadius: '12px',
+                        cursor: 'pointer',
+                        textAlign: 'center',
+                        boxShadow: isSelected ? '0 0 16px var(--accent-glow)' : 'var(--shadow-card-val)',
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      <span style={{ fontSize: '14px', fontWeight: '800', color: t.text, display: 'block', marginBottom: 4 }}>
+                        {t.name} {isSelected && '✓'}
+                      </span>
+                      <span style={{ fontSize: '11px', color: t.sub, fontWeight: '500' }}>
+                        {t.desc}
+                      </span>
+                    </div>
+                  )
+                })}
               </div>
             </div>
           )}

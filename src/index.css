@@ -206,6 +206,92 @@
   --shadow-glow-violet-val: 0 0 20px rgba(255, 122, 26, 0.2);
 }
 
+.theme-cyberpunk {
+  /* Cyberpunk Neon mode: #0D0814 background, #160D24 cards, #00F0FF & #FF007F accents */
+  --app-bg: #0D0814;
+  --app-surface: #160D24;
+  --app-surface-2: #211336;
+  --app-surface-hover: #2E1A4A;
+  --app-border: rgba(0, 240, 255, 0.25);
+  --app-border-bright: rgba(255, 0, 127, 0.4);
+  --app-text: #00F0FF;
+  --app-muted: #B388FF;
+  --app-faint: #7C4DFF;
+
+  --accent-color: #FF007F;
+  --accent-bright: #FF3399;
+  --accent-dim: rgba(255, 0, 127, 0.2);
+  --accent-glow: rgba(0, 240, 255, 0.35);
+
+  --blue-dim: rgba(0, 240, 255, 0.15);
+  --green-dim: rgba(0, 255, 157, 0.15);
+  --amber-dim: rgba(255, 204, 0, 0.15);
+  --pink-dim: rgba(255, 0, 127, 0.15);
+  --teal-dim: rgba(0, 240, 255, 0.15);
+  --danger-dim: rgba(255, 0, 85, 0.15);
+
+  --card-bg: #160D24;
+  --card-bg-inset: #211336;
+  --card-border: rgba(0, 240, 255, 0.25);
+  --card-border-top: rgba(255, 0, 127, 0.3);
+  --card-border-left: rgba(0, 240, 255, 0.3);
+  --card-border-inset: rgba(0, 240, 255, 0.1);
+  --sidebar-bg: #0A0610;
+  --sidebar-border: rgba(0, 240, 255, 0.25);
+
+  --shadow-neu-sm-val: 0 4px 12px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 240, 255, 0.2);
+  --shadow-neu-md-val: 0 8px 24px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 0, 127, 0.25);
+  --shadow-neu-lg-val: 0 12px 36px rgba(0, 0, 0, 0.95), 0 0 30px rgba(0, 240, 255, 0.3);
+  --shadow-card-val: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(0, 240, 255, 0.25);
+  --shadow-card-hover-val: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 24px rgba(255, 0, 127, 0.4);
+  --shadow-sidebar-val: 4px 0 24px rgba(0, 0, 0, 0.8);
+  --shadow-dropdown-val: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 240, 255, 0.3);
+  --shadow-glow-violet-val: 0 0 30px rgba(255, 0, 127, 0.5);
+}
+
+.theme-neobrutalist {
+  /* Neo-Brutalist mode: #FEF08A background, #FFFFFF cards, #000000 thick borders */
+  --app-bg: #FEF9C3;
+  --app-surface: #FFFFFF;
+  --app-surface-2: #FFF08A;
+  --app-surface-hover: #FDE047;
+  --app-border: #000000;
+  --app-border-bright: #000000;
+  --app-text: #000000;
+  --app-muted: #333333;
+  --app-faint: #666666;
+
+  --accent-color: #000000;
+  --accent-bright: #1A1A1A;
+  --accent-dim: #FDE047;
+  --accent-glow: rgba(0, 0, 0, 0.2);
+
+  --blue-dim: #93C5FD;
+  --green-dim: #86EFAC;
+  --amber-dim: #FDE047;
+  --pink-dim: #F472B6;
+  --teal-dim: #67E8F9;
+  --danger-dim: #FCA5A5;
+
+  --card-bg: #FFFFFF;
+  --card-bg-inset: #FEF08A;
+  --card-border: #000000;
+  --card-border-top: #000000;
+  --card-border-left: #000000;
+  --card-border-inset: #000000;
+  --sidebar-bg: #FFFFFF;
+  --sidebar-border: #000000;
+
+  --shadow-neu-sm-val: 3px 3px 0px #000000;
+  --shadow-neu-md-val: 5px 5px 0px #000000;
+  --shadow-neu-lg-val: 7px 7px 0px #000000;
+  --shadow-card-val: 4px 4px 0px #000000;
+  --shadow-card-hover-val: 6px 6px 0px #000000;
+  --shadow-sidebar-val: 4px 0 0px #000000;
+  --shadow-dropdown-val: 5px 5px 0px #000000;
+  --shadow-glow-violet-val: 4px 4px 0px #000000;
+}
+
 
 
 
