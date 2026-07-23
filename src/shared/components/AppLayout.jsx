@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import Sidebar from '@/shared/components/Sidebar'
 import CommandPalette from '@/shared/components/CommandPalette'
+import { FocusProvider } from '@/shared/components/FocusContext'
 import { Menu, X } from 'lucide-react'
 
 export default function AppLayout() {
@@ -27,41 +28,43 @@ export default function AppLayout() {
   }, [])
 
   return (
-    <div className="app-shell">
-      {/* Mobile backdrop */}
-      {sidebarOpen && (
-        <div
-          className="sidebar-backdrop open"
-          onClick={() => setSidebarOpen(false)}
-          aria-hidden="true"
+    <FocusProvider>
+      <div className="app-shell">
+        {/* Mobile backdrop */}
+        {sidebarOpen && (
+          <div
+            className="sidebar-backdrop open"
+            onClick={() => setSidebarOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Mobile toggle */}
+        <button
+          className="sidebar-mobile-toggle"
+          onClick={() => setSidebarOpen(o => !o)}
+          aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
+          aria-expanded={sidebarOpen}
+        >
+          {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+
+        {/* Sidebar */}
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+        {/* Main content */}
+        <div className="app-content">
+          <main className="app-main">
+            <Outlet />
+          </main>
+        </div>
+
+        {/* Command Palette — global overlay, no FAB (moved to header) */}
+        <CommandPalette
+          isOpen={paletteOpen}
+          onClose={() => setPaletteOpen(false)}
         />
-      )}
-
-      {/* Mobile toggle */}
-      <button
-        className="sidebar-mobile-toggle"
-        onClick={() => setSidebarOpen(o => !o)}
-        aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
-        aria-expanded={sidebarOpen}
-      >
-        {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
-      </button>
-
-      {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-
-      {/* Main content */}
-      <div className="app-content">
-        <main className="app-main">
-          <Outlet />
-        </main>
       </div>
-
-      {/* Command Palette — global overlay, no FAB (moved to header) */}
-      <CommandPalette
-        isOpen={paletteOpen}
-        onClose={() => setPaletteOpen(false)}
-      />
-    </div>
+    </FocusProvider>
   )
 }
