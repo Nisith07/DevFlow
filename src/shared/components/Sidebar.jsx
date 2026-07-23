@@ -144,12 +144,12 @@ export default function Sidebar({ isOpen, onClose }) {
     <aside className={`sidebar ${isOpen ? 'open' : ''}`} aria-label="App sidebar" style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', background: 'var(--sidebar-bg)', borderRight: '1px solid var(--sidebar-border)' }}>
 
       {/* Developer Identity Card (At Very Top) */}
-      <div style={{ flexShrink: 0, padding: '14px 14px 10px' }}>
+      <div style={{ flexShrink: 0, padding: '16px 14px 10px' }}>
         <div style={{
           background: 'var(--card-bg-inset)',
           border: '1px solid var(--card-border)',
           borderRadius: '14px',
-          padding: '10px 12px',
+          padding: '8px 12px',
           display: 'flex',
           alignItems: 'center',
           gap: '10px',
