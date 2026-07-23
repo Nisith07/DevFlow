@@ -17,24 +17,25 @@ export default function CtaBand({ onLoginClick }) {
         >
           <div className="lp-cta-glow" />
 
-          {/* Rocket icon */}
-          <motion.div
-            className="lp-cta-rocket"
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            🚀
-          </motion.div>
+          {/* Header row with rocket icon + title copy right next to each other */}
+          <div className="lp-cta-header">
+            <motion.div
+              className="lp-cta-rocket"
+              animate={{ y: [0, -6, 0] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              🚀
+            </motion.div>
 
-          {/* Copy */}
-          <div className="lp-cta-copy">
-            <h2 className="lp-cta-title">
-              Start your day with clarity.<br />
-              End your day with progress.
-            </h2>
-            <p className="lp-cta-sub">
-              Join thousands of developers shipping faster with automated morning standups. Free for individuals, no card required.
-            </p>
+            <div className="lp-cta-copy">
+              <h2 className="lp-cta-title">
+                Start your day with clarity.<br />
+                End your day with progress.
+              </h2>
+              <p className="lp-cta-sub">
+                Join thousands of developers shipping faster with automated morning standups. Free for individuals, no card required.
+              </p>
+            </div>
           </div>
 
           {/* Actions */}
@@ -42,8 +43,8 @@ export default function CtaBand({ onLoginClick }) {
             <motion.button
               className="lp-btn lp-btn-primary"
               onClick={onLoginClick}
-              style={{ padding: '13px 28px', fontSize: 14.5 }}
-              whileHover={{ scale: 1.05, y: -2 }}
+              style={{ padding: '12px 26px', fontSize: 14 }}
+              whileHover={{ scale: 1.04, y: -2 }}
               whileTap={{ scale: 0.97 }}
             >
               Start Free <ArrowRight size={15} />
@@ -52,7 +53,7 @@ export default function CtaBand({ onLoginClick }) {
               href="#how-it-works"
               className="lp-btn lp-btn-secondary"
               onClick={e => { e.preventDefault(); document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }) }}
-              style={{ padding: '13px 24px', fontSize: 14.5 }}
+              style={{ padding: '12px 22px', fontSize: 14 }}
               whileHover={{ scale: 1.03, y: -2 }}
               whileTap={{ scale: 0.97 }}
             >
