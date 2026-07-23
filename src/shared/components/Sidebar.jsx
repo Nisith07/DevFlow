@@ -488,12 +488,12 @@ export default function Sidebar({ isOpen, onClose }) {
             </div>
           </div>
           <div
-            onClick={() => setFocusMode(f => !f)}
+            onClick={() => setShowFocusTimer(f => !f)}
             style={{
               width: '32px',
               height: '18px',
               borderRadius: '9px',
-              background: focusMode ? 'var(--accent-color)' : 'rgba(255,255,255,0.1)',
+              background: showFocusTimer ? 'var(--accent-color)' : 'rgba(255,255,255,0.1)',
               position: 'relative',
               cursor: 'pointer',
               transition: 'background 0.2s',
@@ -506,7 +506,7 @@ export default function Sidebar({ isOpen, onClose }) {
               background: '#FFFFFF',
               position: 'absolute',
               top: '2px',
-              left: focusMode ? '16px' : '2px',
+              left: showFocusTimer ? '16px' : '2px',
               transition: 'left 0.2s',
               boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
             }} />
