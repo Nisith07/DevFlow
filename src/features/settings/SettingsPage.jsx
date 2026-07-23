@@ -345,31 +345,31 @@ export default function SettingsPage() {
           {/* E. NOTIFICATIONS */}
           {activeTab === 'notifications' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800' }}>Notifications alerts</h3>
+              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: 'var(--color-app-text)' }}>Notifications alerts</h3>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--card-border)' }}>
                   <div>
-                    <strong style={{ fontSize: '13px', display: 'block', color: '#fff' }}>Email Alerts</strong>
+                    <strong style={{ fontSize: '13px', display: 'block', color: 'var(--color-app-text)' }}>Email Alerts</strong>
                     <span style={{ fontSize: '11.5px', color: 'var(--color-app-muted)' }}>Send email logs when task deadlines approach.</span>
                   </div>
-                  <input type="checkbox" checked={notifyEmail} onChange={(e) => { setNotifyEmail(e.target.checked); saveSettings.mutate({ notifications: { email: e.target.checked } }); }} style={{ width: 16, height: 16 }} />
+                  <input type="checkbox" checked={notifyEmail} onChange={(e) => { setNotifyEmail(e.target.checked); saveSettings.mutate({ notifications: { email: e.target.checked } }); }} style={{ width: 16, height: 16, accentColor: '#FF7A1A' }} />
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--card-border)' }}>
                   <div>
-                    <strong style={{ fontSize: '13px', display: 'block', color: '#fff' }}>SMS alerts notifications</strong>
+                    <strong style={{ fontSize: '13px', display: 'block', color: 'var(--color-app-text)' }}>SMS alerts notifications</strong>
                     <span style={{ fontSize: '11.5px', color: 'var(--color-app-muted)' }}>Get mobile texts when sprint tasks are assigned.</span>
                   </div>
-                  <input type="checkbox" checked={notifySms} onChange={(e) => { setNotifySms(e.target.checked); saveSettings.mutate({ notifications: { sms: e.target.checked } }); }} style={{ width: 16, height: 16 }} />
+                  <input type="checkbox" checked={notifySms} onChange={(e) => { setNotifySms(e.target.checked); saveSettings.mutate({ notifications: { sms: e.target.checked } }); }} style={{ width: 16, height: 16, accentColor: '#FF7A1A' }} />
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0' }}>
                   <div>
-                    <strong style={{ fontSize: '13px', display: 'block', color: '#fff' }}>Sound alert effects</strong>
+                    <strong style={{ fontSize: '13px', display: 'block', color: 'var(--color-app-text)' }}>Sound alert effects</strong>
                     <span style={{ fontSize: '11.5px', color: 'var(--color-app-muted)' }}>Trigger audio bells when tasks checklists are finished.</span>
                   </div>
-                  <input type="checkbox" checked={notifySound} onChange={(e) => { setNotifySound(e.target.checked); saveSettings.mutate({ notifications: { sound: e.target.checked } }); }} style={{ width: 16, height: 16 }} />
+                  <input type="checkbox" checked={notifySound} onChange={(e) => { setNotifySound(e.target.checked); saveSettings.mutate({ notifications: { sound: e.target.checked } }); }} style={{ width: 16, height: 16, accentColor: '#FF7A1A' }} />
                 </div>
               </div>
             </div>
