@@ -591,9 +591,10 @@ export default function Sidebar({ isOpen, onClose }) {
           {showFocusTimer && (
             <div style={{
               position: 'fixed',
-              bottom: '70px',
-              left: '16px',
+              bottom: '20px',
+              left: '268px',
               zIndex: 99999,
+              animation: 'fadeInUp 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
             }}>
               <FocusTimer onClose={() => setShowFocusTimer(false)} />
             </div>
