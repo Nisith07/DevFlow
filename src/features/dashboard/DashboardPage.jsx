@@ -196,7 +196,7 @@ export default function DashboardPage() {
           { title: 'New Task', sub: 'Add a new task', route: '/tasks', icon: CheckSquare, color: '#10B981' },
           { title: 'Generate Code', sub: 'AI Code Generation', route: '/ai', icon: Code, color: '#EC4899' },
           { title: 'Deploy', sub: 'Deploy to production', route: '/deployments', icon: Rocket, color: '#3B82F6' },
-          { title: 'Open GitHub', sub: 'View Repositories', route: '/github', icon: GithubIcon, color: '#F4F4F6' },
+          { title: 'Open GitHub', sub: 'View Repositories', route: '/github', icon: GithubIcon, color: 'var(--color-app-text)' },
           { title: 'Focus Mode', sub: 'Start a session', route: '/planner', icon: Focus, color: '#A78BFA' },
         ].map((act) => {
           const Icon = act.icon
