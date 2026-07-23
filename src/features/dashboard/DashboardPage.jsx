@@ -8,7 +8,7 @@ import {
 } from 'lucide-react'
 import DashboardHeader from './components/DashboardHeader'
 import { useAuth } from '@/features/auth/hooks/useAuth'
-import { useDashboard, useCompleteTask, useDailyBriefing } from './hooks/useDashboard'
+import { useDashboard, useCompleteTask, useUpdateTaskStatus, useDailyBriefing } from './hooks/useDashboard'
 
 const GithubIcon = ({ size = 13 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
@@ -108,6 +108,7 @@ export default function DashboardPage() {
   // Real data from backend
   const { data: dashData, isLoading: dashLoading } = useDashboard()
   const completeTask = useCompleteTask()
+  const updateTaskStatus = useUpdateTaskStatus()
   const { data: briefingData, isLoading: briefingLoading, refetch: refetchBriefing } = useDailyBriefing()
 
   // Derive real values from API
@@ -119,8 +120,12 @@ export default function DashboardPage() {
   const taskPercent = todayTasks.length > 0 ? Math.round((completedTodayCount / todayTasks.length) * 100) : 0
 
   const handleToggleTask = async (task) => {
-    if (task.status === 'done') return
-    await completeTask.mutateAsync(task.id || task._id)
+    const taskId = task.id || task._id
+    if (task.status === 'done') {
+      await updateTaskStatus.mutateAsync({ id: taskId, status: 'todo' })
+    } else {
+      await completeTask.mutateAsync(taskId)
+    }
   }
 
   // Card container style — compact & elegant
@@ -272,7 +277,7 @@ export default function DashboardPage() {
                     <div
                       key={t.id || t._id}
                       onClick={() => handleToggleTask(t)}
-                      style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: t.status === 'done' ? 'default' : 'pointer', fontSize: '11px' }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '11px' }}
                     >
                       <div style={{
                         width: '13px', height: '13px', borderRadius: '4px',
