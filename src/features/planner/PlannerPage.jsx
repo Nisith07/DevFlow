@@ -268,64 +268,39 @@ export default function PlannerPage() {
         />
 
         {/* Tab Controls */}
-        <div style={{ display: 'flex', background: 'var(--color-app-surface)', borderRadius: 8, padding: 4, border: '1px solid var(--color-app-border)' }}>
-          <button
-            onClick={() => setActiveTab('daily')}
-            style={{
-              padding: '6px 14px',
-              borderRadius: 6,
-              background: activeTab === 'daily' ? 'var(--color-app-bg)' : 'transparent',
-              color: activeTab === 'daily' ? '#fff' : 'var(--color-app-faint)',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              fontSize: '12.5px',
-              fontWeight: '600'
-            }}
-          >
-            <Clock size={13} />
-            <span>Daily Schedule</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('weekly')}
-            style={{
-              padding: '6px 14px',
-              borderRadius: 6,
-              background: activeTab === 'weekly' ? 'var(--color-app-bg)' : 'transparent',
-              color: activeTab === 'weekly' ? '#fff' : 'var(--color-app-faint)',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              fontSize: '12.5px',
-              fontWeight: '600'
-            }}
-          >
-            <CheckSquare size={13} />
-            <span>Weekly Focus</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('timeline')}
-            style={{
-              padding: '6px 14px',
-              borderRadius: 6,
-              background: activeTab === 'timeline' ? 'var(--color-app-bg)' : 'transparent',
-              color: activeTab === 'timeline' ? '#fff' : 'var(--color-app-faint)',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              fontSize: '12.5px',
-              fontWeight: '600'
-            }}
-          >
-            <Calendar size={13} />
-            <span>Sprints & Timelines</span>
-          </button>
+        <div style={{ display: 'inline-flex', background: 'var(--card-bg-inset)', borderRadius: '10px', padding: '3px', border: '1px solid var(--card-border)' }}>
+          {[
+            { id: 'daily', label: 'Daily Schedule', icon: Clock },
+            { id: 'weekly', label: 'Weekly Focus', icon: CheckSquare },
+            { id: 'timeline', label: 'Sprints & Timelines', icon: Calendar },
+          ].map((tab) => {
+            const Icon = tab.icon
+            const isActive = activeTab === tab.id
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '8px',
+                  background: isActive ? 'var(--accent-color)' : 'transparent',
+                  color: isActive ? '#FFFFFF' : 'var(--color-app-muted)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontSize: '12.5px',
+                  fontWeight: isActive ? '700' : '600',
+                  boxShadow: isActive ? '0 3px 10px rgba(255,122,26,0.3)' : 'none',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <Icon size={14} />
+                <span>{tab.label}</span>
+              </button>
+            )
+          })}
         </div>
       </div>
 
