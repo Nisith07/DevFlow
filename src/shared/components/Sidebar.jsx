@@ -43,8 +43,8 @@ const WORKSPACE_CATEGORIES = [
   {
     category: 'Development',
     items: [
-      { name: 'Projects', route: '/projects', icon: Briefcase, badge: 'Active' },
       { name: 'Team Hub', route: '/teams', icon: Users, badge: 'Live' },
+      { name: 'Projects', route: '/projects', icon: Briefcase, badge: 'Active' },
       { name: 'Tasks', route: '/tasks', icon: CheckSquare },
       { name: 'GitHub', route: '/github', icon: GithubIcon },
       { name: 'Deployments', route: '/deployments', icon: Layers },
@@ -417,6 +417,7 @@ export default function Sidebar({ isOpen, onClose }) {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
             {[
+              { name: 'Team Hub', route: '/teams', icon: Users },
               { name: 'Projects', route: '/projects', icon: Briefcase },
               { name: 'Tasks', route: '/tasks', icon: CheckSquare },
               { name: 'GitHub', route: '/github', icon: GithubIcon },
