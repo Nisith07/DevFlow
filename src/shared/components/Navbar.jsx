@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 
+import DevFlowLogo from '@/shared/components/DevFlowLogo'
+
 const NAV_LINKS = [
   { label: 'Home', href: '#home' },
   { label: 'Features', href: '#features' },
@@ -64,7 +66,7 @@ export default function Navbar() {
 
           {/* Brand */}
           <button className="lp-brand" onClick={(e) => scrollTo('#home', e)} aria-label="Devflow home">
-            <div className="lp-brand-icon">D</div>
+            <DevFlowLogo size={32} iconSize={18} />
             <span>DevFlow</span>
           </button>
 

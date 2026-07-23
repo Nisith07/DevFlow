@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import DevFlowLogo from '@/shared/components/DevFlowLogo'
 
 const GithubIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -77,7 +78,7 @@ export default function Footer() {
               style={{ color: '#FFFFFF' }}
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             >
-              <div className="lp-brand-icon">D</div>
+              <DevFlowLogo size={30} iconSize={17} />
               <span>DevFlow</span>
             </button>
             <p className="lp-footer-desc">
