@@ -2,6 +2,7 @@ import { NavLink, useNavigate, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard,
   Briefcase,
+  Users,
   CheckSquare,
   AlertCircle,
   Sparkles,
@@ -43,6 +44,7 @@ const WORKSPACE_CATEGORIES = [
     category: 'Development',
     items: [
       { name: 'Projects', route: '/projects', icon: Briefcase, badge: 'Active' },
+      { name: 'Team Hub', route: '/teams', icon: Users, badge: 'Live' },
       { name: 'Tasks', route: '/tasks', icon: CheckSquare },
       { name: 'GitHub', route: '/github', icon: GithubIcon },
       { name: 'Deployments', route: '/deployments', icon: Layers },

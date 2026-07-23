@@ -20,6 +20,7 @@ import SnippetPage from '@/features/snippets/SnippetPage'
 import SettingsPage from '@/features/settings/SettingsPage'
 import DeploymentsPage from '@/features/deployments/DeploymentsPage'
 import IntegrationsPage from '@/features/integrations/IntegrationsPage'
+import TeamsPage from '@/features/teams/TeamsPage'
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: 'projects',
         element: <ProjectsPage />,
+      },
+      {
+        path: 'teams',
+        element: <TeamsPage />,
       },
       {
         path: 'tasks',
