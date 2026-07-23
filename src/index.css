@@ -467,12 +467,21 @@ button {
   overflow-x: hidden;
   z-index: 50;
   /* Subtle left-edge vertical gradient line */
-  box-shadow: 1px 0 0 var(--color-app-border), var(--shadow-neu-sm);
-  scrollbar-width: none;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
-.sidebar::-webkit-scrollbar {
-  display: none;
+.sidebar::-webkit-scrollbar,
+.sidebar-top-container::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.sidebar,
+.sidebar-top-container {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
 /* Brand header */
