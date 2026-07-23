@@ -244,7 +244,7 @@ export default function Sidebar({ isOpen, onClose }) {
             top: '48px',
             left: '14px',
             right: '14px',
-            width: '280px',
+            boxSizing: 'border-box',
             background: 'var(--card-bg)',
             border: '1px solid var(--accent-color)',
             borderRadius: '20px',
