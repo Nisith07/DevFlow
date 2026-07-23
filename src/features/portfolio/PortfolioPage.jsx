@@ -187,14 +187,15 @@ export default function PortfolioPage() {
   }
 
   const selectStyle = {
-    padding: '8px 12px',
-    background: 'var(--color-app-bg)',
-    border: '1px solid var(--color-app-border)',
+    padding: '9px 12px',
+    background: 'var(--card-bg-inset)',
+    border: '1px solid var(--card-border)',
     borderRadius: '8px',
-    color: '#fff',
+    color: 'var(--color-app-text)',
     fontSize: '13px',
     outline: 'none',
-    width: '100%'
+    width: '100%',
+    boxSizing: 'border-box',
   }
 
   // Preview styling configurations
@@ -207,7 +208,7 @@ export default function PortfolioPage() {
           text: '#111827',
           muted: '#4b5563',
           accent: '#0d9488',
-          border: '#e5e7eb'
+          border: '1px solid #e5e7eb'
         }
       case 'cyberpunk':
         return {
@@ -233,7 +234,7 @@ export default function PortfolioPage() {
           surface: '#111827',
           text: '#f9fafb',
           muted: '#9ca3af',
-          accent: '#38bdf8',
+          accent: '#FF7A1A',
           border: '1px solid rgba(255,255,255,0.05)'
         }
     }
@@ -249,14 +250,56 @@ export default function PortfolioPage() {
         title="Portfolio Builder"
         subtitle="Manage sections, test themes, import GitHub projects, and publish your live developer portfolio."
         action={
-          <div style={{ display: 'flex', background: 'var(--color-app-surface)', borderRadius: 8, padding: 4, border: '1px solid var(--color-app-border)' }}>
-            <button onClick={() => setActiveTab('builder')} style={{ padding: '6px 14px', borderRadius: 6, fontSize: '12px', fontWeight: '600', cursor: 'pointer', border: 'none', background: activeTab === 'builder' ? 'var(--color-app-bg)' : 'transparent', color: activeTab === 'builder' ? '#fff' : 'var(--color-app-faint)' }}>
+          <div style={{ display: 'inline-flex', background: 'var(--card-bg-inset)', borderRadius: '10px', padding: '3px', border: '1px solid var(--card-border)' }}>
+            <button
+              onClick={() => setActiveTab('builder')}
+              style={{
+                padding: '6px 14px',
+                borderRadius: '8px',
+                fontSize: '12px',
+                fontWeight: activeTab === 'builder' ? '700' : '600',
+                cursor: 'pointer',
+                border: 'none',
+                background: activeTab === 'builder' ? 'var(--accent-color)' : 'transparent',
+                color: activeTab === 'builder' ? '#FFFFFF' : 'var(--color-app-muted)',
+                boxShadow: activeTab === 'builder' ? '0 3px 10px rgba(255,122,26,0.3)' : 'none',
+                transition: 'all 0.15s ease',
+              }}
+            >
               Builder
             </button>
-            <button onClick={() => setActiveTab('inbox')} style={{ padding: '6px 14px', borderRadius: 6, fontSize: '12px', fontWeight: '600', cursor: 'pointer', border: 'none', background: activeTab === 'inbox' ? 'var(--color-app-bg)' : 'transparent', color: activeTab === 'inbox' ? '#fff' : 'var(--color-app-faint)' }}>
+            <button
+              onClick={() => setActiveTab('inbox')}
+              style={{
+                padding: '6px 14px',
+                borderRadius: '8px',
+                fontSize: '12px',
+                fontWeight: activeTab === 'inbox' ? '700' : '600',
+                cursor: 'pointer',
+                border: 'none',
+                background: activeTab === 'inbox' ? 'var(--accent-color)' : 'transparent',
+                color: activeTab === 'inbox' ? '#FFFFFF' : 'var(--color-app-muted)',
+                boxShadow: activeTab === 'inbox' ? '0 3px 10px rgba(255,122,26,0.3)' : 'none',
+                transition: 'all 0.15s ease',
+              }}
+            >
               Inbox ({portfolio?.messages?.length || 0})
             </button>
-            <button onClick={() => setActiveTab('deployment')} style={{ padding: '6px 14px', borderRadius: 6, fontSize: '12px', fontWeight: '600', cursor: 'pointer', border: 'none', background: activeTab === 'deployment' ? 'var(--color-app-bg)' : 'transparent', color: activeTab === 'deployment' ? '#fff' : 'var(--color-app-faint)' }}>
+            <button
+              onClick={() => setActiveTab('deployment')}
+              style={{
+                padding: '6px 14px',
+                borderRadius: '8px',
+                fontSize: '12px',
+                fontWeight: activeTab === 'deployment' ? '700' : '600',
+                cursor: 'pointer',
+                border: 'none',
+                background: activeTab === 'deployment' ? 'var(--accent-color)' : 'transparent',
+                color: activeTab === 'deployment' ? '#FFFFFF' : 'var(--color-app-muted)',
+                boxShadow: activeTab === 'deployment' ? '0 3px 10px rgba(255,122,26,0.3)' : 'none',
+                transition: 'all 0.15s ease',
+              }}
+            >
               Deploy
             </button>
           </div>
@@ -267,11 +310,11 @@ export default function PortfolioPage() {
       <div style={{ display: 'grid', gridTemplateColumns: '460px 1fr', gap: 20, flex: 1, minHeight: 0 }}>
         
         {/* LEFT COLUMN: Controls tab panel */}
-        <div style={{ display: 'flex', flexDirection: 'column', background: 'var(--color-app-surface)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: 14, overflow: 'hidden' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', background: 'var(--color-app-surface)', border: '1px solid var(--card-border)', borderRadius: 14, overflow: 'hidden' }}>
           
           {/* BUILDER SETTINGS */}
           {activeTab === 'builder' && (
-            <div style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <div className="no-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: 20 }}>
               
               {/* Theme & Social settings */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -465,7 +508,7 @@ export default function PortfolioPage() {
           </div>
 
           {/* Sandbox paper scroll preview */}
-          <div style={{ flex: 1, overflowY: 'auto', background: '#0e121e', border: '1px solid var(--color-app-border)', borderRadius: '0 0 14px 14px', padding: '20px' }}>
+          <div className="no-scrollbar" style={{ flex: 1, overflowY: 'auto', background: 'var(--card-bg-inset)', border: '1px solid var(--card-border)', borderRadius: '0 0 14px 14px', padding: '20px' }}>
             
             {/* Visual template site box */}
             <div
@@ -475,10 +518,12 @@ export default function PortfolioPage() {
                 background: pStyles.bg,
                 color: pStyles.text,
                 border: theme === 'neo_brutalist' ? pStyles.border : 'none',
-                borderRadius: theme === 'neo_brutalist' ? '0px' : '10px',
+                borderRadius: theme === 'neo_brutalist' ? '0' : '10px',
                 padding: '30px',
-                boxSizing: 'border-box',
-                fontFamily: 'system-ui, sans-serif'
+                boxShadow: theme === 'neo_brutalist' ? '6px 6px 0px #000' : '0 10px 30px rgba(0,0,0,0.15)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '24px'
               }}
             >
               {/* Loop rendering sections in order! */}
@@ -491,14 +536,14 @@ export default function PortfolioPage() {
                   // HERO SECTION
                   case 'hero':
                     return (
-                      <div key="hero" style={{ padding: '20px 0', borderBottom: `1px dashed ${pStyles.border === 'none' ? 'rgba(255,255,255,0.05)' : pStyles.border}`, marginBottom: 20 }}>
-                        <h1 style={{ fontSize: '28px', margin: 0, fontWeight: '900', color: pStyles.accent }}>
+                      <div key="hero" style={{ borderBottom: `1px dashed ${pStyles.muted}40`, paddingBottom: '20px' }}>
+                        <h1 style={{ margin: '0 0 4px 0', fontSize: '24px', fontWeight: '900', color: pStyles.accent }}>
                           {resume?.personalInfo?.name || 'Developer Identity'}
                         </h1>
-                        <h2 style={{ fontSize: '16px', margin: '4px 0 10px', fontWeight: '700', color: pStyles.text }}>
+                        <h3 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600', color: pStyles.text }}>
                           {resume?.personalInfo?.title || 'Software Engineer'}
-                        </h2>
-                        <p style={{ fontSize: '13px', color: pStyles.muted, margin: '0 0 16px', lineHeight: 1.5 }}>
+                        </h3>
+                        <p style={{ margin: '0 0 16px 0', fontSize: '12px', color: pStyles.muted, lineHeight: 1.6 }}>
                           {aboutText || 'Hi, welcome to my developer showcase portfolio.'}
                         </p>
                         
@@ -514,7 +559,7 @@ export default function PortfolioPage() {
                               borderRadius: theme === 'neo_brutalist' ? '0px' : '6px',
                               cursor: 'pointer',
                               fontWeight: 'bold',
-                              fontSize: '12px'
+                              fontSize: '11px'
                             }}
                           >
                             Download Resume (PDF)
@@ -526,9 +571,9 @@ export default function PortfolioPage() {
                   // ABOUT TEXT SECTION
                   case 'about':
                     return (
-                      <div key="about" style={{ padding: '10px 0 20px', borderBottom: `1px dashed ${pStyles.border === 'none' ? 'rgba(255,255,255,0.05)' : pStyles.border}`, marginBottom: 20 }}>
+                      <div key="about" style={{ borderBottom: `1px dashed ${pStyles.muted}40`, paddingBottom: '20px' }}>
                         <h3 style={{ margin: '0 0 8px 0', fontSize: '13.5px', textTransform: 'uppercase', letterSpacing: '0.05em', color: pStyles.accent }}>About Me</h3>
-                        <p style={{ margin: 0, fontSize: '12.5px', color: pStyles.muted, lineHeight: 1.5, textAlign: 'justify' }}>
+                        <p style={{ margin: 0, fontSize: '12px', color: pStyles.muted, lineHeight: 1.6 }}>
                           {resume?.personalInfo?.summary || 'No resume summary configured. Please set up Resume Builder info.'}
                         </p>
                       </div>
@@ -537,18 +582,18 @@ export default function PortfolioPage() {
                   // PROJECTS LIST SECTION
                   case 'projects':
                     return (
-                      <div key="projects" style={{ padding: '10px 0 20px', borderBottom: `1px dashed ${pStyles.border === 'none' ? 'rgba(255,255,255,0.05)' : pStyles.border}`, marginBottom: 20 }}>
+                      <div key="projects" style={{ borderBottom: `1px dashed ${pStyles.muted}40`, paddingBottom: '20px' }}>
                         <h3 style={{ margin: '0 0 12px 0', fontSize: '13.5px', textTransform: 'uppercase', letterSpacing: '0.05em', color: pStyles.accent }}>Selected Work</h3>
                         
                         {projectsList.length === 0 ? (
-                          <p style={{ fontSize: '12px', color: pStyles.muted, margin: 0 }}>No projects selected. Link GitHub repositories in Builder.</p>
+                          <div style={{ fontSize: '12px', color: pStyles.muted }}>No projects selected. Link GitHub repositories in Builder.</div>
                         ) : (
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                             {projectsList.map((p, i) => (
-                              <div key={i} style={{ padding: '12px', background: pStyles.surface, border: theme === 'neo_brutalist' ? '2px solid #000' : `1px solid ${pStyles.border === 'none' ? 'rgba(255,255,255,0.05)' : pStyles.border}`, borderRadius: theme === 'neo_brutalist' ? 0 : 8 }}>
-                                <h4 style={{ margin: '0 0 4px 0', fontSize: '13px', fontWeight: 'bold', color: pStyles.text }}>{p.name}</h4>
-                                <p style={{ margin: '0 0 8px 0', fontSize: '11.5px', color: pStyles.muted, height: '34px', overflow: 'hidden' }}>{p.description}</p>
-                                <span style={{ fontSize: '10px', color: pStyles.accent, fontWeight: '700' }}>★ {p.stars} stars</span>
+                              <div key={i} style={{ background: pStyles.surface, border: theme === 'neo_brutalist' ? '2px solid #000' : `1px solid ${pStyles.muted}30`, borderRadius: '6px', padding: '12px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                                <strong style={{ fontSize: '12.5px', color: pStyles.text }}>{p.name}</strong>
+                                <p style={{ fontSize: '11px', color: pStyles.muted, flex: 1, margin: 0 }}>{p.description}</p>
+                                <span style={{ fontSize: '9.5px', color: pStyles.accent, fontWeight: '700' }}>★ {p.stars} stars</span>
                               </div>
                             ))}
                           </div>
@@ -559,17 +604,17 @@ export default function PortfolioPage() {
                   // SKILLS LIST SECTION
                   case 'skills':
                     return (
-                      <div key="skills" style={{ padding: '10px 0 20px', borderBottom: `1px dashed ${pStyles.border === 'none' ? 'rgba(255,255,255,0.05)' : pStyles.border}`, marginBottom: 20 }}>
-                        <h3 style={{ margin: '0 0 10px 0', fontSize: '13.5px', textTransform: 'uppercase', letterSpacing: '0.05em', color: pStyles.accent }}>Core Stack</h3>
+                      <div key="skills" style={{ borderBottom: `1px dashed ${pStyles.muted}40`, paddingBottom: '20px' }}>
+                        <h3 style={{ margin: '0 0 12px 0', fontSize: '13.5px', textTransform: 'uppercase', letterSpacing: '0.05em', color: pStyles.accent }}>Core Stack</h3>
                         
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                           {(resume?.skills || ['JavaScript', 'React', 'HTML', 'CSS']).map((skill, idx) => (
                             <span key={idx} style={{
-                              fontSize: '11px', fontWeight: 'bold',
-                              padding: '3px 8px',
-                              borderRadius: theme === 'neo_brutalist' ? '0px' : '4px',
+                              fontSize: '11px', fontWeight: '600',
+                              padding: '4px 10px',
+                              borderRadius: theme === 'neo_brutalist' ? '0px' : '6px',
                               background: pStyles.surface,
-                              border: theme === 'neo_brutalist' ? '1px solid #000' : 'none',
+                              border: theme === 'neo_brutalist' ? '2px solid #000' : `1px solid ${pStyles.muted}30`,
                               color: pStyles.text
                             }}>
                               {skill}
@@ -582,17 +627,17 @@ export default function PortfolioPage() {
                   // BLOG SECTION
                   case 'blog':
                     return (
-                      <div key="blog" style={{ padding: '10px 0 20px', borderBottom: `1px dashed ${pStyles.border === 'none' ? 'rgba(255,255,255,0.05)' : pStyles.border}`, marginBottom: 20 }}>
+                      <div key="blog" style={{ borderBottom: `1px dashed ${pStyles.muted}40`, paddingBottom: '20px' }}>
                         <h3 style={{ margin: '0 0 12px 0', fontSize: '13.5px', textTransform: 'uppercase', letterSpacing: '0.05em', color: pStyles.accent }}>Articles</h3>
                         
                         {blogPosts.length === 0 ? (
-                          <p style={{ fontSize: '12px', color: pStyles.muted, margin: 0 }}>No blog posts added yet. Add posts in Builder.</p>
+                          <div style={{ fontSize: '12px', color: pStyles.muted }}>No blog posts added yet. Add posts in Builder.</div>
                         ) : (
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                             {blogPosts.map((post, idx) => (
-                              <div key={idx} style={{ paddingBottom: '8px', borderBottom: `1px solid ${pStyles.border === 'none' ? 'rgba(255,255,255,0.02)' : pStyles.border}` }}>
-                                <h4 style={{ margin: '0 0 3px 0', fontSize: '13px', fontWeight: '700', color: pStyles.text }}>{post.title}</h4>
-                                <p style={{ margin: 0, fontSize: '11.5px', color: pStyles.muted }}>{post.content}</p>
+                              <div key={idx} style={{ background: pStyles.surface, border: theme === 'neo_brutalist' ? '2px solid #000' : `1px solid ${pStyles.muted}30`, padding: '10px 12px', borderRadius: '6px' }}>
+                                <strong style={{ fontSize: '12px', color: pStyles.text, display: 'block' }}>{post.title}</strong>
+                                <span style={{ fontSize: '11px', color: pStyles.muted }}>{post.content}</span>
                               </div>
                             ))}
                           </div>
@@ -608,10 +653,10 @@ export default function PortfolioPage() {
                         
                         <form onSubmit={handleSimSubmitContact} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-                            <input type="text" placeholder="Name" value={simName} onChange={(e) => setSimName(e.target.value)} required style={{ padding: '6px 10px', background: pStyles.surface, border: theme === 'neo_brutalist' ? '2px solid #000' : 'none', color: pStyles.text, fontSize: '12px', outline: 'none' }} />
-                            <input type="email" placeholder="Email" value={simEmail} onChange={(e) => setSimEmail(e.target.value)} required style={{ padding: '6px 10px', background: pStyles.surface, border: theme === 'neo_brutalist' ? '2px solid #000' : 'none', color: pStyles.text, fontSize: '12px', outline: 'none' }} />
+                            <input type="text" placeholder="Name" value={simName} onChange={(e) => setSimName(e.target.value)} required style={{ padding: '8px 12px', background: pStyles.surface, border: theme === 'neo_brutalist' ? '2px solid #000' : '1px solid var(--card-border)', borderRadius: '6px', color: pStyles.text, fontSize: '12px', outline: 'none' }} />
+                            <input type="email" placeholder="Email" value={simEmail} onChange={(e) => setSimEmail(e.target.value)} required style={{ padding: '8px 12px', background: pStyles.surface, border: theme === 'neo_brutalist' ? '2px solid #000' : '1px solid var(--card-border)', borderRadius: '6px', color: pStyles.text, fontSize: '12px', outline: 'none' }} />
                           </div>
-                          <textarea placeholder="Message" rows={2} value={simMessage} onChange={(e) => setSimMessage(e.target.value)} required style={{ padding: '6px 10px', background: pStyles.surface, border: theme === 'neo_brutalist' ? '2px solid #000' : 'none', color: pStyles.text, fontSize: '12px', outline: 'none', resize: 'none' }} />
+                          <textarea placeholder="Message" rows={2} value={simMessage} onChange={(e) => setSimMessage(e.target.value)} required style={{ padding: '8px 12px', background: pStyles.surface, border: theme === 'neo_brutalist' ? '2px solid #000' : '1px solid var(--card-border)', borderRadius: '6px', color: pStyles.text, fontSize: '12px', outline: 'none', resize: 'none' }} />
                           
                           <button
                             type="submit"
@@ -620,7 +665,8 @@ export default function PortfolioPage() {
                               background: theme === 'neo_brutalist' ? '#fff' : pStyles.accent,
                               color: theme === 'neo_brutalist' ? '#000' : '#fff',
                               border: theme === 'neo_brutalist' ? '2px solid #000' : 'none',
-                              padding: '6px 12px',
+                              padding: '8px 16px',
+                              borderRadius: '6px',
                               cursor: 'pointer',
                               fontWeight: 'bold',
                               fontSize: '11.5px',
