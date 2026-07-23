@@ -9,7 +9,7 @@ import { useAuth } from '@/features/auth/hooks/useAuth'
 
 // Mock initial team members
 const INITIAL_MEMBERS = [
-  { id: '1', name: 'Nisith Bhowmik', role: 'Full Stack Lead', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces', status: 'coding', taskCount: 8, completedCount: 6, workload: 85 },
+  { id: '1', name: 'Nisith Bhowmik', role: 'Full Stack Lead', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop&crop=faces', status: 'coding', taskCount: 8, completedCount: 6, workload: 85 },
   { id: '2', name: 'Alex Rivera', role: 'Backend Engineer', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces', status: 'online', taskCount: 6, completedCount: 4, workload: 70 },
   { id: '3', name: 'Sophia Chen', role: 'UI/UX Designer', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces', status: 'meeting', taskCount: 5, completedCount: 5, workload: 60 },
   { id: '4', name: 'David Kim', role: 'DevOps & Cloud Architect', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=faces', status: 'offline', taskCount: 4, completedCount: 2, workload: 45 },
@@ -19,7 +19,7 @@ const INITIAL_MEMBERS = [
 const INITIAL_CHAT = [
   { id: 'm1', sender: 'Alex Rivera', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces', text: 'Hey team! The new GraphQL API endpoint for project analytics is deployed to staging 🚀', time: '10:14 AM' },
   { id: 'm2', sender: 'Sophia Chen', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces', text: 'Awesome! I updated the Figma component library for Dark and Neo-Brutalist themes.', time: '10:18 AM' },
-  { id: 'm3', sender: 'Nisith Bhowmik', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces', text: 'Great work! Let us sync up in the Standup Meeting room at 11:00 AM.', time: '10:25 AM' },
+  { id: 'm3', sender: 'Nisith Bhowmik', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop&crop=faces', text: 'Great work! Let us sync up in the Standup Meeting room at 11:00 AM.', time: '10:25 AM' },
 ]
 
 export default function TeamsPage() {
@@ -92,7 +92,7 @@ export default function TeamsPage() {
     const newMsg = {
       id: Date.now().toString(),
       sender: user?.name || 'Nisith Bhowmik',
-      avatar: user?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces',
+      avatar: user?.avatarUrl || 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop&crop=faces',
       text: chatInput.trim(),
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
