@@ -263,43 +263,38 @@ export default function NoteEditor({ note, onUpdate, onTogglePin }) {
         <div style={{ flex: 1 }} />
 
         {/* View Mode Toggle (Edit / Preview) */}
-        <div style={{ display: 'flex', background: 'var(--color-app-bg)', padding: '2px', borderRadius: '6px', border: '1px solid var(--color-app-border)' }}>
-          <button
-            onClick={() => setEditMode('edit')}
-            style={{
-              padding: '4px 10px',
-              borderRadius: '4px',
-              fontSize: '11px',
-              fontWeight: '700',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-              background: editMode === 'edit' ? 'var(--color-app-surface)' : 'transparent',
-              color: editMode === 'edit' ? '#fff' : 'var(--color-app-faint)'
-            }}
-          >
-            <Edit2 size={10} /> Edit
-          </button>
-          <button
-            onClick={() => setEditMode('preview')}
-            style={{
-              padding: '4px 10px',
-              borderRadius: '4px',
-              fontSize: '11px',
-              fontWeight: '700',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-              background: editMode === 'preview' ? 'var(--color-app-surface)' : 'transparent',
-              color: editMode === 'preview' ? '#fff' : 'var(--color-app-faint)'
-            }}
-          >
-            <Eye size={10} /> Preview
-          </button>
+        <div style={{ display: 'inline-flex', background: 'var(--card-bg-inset)', borderRadius: '8px', padding: '2px', border: '1px solid var(--card-border)' }}>
+          {[
+            { id: 'edit', label: 'Edit', icon: Edit2 },
+            { id: 'preview', label: 'Preview', icon: Eye },
+          ].map(tab => {
+            const Icon = tab.icon
+            const isActive = editMode === tab.id
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setEditMode(tab.id)}
+                style={{
+                  padding: '5px 12px',
+                  borderRadius: '6px',
+                  fontSize: '11.5px',
+                  fontWeight: isActive ? '700' : '600',
+                  cursor: 'pointer',
+                  border: 'none',
+                  background: isActive ? 'var(--accent-color)' : 'transparent',
+                  color: isActive ? '#FFFFFF' : 'var(--color-app-muted)',
+                  boxShadow: isActive ? '0 2px 8px rgba(255,122,26,0.3)' : 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 5,
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <Icon size={12} />
+                <span>{tab.label}</span>
+              </button>
+            )
+          })}
         </div>
 
         {/* Favorite star */}

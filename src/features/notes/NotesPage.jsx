@@ -132,8 +132,8 @@ export default function NotesPage() {
               onClick={handleClearFilters}
               style={{
                 display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '6px 8px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: !filterFavOnly && !selectedFolder ? '700' : '500',
-                background: !filterFavOnly && !selectedFolder ? 'var(--color-app-surface)' : 'transparent',
-                color: !filterFavOnly && !selectedFolder ? '#fff' : 'var(--color-app-muted)'
+                background: !filterFavOnly && !selectedFolder ? 'var(--card-bg-inset)' : 'transparent',
+                color: !filterFavOnly && !selectedFolder ? 'var(--accent-color)' : 'var(--color-app-muted)'
               }}
             >
               <ClipboardList size={13} /> <span>All Notes</span>
