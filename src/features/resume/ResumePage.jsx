@@ -199,14 +199,15 @@ export default function ResumePage() {
   }
 
   const selectStyle = {
-    padding: '8px 12px',
-    background: 'var(--color-app-bg)',
-    border: '1px solid var(--color-app-border)',
+    padding: '9px 12px',
+    background: 'var(--card-bg-inset)',
+    border: '1px solid var(--card-border)',
     borderRadius: '8px',
-    color: '#fff',
+    color: 'var(--color-app-text)',
     fontSize: '13px',
     outline: 'none',
-    width: '100%'
+    width: '100%',
+    boxSizing: 'border-box',
   }
 
   return (
@@ -232,7 +233,7 @@ export default function ResumePage() {
 
       {/* LinkedIn Import paste area drawer */}
       {showImportArea && (
-        <div className="card" style={{ background: 'var(--color-app-surface)', border: '1px solid var(--color-teal)' }}>
+        <div className="card" style={{ background: 'var(--card-bg-inset)', border: '1px solid var(--color-teal)' }}>
           <h4 style={{ margin: '0 0 8px 0', fontSize: '13px', fontWeight: '800', color: 'var(--color-teal)' }}>Paste LinkedIn Profile Export Text</h4>
           <p style={{ margin: '0 0 12px 0', fontSize: '11.5px', color: 'var(--color-app-muted)' }}>
             Paste raw text from a LinkedIn PDF export or copy-paste your profile text. The AI will parse it and auto-fill all form categories.
@@ -246,10 +247,10 @@ export default function ResumePage() {
               required
               style={{
                 padding: '10px',
-                background: 'var(--color-app-bg)',
-                border: '1px solid var(--color-app-border)',
+                background: 'var(--card-bg-inset)',
+                border: '1px solid var(--card-border)',
                 borderRadius: '8px',
-                color: '#fff',
+                color: 'var(--color-app-text)',
                 fontSize: '12.5px',
                 outline: 'none',
                 fontFamily: 'monospace'
@@ -269,18 +270,43 @@ export default function ResumePage() {
       <div style={{ display: 'grid', gridTemplateColumns: '450px 1fr', gap: 20, flex: 1, minHeight: 0 }}>
         
         {/* LEFT COLUMN: Input Forms Workspace */}
-        <div style={{ display: 'flex', flexDirection: 'column', background: 'var(--color-app-surface)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: 14, overflow: 'hidden' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', background: 'var(--color-app-surface)', border: '1px solid var(--card-border)', borderRadius: 14, overflow: 'hidden' }}>
           {/* Sub Tab buttons */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', background: 'var(--color-app-bg)', borderBottom: '1px solid var(--color-app-border)' }}>
-            <button onClick={() => setActiveFormTab('personal')} style={{ padding: '12px 6px', border: 'none', background: activeFormTab === 'personal' ? 'var(--color-app-surface)' : 'transparent', color: activeFormTab === 'personal' ? 'var(--color-teal)' : 'var(--color-app-faint)', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}>Info</button>
-            <button onClick={() => setActiveFormTab('experience')} style={{ padding: '12px 6px', border: 'none', background: activeFormTab === 'experience' ? 'var(--color-app-surface)' : 'transparent', color: activeFormTab === 'experience' ? 'var(--color-teal)' : 'var(--color-app-faint)', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}>Work</button>
-            <button onClick={() => setActiveFormTab('education')} style={{ padding: '12px 6px', border: 'none', background: activeFormTab === 'education' ? 'var(--color-app-surface)' : 'transparent', color: activeFormTab === 'education' ? 'var(--color-teal)' : 'var(--color-app-faint)', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}>Edu</button>
-            <button onClick={() => setActiveFormTab('projects')} style={{ padding: '12px 6px', border: 'none', background: activeFormTab === 'projects' ? 'var(--color-app-surface)' : 'transparent', color: activeFormTab === 'projects' ? 'var(--color-teal)' : 'var(--color-app-faint)', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}>Projects</button>
-            <button onClick={() => setActiveFormTab('skills')} style={{ padding: '12px 6px', border: 'none', background: activeFormTab === 'skills' ? 'var(--color-app-surface)' : 'transparent', color: activeFormTab === 'skills' ? 'var(--color-teal)' : 'var(--color-app-faint)', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}>Skills</button>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '4px', padding: '6px', background: 'var(--card-bg-inset)', borderBottom: '1px solid var(--card-border)' }}>
+            {[
+              { id: 'personal', label: 'Info' },
+              { id: 'experience', label: 'Work' },
+              { id: 'education', label: 'Edu' },
+              { id: 'projects', label: 'Projects' },
+              { id: 'skills', label: 'Skills' },
+            ].map(t => {
+              const isActive = activeFormTab === t.id
+              return (
+                <button
+                  key={t.id}
+                  onClick={() => setActiveFormTab(t.id)}
+                  style={{
+                    padding: '8px 4px',
+                    borderRadius: '6px',
+                    border: 'none',
+                    background: isActive ? 'var(--accent-color)' : 'transparent',
+                    color: isActive ? '#FFFFFF' : 'var(--color-app-muted)',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    fontWeight: isActive ? '700' : '600',
+                    boxShadow: isActive ? '0 2px 8px rgba(255,122,26,0.3)' : 'none',
+                    transition: 'all 0.15s ease',
+                    textAlign: 'center',
+                  }}
+                >
+                  {t.label}
+                </button>
+              )
+            })}
           </div>
 
           {/* Form scroll pane */}
-          <div style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div className="no-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
             
             {/* 1. PERSONAL INFORMATION */}
             {activeFormTab === 'personal' && (
@@ -596,7 +622,7 @@ export default function ResumePage() {
         {/* RIGHT COLUMN: Live A4 PDF Print Canvas */}
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0 }}>
           {/* Scroll view wrapper around paper preview */}
-          <div style={{ flex: 1, overflowY: 'auto', background: '#090d16', border: '1px solid var(--color-app-border)', borderRadius: 14, display: 'flex', justifyContent: 'center', padding: '30px 10px' }}>
+          <div className="no-scrollbar" style={{ flex: 1, overflowY: 'auto', background: 'var(--card-bg-inset)', border: '1px solid var(--card-border)', borderRadius: 14, display: 'flex', justifyContent: 'center', padding: '30px 10px' }}>
             
             {/* A4 Paper canvas document */}
             <div
