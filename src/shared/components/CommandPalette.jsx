@@ -4,7 +4,7 @@ import {
   Search, LayoutDashboard, Briefcase, CheckSquare, AlertCircle,
   Sparkles, Calendar, Layers, BookOpen, Code, BarChart2, Activity,
   Settings, Link2, Plus, FileText, Folder, X, ArrowRight, Loader2,
-  GitBranch, Rocket, MessageSquare, Moon
+  GitBranch, Rocket, MessageSquare, Moon, Users
 } from 'lucide-react'
 import api from '@/shared/lib/axios'
 
@@ -18,6 +18,7 @@ const GithubIcon = ({ size = 14 }) => (
 const NAVIGATE_CMDS = [
   { id: 'nav-dashboard',    label: 'Dashboard',         sub: 'Overview & stats',               icon: LayoutDashboard, color: '#a78bfa', route: '/dashboard' },
   { id: 'nav-projects',     label: 'Projects',           sub: 'View all projects',              icon: Briefcase,       color: '#f59e0b', route: '/projects' },
+  { id: 'nav-teams',        label: 'Team Hub',           sub: 'Work progress, chat, standup & whiteboard', icon: Users, color: '#ff7a1a', route: '/teams' },
   { id: 'nav-tasks',        label: 'Tasks',              sub: 'Kanban & task list',             icon: CheckSquare,     color: '#10b981', route: '/tasks' },
   { id: 'nav-issues',       label: 'Issues',             sub: 'Bugs & feature requests',        icon: AlertCircle,     color: '#ef4444', route: '/issues' },
   { id: 'nav-ai',           label: 'AI Copilot',         sub: 'Generate code & docs',           icon: Sparkles,        color: '#f43f5e', route: '/ai' },

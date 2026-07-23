@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { Plus, Code, Server, Moon, Rocket } from 'lucide-react'
+import { Plus, Code, Server, Moon, Rocket, Users } from 'lucide-react'
 import { toggleTheme } from '@/shared/lib/theme'
 
 const GithubIcon = ({ size = 16 }) => (
@@ -63,6 +63,15 @@ export default function QuickActions() {
       border: 'var(--color-app-border-bright)',
       text: 'var(--color-app-text)',
       onClick: () => navigate('/github'),
+    },
+    {
+      label: 'Team Hub',
+      sub: 'Standups & Chat',
+      icon: Users,
+      color: 'rgba(255, 122, 26, 0.12)',
+      border: 'rgba(255, 122, 26, 0.25)',
+      text: '#FF7A1A',
+      onClick: () => navigate('/teams'),
     },
     {
       label: 'Focus Mode',
