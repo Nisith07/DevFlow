@@ -143,25 +143,13 @@ export default function Sidebar({ isOpen, onClose }) {
   return (
     <aside className={`sidebar ${isOpen ? 'open' : ''}`} aria-label="App sidebar" style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', background: 'var(--sidebar-bg)', borderRight: '1px solid var(--sidebar-border)' }}>
 
-      {/* Brand logo */}
-      <div className="sidebar-brand" style={{ flexShrink: 0, padding: '16px 18px 8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }} onClick={() => navigate('/dashboard')}>
-          <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'linear-gradient(135deg, #FF7A1A, #E66A0D)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(255,122,26,0.3)' }}>
-            <span style={{ fontSize: '15px', fontWeight: '900', color: '#FFFFFF' }}>D</span>
-          </div>
-          <span className="sidebar-brand-text" style={{ fontSize: '16px', fontWeight: '800', color: 'var(--color-app-text)', letterSpacing: '-0.02em' }}>
-            Dev<span style={{ color: 'var(--accent-color)' }}>Flow</span>
-          </span>
-        </div>
-      </div>
-
-      {/* Developer Identity Card */}
-      <div style={{ flexShrink: 0, padding: '6px 14px 10px' }}>
+      {/* Developer Identity Card (At Very Top) */}
+      <div style={{ flexShrink: 0, padding: '14px 14px 10px' }}>
         <div style={{
           background: 'var(--card-bg-inset)',
           border: '1px solid var(--card-border)',
           borderRadius: '14px',
-          padding: '8px 12px',
+          padding: '10px 12px',
           display: 'flex',
           alignItems: 'center',
           gap: '10px',
