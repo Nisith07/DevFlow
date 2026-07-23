@@ -587,13 +587,13 @@ export default function Sidebar({ isOpen, onClose }) {
         </NavLink>
 
         {/* Focus Timer Button */}
-        <div style={{ position: 'relative' }}>
+        <div>
           {showFocusTimer && (
             <div style={{
-              position: 'absolute',
-              bottom: '44px',
-              left: '0',
-              zIndex: 1000,
+              position: 'fixed',
+              bottom: '70px',
+              left: '16px',
+              zIndex: 99999,
             }}>
               <FocusTimer onClose={() => setShowFocusTimer(false)} />
             </div>
