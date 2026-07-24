@@ -4038,39 +4038,44 @@ html.theme-light .lp-cursor-ring.is-cta {
   background: rgba(124, 58, 237, 0.1);
 }
 
-/* Adaptive cursor style when hovering over dark containers (e.g. .lp-footer) */
-.lp-cursor-dot.is-on-dark {
+/* Adaptive white cursor style when hovering over dark containers (e.g. .lp-footer) */
+.lp-cursor-dot.is-on-dark,
+html:has(.lp-root) .lp-cursor-dot.is-on-dark {
   background: #ffffff !important;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.9) !important;
 }
 
-.lp-cursor-ring.is-on-dark {
-  border-color: rgba(255, 255, 255, 0.45) !important;
+.lp-cursor-ring.is-on-dark,
+html:has(.lp-root) .lp-cursor-ring.is-on-dark {
+  border-color: rgba(255, 255, 255, 0.5) !important;
 }
 
-.lp-cursor-ring.is-on-dark.is-hovering {
+.lp-cursor-ring.is-on-dark.is-hovering,
+html:has(.lp-root) .lp-cursor-ring.is-on-dark.is-hovering {
   border-color: #FF7A1A !important;
   background: rgba(255, 122, 26, 0.18) !important;
 }
 
-/* Force dark charcoal cursor with premium orange accents on the light landing page */
-html:has(.lp-root) .lp-cursor-dot {
+/* Force dark charcoal cursor on light parts of landing page */
+html:has(.lp-root) .lp-cursor-dot:not(.is-on-dark) {
   background: #1D1D1F !important;
+  box-shadow: none !important;
 }
 
-html:has(.lp-root) .lp-cursor-ring {
+html:has(.lp-root) .lp-cursor-ring:not(.is-on-dark) {
   border-color: rgba(29, 29, 31, 0.3) !important;
 }
 
-html:has(.lp-root) .lp-cursor-ring.is-hovering {
+html:has(.lp-root) .lp-cursor-ring.is-hovering:not(.is-on-dark) {
   border-color: rgba(230, 126, 34, 0.7) !important;
   background: rgba(230, 126, 34, 0.06) !important;
 }
 
-html:has(.lp-root) .lp-cursor-ring.is-cta {
+html:has(.lp-root) .lp-cursor-ring.is-cta:not(.is-on-dark) {
   border-color: rgba(230, 126, 34, 0.9) !important;
   background: rgba(230, 126, 34, 0.1) !important;
 }
+
 
 
 /* Hide custom cursor on touch devices */
