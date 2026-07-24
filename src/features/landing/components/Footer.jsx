@@ -32,19 +32,20 @@ const COLS = [
       { label: 'Features', href: '#features' },
       { label: 'How It Works', href: '#how-it-works' },
       { label: 'Pricing', href: '#pricing' },
-      { label: 'Docs', href: '#' },
-      { label: 'Changelog', href: '#' },
+      { label: 'Docs', href: '#docs' },
+      { label: 'Changelog', href: '#changelog' },
     ],
   },
   {
     title: 'Resources',
     links: [
-      { label: 'Documentation', href: '#' },
+      { label: 'Documentation', href: '#docs' },
       { label: 'GitHub Repo', href: 'https://github.com' },
-      { label: 'Blog', href: '#' },
-      { label: 'API Status', href: '#' },
+      { label: 'Blog', href: '#changelog' },
+      { label: 'API Status', href: '#docs' },
     ],
   },
+
   {
     title: 'Company',
     links: [

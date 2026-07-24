@@ -10,6 +10,7 @@ import Integrations from './components/Integrations'
 import About from './components/About'
 import Testimonials from './components/Testimonials'
 import Pricing from './components/Pricing'
+import Changelog from './components/Changelog'
 import Faq from './components/Faq'
 import CtaBand from './components/CtaBand'
 import Footer from './components/Footer'
@@ -87,10 +88,12 @@ export default function LandingPage() {
         <Integrations />
         <Testimonials />
         <Pricing />
+        <Changelog />
         <Faq />
         <CtaBand onLoginClick={() => navigate('/register')} />
         <Footer />
       </main>
+
 
       <Outlet />
     </div>
