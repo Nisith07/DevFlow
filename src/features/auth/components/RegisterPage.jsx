@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LoaderCircle, LockKeyhole, Mail, X } from 'lucide-react'
 import api from '@/shared/lib/axios'
+import DevFlowLogo from '@/shared/components/DevFlowLogo'
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://devflow-backend-53bm.onrender.com'
 
@@ -60,10 +61,8 @@ export default function RegisterPage() {
         </button>
 
         <div className="auth-brand" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-          <span className="auth-brand-mark" aria-hidden="true">
-            <img src="/logo-icon.svg" alt="" />
-          </span>
-          <span>Dev<span style={{ color: '#8b5cf6' }}>Flow</span></span>
+          <DevFlowLogo size={34} iconSize={20} />
+          <span className="auth-brand-text">Dev<span className="auth-brand-accent">Flow</span></span>
         </div>
 
         <h2 id="auth-title">Create your account</h2>

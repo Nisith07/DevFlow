@@ -2649,43 +2649,62 @@ button {
 
 
 /* ═══════════════════════════════════════════════════════════════════
-   AUTH MODAL
+   AUTH MODAL & OVERLAY — PREMIUM GLOSSY GLASS
    ═══════════════════════════════════════════════════════════════════ */
-.auth-overlay {
+.auth-overlay,
+.auth-page-container {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(12, 12, 16, 0.65);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  z-index: 1000;
   padding: 20px;
-  backdrop-filter: blur(6px);
+  overflow-y: auto;
+  animation: auth-fade-in 0.25s ease-out;
+}
+
+@keyframes auth-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 .auth-modal {
-  /* Premium neumorphic card — theme-aware */
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-top: 1px solid var(--card-border-top);
-  border-left: 1px solid var(--card-border-left);
+  /* Ultra-glossy glassmorphism card */
+  background: rgba(18, 18, 24, 0.88);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+  border-left: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 24px;
-  padding: 40px 36px 32px;
+  padding: 36px 34px 28px;
   width: 100%;
-  max-width: 400px;
+  max-width: 410px;
   position: relative;
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 122, 26, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  animation: auth-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  color: #f0f4f8;
+}
 
-  /* Neumorphic shadow — theme-aware */
-  box-shadow: var(--shadow-dropdown-val);
+@keyframes auth-slide-up {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .auth-close {
   position: absolute;
   top: 18px;
   right: 18px;
-  background: var(--color-app-surface-2);
-  border: 1px solid var(--color-app-border);
-  color: var(--color-app-muted);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #8a97a8;
   cursor: pointer;
   padding: 6px;
   border-radius: 50%;
@@ -2694,54 +2713,44 @@ button {
 }
 
 .auth-close:hover {
-  color: var(--color-app-text);
-  background: var(--color-app-surface-hover);
-  border-color: var(--color-app-border-bright);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
   transform: rotate(90deg);
 }
 
 .auth-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--color-app-text);
-  margin-bottom: 24px;
+  gap: 10px;
+  margin-bottom: 20px;
+  text-decoration: none;
 }
 
-.auth-brand-mark {
-  width: 28px;
-  height: 28px;
-  border-radius: 7px;
-  overflow: hidden;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.auth-brand-text {
+  font-size: 19px;
+  font-weight: 800;
+  color: #f0f4f8;
+  letter-spacing: -0.4px;
+  font-family: 'Inter', -apple-system, sans-serif;
 }
 
-.auth-brand-mark img {
-  width: 28px;
-  height: 28px;
-  display: block;
+.auth-brand-accent {
+  color: #FF7A1A;
 }
 
 .auth-modal h2 {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 900;
-  letter-spacing: -0.03em;
-  background: linear-gradient(to right, var(--color-app-text), #c084fc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin: 0 0 6px;
+  letter-spacing: -0.4px;
+  color: #f0f4f8;
+  margin: 0 0 4px;
 }
 
 .auth-subtitle {
-  font-size: 13.5px;
-  color: #8c98ad;
-  margin: 0 0 28px;
+  font-size: 13px;
+  color: #8a97a8;
+  margin: 0 0 24px;
 }
 
 .auth-google {
@@ -2750,25 +2759,27 @@ button {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 11px;
-  border: 1px solid var(--color-app-border);
-  border-radius: 9px;
-  background: var(--color-app-surface-2);
-  color: var(--color-app-text);
-  font-size: 14px;
+  padding: 11px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #f0f4f8;
+  font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  transition: all 0.2s ease;
+  font-family: inherit;
 }
 
 .auth-google:hover {
-  background: var(--color-app-surface-hover);
-  border-color: var(--color-app-border-bright);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
 }
 
 .auth-google-mark {
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800;
   color: #4285F4;
 }
 
@@ -2776,9 +2787,10 @@ button {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 20px 0;
-  color: var(--color-app-faint);
-  font-size: 13px;
+  margin: 18px 0;
+  color: #8a97a8;
+  font-size: 12px;
+  text-transform: lowercase;
 }
 
 .auth-divider::before,
@@ -2786,7 +2798,7 @@ button {
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--color-app-border);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .auth-form {
@@ -2797,42 +2809,45 @@ button {
 
 .auth-form input {
   width: 100%;
-  padding: 10px 12px;
-  background: var(--color-app-bg);
-  border: 1px solid var(--color-app-border);
-  border-radius: 8px;
-  color: var(--color-app-text);
-  font-size: 14px;
-  font-family: var(--font-sans);
-  transition: border-color 0.15s, background-color 0.15s;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  color: #f0f4f8;
+  font-size: 13.5px;
+  font-family: inherit;
+  transition: all 0.2s ease;
   outline: none;
+  box-sizing: border-box;
 }
 
 .auth-form input::placeholder {
-  color: var(--color-app-faint);
+  color: rgba(138, 151, 168, 0.6);
 }
 
 .auth-form input:focus {
-  border-color: var(--color-violet);
-  background: var(--color-app-surface-hover);
+  border-color: #FF7A1A;
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 0 3px rgba(255, 122, 26, 0.12);
 }
 
 .auth-input-wrap {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: var(--color-app-bg);
-  border: 1px solid var(--color-app-border);
-  border-radius: 8px;
-  padding: 10px 12px;
-  transition: border-color 0.15s, background-color 0.15s;
-  color: var(--color-app-faint);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  padding: 10px 14px;
+  transition: all 0.2s ease;
+  color: #8a97a8;
 }
 
 .auth-input-wrap:focus-within {
-  border-color: var(--color-violet);
-  background: var(--color-app-surface-hover);
-  color: var(--color-violet-bright);
+  border-color: #FF7A1A;
+  background: rgba(255, 255, 255, 0.07);
+  color: #FF7A1A;
+  box-shadow: 0 0 0 3px rgba(255, 122, 26, 0.12);
 }
 
 .auth-input-wrap input {
@@ -2840,67 +2855,59 @@ button {
   background: none;
   padding: 0;
   flex: 1;
+  color: #f0f4f8;
 }
 
 .auth-input-wrap input:focus {
   border-color: transparent;
+  box-shadow: none;
 }
 
 .auth-error {
-  font-size: 13px;
-  color: var(--color-danger);
-  background: var(--color-danger-dim);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  border-radius: 7px;
-  padding: 10px 12px;
+  font-size: 12.5px;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 10px;
+  padding: 9px 12px;
   margin: 0;
 }
 
 .auth-success {
-  font-size: 13px;
-  color: var(--color-success);
+  font-size: 12.5px;
+  color: #10B981;
   background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  border-radius: 7px;
-  padding: 10px 12px;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 10px;
+  padding: 9px 12px;
   margin: 0;
-}
-
-.auth-page-container {
-  position: fixed;
-  inset: 0;
-  background: rgba(8, 11, 18, 0.45);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 20px;
-  overflow-y: auto;
 }
 
 .auth-submit {
   width: 100%;
-  padding: 12px;
-  background: linear-gradient(135deg, var(--color-violet), var(--color-blue));
-  color: #fff;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #FF7A1A 0%, #FF9A50 100%);
+  color: #ffffff;
   border: none;
-  border-radius: 9px;
-  font-size: 15px;
+  border-radius: 12px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: opacity 0.15s;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  box-shadow: 0 4px 18px rgba(255, 122, 26, 0.4);
+  margin-top: 4px;
 }
 
-.auth-submit:hover {
-  opacity: 0.9;
+.auth-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(255, 122, 26, 0.55);
 }
 
 .auth-submit:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
@@ -2919,15 +2926,27 @@ button {
 
 .auth-switch {
   text-align: center;
-  font-size: 13px;
-  color: var(--color-app-muted);
-  margin: 16px 0 0;
+  font-size: 12.5px;
+  color: #8a97a8;
+  margin: 18px 0 0;
 }
 
 .auth-switch button {
   background: none;
   border: none;
-  color: var(--color-violet-bright);
+  color: #FF7A1A;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 0;
+  transition: opacity 0.15s;
+}
+
+.auth-switch button:hover {
+  opacity: 0.85;
+  text-decoration: underline;
+}
+
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
@@ -4080,7 +4099,7 @@ html:has(.lp-root) .lp-cursor-ring.is-cta {
   input,
   textarea,
   select {
-    cursor: none !important;
+    cursor: auto;
   }
 }
 
@@ -4115,6 +4134,27 @@ html:has(.lp-root) .lp-cursor-ring.is-cta {
    All CSS vars are re-declared at .ob-root so this works
    outside the app-shell dark-theme context.
    ═══════════════════════════════════════════════════════════ */
+
+/* Hide all scrollbars in onboarding UI */
+.ob-root,
+.ob-root *,
+.ob-stack-categories,
+.ob-widget-list,
+.ob-steps-row {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.ob-root::-webkit-scrollbar,
+.ob-root *::-webkit-scrollbar,
+.ob-stack-categories::-webkit-scrollbar,
+.ob-widget-list::-webkit-scrollbar,
+.ob-steps-row::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
 
 .ob-root {
   /* ── Self-contained dark theme ── */

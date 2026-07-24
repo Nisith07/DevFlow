@@ -156,39 +156,56 @@
   z-index: 0;
 }
 
-/* ── Sticky Navigation ── */
+/* ── Floating Glossy Glass Navigation ── */
 .lp-nav {
   position: fixed;
-  top: 0;
+  top: 14px;
   left: 0;
   right: 0;
   z-index: 200;
-  height: 72px;
+  height: 64px;
   display: flex;
   align-items: center;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  border-bottom: 1px solid transparent;
+  justify-content: center;
+  padding: 0 20px;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .lp-nav-inner {
-  max-width: 1480px;
+  pointer-events: auto;
+  max-width: 1240px;
   width: 100%;
   margin: 0 auto;
-  padding: 0 48px;
+  padding: 8px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 32px;
+  gap: 28px;
+  background: rgba(252, 250, 247, 0.78);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid rgba(29, 29, 31, 0.08);
+  border-radius: 20px;
+  box-shadow:
+    0 10px 30px rgba(29, 29, 31, 0.06),
+    0 1px 3px rgba(29, 29, 31, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.lp-nav-scrolled {
-  height: 60px;
-  background: var(--lp-glass-bg);
-  backdrop-filter: blur(24px) saturate(1.5);
-  -webkit-backdrop-filter: blur(24px) saturate(1.5);
-  border-bottom: 1px solid var(--lp-border);
-  box-shadow: 0 4px 20px rgba(29, 29, 31, 0.05);
+.lp-nav-scrolled .lp-nav-inner {
+  background: rgba(252, 250, 247, 0.92);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border-color: rgba(230, 126, 34, 0.22);
+  box-shadow:
+    0 16px 40px rgba(29, 29, 31, 0.1),
+    0 2px 6px rgba(29, 29, 31, 0.04),
+    inset 0 1px 0 #ffffff;
 }
+
 
 .lp-brand {
   display: flex;

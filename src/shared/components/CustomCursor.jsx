@@ -4,16 +4,18 @@ export default function CustomCursor() {
   const ringRef = useRef(null)
   const dotRef  = useRef(null)
   const [state, setState] = useState('default') // 'default' | 'hovering' | 'cta'
+  const [visible, setVisible] = useState(false)
 
   useEffect(() => {
     // Disable on touch devices
     if (window.matchMedia('(hover: none)').matches) return
 
-    const mouse  = { x: 0, y: 0 }
-    const ring   = { x: 0, y: 0 }
+    const mouse  = { x: -100, y: -100 }
+    const ring   = { x: -100, y: -100 }
     let rafId
 
     const move = (e) => {
+      if (!visible) setVisible(true)
       mouse.x = e.clientX
       mouse.y = e.clientY
 
@@ -25,13 +27,20 @@ export default function CustomCursor() {
 
       // Detect hover target
       const t = e.target
-      if (t.closest('[data-cursor="cta"]')) setState('cta')
-      else if (t.closest('a, button, [role="button"]')) setState('hovering')
+      if (t?.closest('[data-cursor="cta"]')) setState('cta')
+      else if (t?.closest('a, button, [role="button"], input, select, textarea, .ob-role-card, .ob-chip, .ob-goal-card, .ob-time-card, .ob-exp-card, .ob-tone-card')) setState('hovering')
       else setState('default')
     }
 
+    const handleMouseLeave = () => setVisible(false)
+    const handleMouseEnter = () => setVisible(true)
+
+    window.addEventListener('mousemove', move, { passive: true })
+    document.addEventListener('mouseleave', handleMouseLeave)
+    document.addEventListener('mouseenter', handleMouseEnter)
+
     const tick = () => {
-      const ease = 0.12
+      const ease = 0.15
       ring.x += (mouse.x - ring.x) * ease
       ring.y += (mouse.y - ring.y) * ease
       if (ringRef.current) {
@@ -41,14 +50,17 @@ export default function CustomCursor() {
       rafId = requestAnimationFrame(tick)
     }
 
-    window.addEventListener('mousemove', move, { passive: true })
     rafId = requestAnimationFrame(tick)
 
     return () => {
       window.removeEventListener('mousemove', move)
+      document.removeEventListener('mouseleave', handleMouseLeave)
+      document.removeEventListener('mouseenter', handleMouseEnter)
       cancelAnimationFrame(rafId)
     }
-  }, [])
+  }, [visible])
+
+  if (!visible) return null
 
   return (
     <>
@@ -61,3 +73,4 @@ export default function CustomCursor() {
     </>
   )
 }
+
