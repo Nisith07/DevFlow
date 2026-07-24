@@ -4,18 +4,18 @@ export default function CustomCursor() {
   const ringRef = useRef(null)
   const dotRef  = useRef(null)
   const [state, setState] = useState('default') // 'default' | 'hovering' | 'cta'
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(true)
 
   useEffect(() => {
     // Disable on touch devices
     if (window.matchMedia('(hover: none)').matches) return
 
-    const mouse  = { x: -100, y: -100 }
-    const ring   = { x: -100, y: -100 }
+    const mouse  = { x: window.innerWidth / 2, y: window.innerHeight / 2 }
+    const ring   = { x: window.innerWidth / 2, y: window.innerHeight / 2 }
     let rafId
 
     const move = (e) => {
-      if (!visible) setVisible(true)
+      setVisible(true)
       mouse.x = e.clientX
       mouse.y = e.clientY
 
@@ -27,9 +27,13 @@ export default function CustomCursor() {
 
       // Detect hover target
       const t = e.target
-      if (t?.closest('[data-cursor="cta"]')) setState('cta')
-      else if (t?.closest('a, button, [role="button"], input, select, textarea, .ob-role-card, .ob-chip, .ob-goal-card, .ob-time-card, .ob-exp-card, .ob-tone-card')) setState('hovering')
-      else setState('default')
+      if (t?.closest('[data-cursor="cta"]')) {
+        setState('cta')
+      } else if (t?.closest('a, button, [role="button"], input, select, textarea, .ob-role-card, .ob-chip, .ob-goal-card, .ob-time-card, .ob-exp-card, .ob-tone-card, [tabindex]')) {
+        setState('hovering')
+      } else {
+        setState('default')
+      }
     }
 
     const handleMouseLeave = () => setVisible(false)
@@ -40,7 +44,7 @@ export default function CustomCursor() {
     document.addEventListener('mouseenter', handleMouseEnter)
 
     const tick = () => {
-      const ease = 0.15
+      const ease = 0.18
       ring.x += (mouse.x - ring.x) * ease
       ring.y += (mouse.y - ring.y) * ease
       if (ringRef.current) {
@@ -58,7 +62,7 @@ export default function CustomCursor() {
       document.removeEventListener('mouseenter', handleMouseEnter)
       cancelAnimationFrame(rafId)
     }
-  }, [visible])
+  }, [])
 
   if (!visible) return null
 
@@ -73,4 +77,3 @@ export default function CustomCursor() {
     </>
   )
 }
-

@@ -4084,18 +4084,39 @@ html:has(.lp-root) .lp-cursor-ring.is-cta {
 
 @media (pointer: fine) {
 
+  *,
   body,
   .app-root,
   .lp-root,
+  .ob-root,
   a,
   button,
   [role="button"],
   input,
   textarea,
   select {
-    cursor: auto;
+    cursor: none !important;
   }
 }
+
+/* Custom cursor enhancements for Onboarding / Dark pages */
+.ob-root ~ .lp-cursor-dot,
+.ob-root .lp-cursor-dot {
+  background: #FF7A1A !important;
+  box-shadow: 0 0 10px rgba(255, 122, 26, 0.8) !important;
+}
+
+.ob-root ~ .lp-cursor-ring,
+.ob-root .lp-cursor-ring {
+  border-color: rgba(255, 122, 26, 0.45) !important;
+}
+
+.ob-root ~ .lp-cursor-ring.is-hovering,
+.ob-root .lp-cursor-ring.is-hovering {
+  border-color: #FF7A1A !important;
+  background: rgba(255, 122, 26, 0.12) !important;
+}
+
 
 /* ═══════════════════════════════════════════════════════════════════
    PRINT / PDF EXPORT RULES
