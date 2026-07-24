@@ -29,7 +29,7 @@ export default function Faq() {
   }
 
   return (
-    <section className="lp-section" id="docs" style={{ background: '#FAF9F6' }}>
+    <section className="lp-section" id="faq" style={{ background: '#FAF9F6' }}>
       <div className="lp-wrap">
         
         <div className="lp-section-head lp-center">

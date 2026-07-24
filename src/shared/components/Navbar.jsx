@@ -10,8 +10,8 @@ const NAV_LINKS = [
   { label: 'Features', href: '#features' },
   { label: 'How it Works', href: '#how-it-works' },
   { label: 'Pricing', href: '#pricing' },
-  { label: 'Docs', href: '#docs' },
   { label: 'Changelog', href: '#changelog' },
+  { label: 'FAQ', href: '#faq' },
 ]
 
 export default function Navbar() {
@@ -28,7 +28,7 @@ export default function Navbar() {
       setScrolled(window.scrollY > 20)
 
       if (location.pathname !== '/') return
-      const ids = ['home', 'features', 'how-it-works', 'pricing', 'docs', 'changelog']
+      const ids = ['home', 'features', 'how-it-works', 'pricing', 'changelog', 'faq']
       const offset = window.scrollY + 140
       for (let i = ids.length - 1; i >= 0; i--) {
         const el = document.getElementById(ids[i])
@@ -41,6 +41,7 @@ export default function Navbar() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [location.pathname])
+
 
 
   /* ── Smooth scroll (or navigate then scroll) ─────────────────────── */
