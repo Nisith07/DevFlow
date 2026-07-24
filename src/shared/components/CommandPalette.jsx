@@ -278,8 +278,10 @@ export default function CommandPalette({ isOpen, onClose }) {
         {/* Results */}
         <div
           ref={listRef}
+          className="no-scrollbar"
           style={{ maxHeight: '460px', overflowY: 'auto', padding: '8px' }}
         >
+
           {query.trim() && allCmds.length === 0 && !isSearching ? (
             <div style={{ padding: '32px', textAlign: 'center', color: 'var(--color-app-muted)', fontSize: '13px' }}>
               No results for &ldquo;{query}&rdquo;

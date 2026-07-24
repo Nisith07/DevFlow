@@ -557,6 +557,18 @@ button {
   -ms-overflow-style: none !important;
 }
 
+*,
+*::before,
+*::after,
+.sidebar,
+.sidebar-top-container,
+.no-scrollbar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+::-webkit-scrollbar,
+*::-webkit-scrollbar,
 .sidebar::-webkit-scrollbar,
 .sidebar-top-container::-webkit-scrollbar,
 .no-scrollbar::-webkit-scrollbar {
@@ -565,12 +577,6 @@ button {
   height: 0 !important;
 }
 
-.sidebar,
-.sidebar-top-container,
-.no-scrollbar {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
-}
 
 /* Brand header */
 .sidebar-brand {
