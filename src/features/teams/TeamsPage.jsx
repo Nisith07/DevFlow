@@ -195,8 +195,16 @@ export default function TeamsPage() {
       
       {/* Page Header */}
       <PageHeader
-        title="Team Hub"
+        title={
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span>Team Hub</span>
+            <span className="page-beta-badge" title="Team Hub is currently under active development (Beta)">
+              ⚡ BETA (IN DEV)
+            </span>
+          </div>
+        }
         subtitle="Jira-style work progress, team member workload, channel chat, live standups, & Excalidraw whiteboard."
+
         action={
           <div style={{ display: 'inline-flex', background: 'var(--card-bg-inset)', borderRadius: '10px', padding: '3px', border: '1px solid var(--card-border)' }}>
             {[

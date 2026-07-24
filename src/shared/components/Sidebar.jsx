@@ -43,7 +43,7 @@ const WORKSPACE_CATEGORIES = [
   {
     category: 'Development',
     items: [
-      { name: 'Team Hub', route: '/teams', icon: Users, badge: 'Live' },
+      { name: 'Team Hub', route: '/teams', icon: Users, badge: 'Beta', title: 'Team Hub is currently in development mode (Beta)' },
       { name: 'Projects', route: '/projects', icon: Briefcase, badge: 'Active' },
       { name: 'Tasks', route: '/tasks', icon: CheckSquare },
       { name: 'GitHub', route: '/github', icon: GithubIcon },
@@ -417,7 +417,7 @@ export default function Sidebar({ isOpen, onClose }) {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
             {[
-              { name: 'Team Hub', route: '/teams', icon: Users },
+              { name: 'Team Hub', route: '/teams', icon: Users, badge: 'Beta', title: 'Team Hub is currently in development mode (Beta)' },
               { name: 'Projects', route: '/projects', icon: Briefcase },
               { name: 'Tasks', route: '/tasks', icon: CheckSquare },
               { name: 'GitHub', route: '/github', icon: GithubIcon },
@@ -433,6 +433,7 @@ export default function Sidebar({ isOpen, onClose }) {
                   key={item.name}
                   to={item.route}
                   className={`sidebar-link ${isActive ? 'active' : ''}`}
+                  title={item.title || item.name}
                   style={{
                     padding: '7px 10px',
                     display: 'flex',
@@ -447,11 +448,15 @@ export default function Sidebar({ isOpen, onClose }) {
                   onClick={onClose}
                 >
                   <Icon size={15} color={isActive ? 'var(--accent-color)' : 'var(--color-app-muted)'} />
-                  <span>{item.name}</span>
+                  <span style={{ flex: 1 }}>{item.name}</span>
+                  {item.badge && (
+                    <span className="sidebar-beta-tag">{item.badge}</span>
+                  )}
                 </NavLink>
               )
             })}
           </div>
+
         </div>
 
       </div>
