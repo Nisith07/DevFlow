@@ -1,9 +1,10 @@
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Navigate, Outlet } from 'react-router-dom'
 import LandingPage from '@/features/landing/LandingPage'
 import LoginPage from '@/features/auth/components/LoginPage'
 import RegisterPage from '@/features/auth/components/RegisterPage'
 import AppLayout from '@/shared/components/AppLayout'
 import AuthGuard from '@/features/auth/components/AuthGuard'
+import OnboardingPage from '@/features/onboarding/OnboardingPage'
 import DashboardPage from '@/features/dashboard/DashboardPage'
 import ProjectsPage from '@/features/projects/ProjectsPage'
 import TasksPage from '@/features/tasks/TasksPage'
@@ -37,6 +38,18 @@ const router = createBrowserRouter([
       },
     ],
   },
+
+  // ── Onboarding — fullscreen (no sidebar / AppLayout) ──────────
+  {
+    path: 'onboarding',
+    element: (
+      <AuthGuard>
+        <OnboardingPage />
+      </AuthGuard>
+    ),
+  },
+
+  // ── All other protected routes — inside AppLayout with sidebar ─
   {
     element: (
       <AuthGuard>
