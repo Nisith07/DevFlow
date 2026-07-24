@@ -7,8 +7,8 @@ import DevFlowLogo from '@/shared/components/DevFlowLogo'
 
 const NAV_LINKS = [
   { label: 'Home', href: '#home' },
-  { label: 'Features', href: '#features' },
   { label: 'How it Works', href: '#how-it-works' },
+  { label: 'Features', href: '#features' },
   { label: 'Pricing', href: '#pricing' },
   { label: 'Changelog', href: '#changelog' },
   { label: 'FAQ', href: '#faq' },
@@ -28,7 +28,7 @@ export default function Navbar() {
       setScrolled(window.scrollY > 20)
 
       if (location.pathname !== '/') return
-      const ids = ['home', 'features', 'how-it-works', 'pricing', 'changelog', 'faq']
+      const ids = ['home', 'how-it-works', 'features', 'pricing', 'changelog', 'faq']
       const offset = window.scrollY + 140
       for (let i = ids.length - 1; i >= 0; i--) {
         const el = document.getElementById(ids[i])
@@ -41,6 +41,7 @@ export default function Navbar() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [location.pathname])
+
 
 
 
