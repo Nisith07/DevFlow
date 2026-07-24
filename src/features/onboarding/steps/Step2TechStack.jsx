@@ -50,7 +50,7 @@ export default function Step2TechStack({ data, onChange }) {
 
   return (
     <div className="ob-step-content">
-      <div className="ob-step-eyebrow">Step 2 of 9</div>
+      <div className="ob-step-eyebrow">Step 2 of 5</div>
       <h2 className="ob-step-title">Your Tech Stack</h2>
       <p className="ob-step-sub">What technologies do you use? The AI will understand your environment.</p>
 

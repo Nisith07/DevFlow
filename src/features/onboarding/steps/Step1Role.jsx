@@ -14,7 +14,7 @@ const ROLES = [
 export default function Step1Role({ data, onChange }) {
   return (
     <div className="ob-step-content">
-      <div className="ob-step-eyebrow">Step 1 of 9</div>
+      <div className="ob-step-eyebrow">Step 1 of 5</div>
       <h2 className="ob-step-title">Who are you?</h2>
       <p className="ob-step-sub">What best describes you? This helps DevFlow tailor your workspace.</p>
 

@@ -7,7 +7,7 @@ export default function Step4Project({ data, onChange }) {
 
   return (
     <div className="ob-step-content">
-      <div className="ob-step-eyebrow">Step 4 of 9</div>
+      <div className="ob-step-eyebrow">Step 3 of 5</div>
       <h2 className="ob-step-title">What are you building?</h2>
       <p className="ob-step-sub">Tell us about your main project — this becomes your first AI Memory.</p>
 
