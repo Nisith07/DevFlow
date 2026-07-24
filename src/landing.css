@@ -156,47 +156,47 @@
   z-index: 0;
 }
 
-/* ── Floating Ultra-Glossy Glass Navigation (Apple / Linear Pill Dock) ── */
+/* ── Floating Ultra-Glossy Glass Navigation ── */
 .lp-nav {
   position: fixed;
-  top: 16px;
+  top: 14px;
   left: 0;
   right: 0;
   z-index: 200;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 16px;
+  padding: 0 24px;
   pointer-events: none;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .lp-nav-inner {
   pointer-events: auto;
-  max-width: 1080px;
+  max-width: 1440px;
   width: 100%;
   margin: 0 auto;
-  padding: 8px 16px 8px 20px;
+  padding: 10px 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  background: rgba(255, 255, 255, 0.48);
+  gap: 32px;
+  background: rgba(255, 255, 255, 0.52);
   backdrop-filter: blur(28px) saturate(210%);
   -webkit-backdrop-filter: blur(28px) saturate(210%);
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  border-bottom: 1px solid rgba(29, 29, 31, 0.05);
-  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-bottom: 1px solid rgba(29, 29, 31, 0.06);
+  border-radius: 20px;
   box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.04),
-    0 2px 6px rgba(0, 0, 0, 0.02),
+    0 12px 36px rgba(0, 0, 0, 0.04),
+    0 2px 8px rgba(0, 0, 0, 0.02),
     inset 0 1px 1px rgba(255, 255, 255, 0.95),
     inset 0 -1px 1px rgba(0, 0, 0, 0.02);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .lp-nav-scrolled .lp-nav-inner {
-  background: rgba(255, 255, 255, 0.68);
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(32px) saturate(220%);
   -webkit-backdrop-filter: blur(32px) saturate(220%);
   border-color: rgba(230, 126, 34, 0.28);
@@ -205,6 +205,7 @@
     0 4px 12px rgba(230, 126, 34, 0.1),
     inset 0 1px 1px #ffffff;
 }
+
 
 
 
