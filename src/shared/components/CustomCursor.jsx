@@ -5,6 +5,7 @@ export default function CustomCursor() {
   const dotRef  = useRef(null)
   const [state, setState] = useState('default') // 'default' | 'hovering' | 'cta'
   const [visible, setVisible] = useState(true)
+  const [isDarkSection, setIsDarkSection] = useState(false)
 
   useEffect(() => {
     // Disable on touch devices
@@ -25,8 +26,13 @@ export default function CustomCursor() {
         dotRef.current.style.top  = `${e.clientY}px`
       }
 
-      // Detect hover target
       const t = e.target
+
+      // Detect dark background containers like footer, onboarding, dark cards
+      const darkContainer = t?.closest('.lp-footer, footer, [data-theme="dark"], .ob-root, .dark-section, .auth-page-container')
+      setIsDarkSection(!!darkContainer)
+
+      // Detect hover target
       if (t?.closest('[data-cursor="cta"]')) {
         setState('cta')
       } else if (t?.closest('a, button, [role="button"], input, select, textarea, .ob-role-card, .ob-chip, .ob-goal-card, .ob-time-card, .ob-exp-card, .ob-tone-card, [tabindex]')) {
@@ -70,10 +76,14 @@ export default function CustomCursor() {
     <>
       <div
         ref={ringRef}
-        className={`lp-cursor-ring ${state === 'hovering' ? 'is-hovering' : ''} ${state === 'cta' ? 'is-cta' : ''}`}
+        className={`lp-cursor-ring ${state === 'hovering' ? 'is-hovering' : ''} ${state === 'cta' ? 'is-cta' : ''} ${isDarkSection ? 'is-on-dark' : ''}`}
         aria-hidden="true"
       />
-      <div ref={dotRef} className="lp-cursor-dot" aria-hidden="true" />
+      <div
+        ref={dotRef}
+        className={`lp-cursor-dot ${isDarkSection ? 'is-on-dark' : ''}`}
+        aria-hidden="true"
+      />
     </>
   )
 }

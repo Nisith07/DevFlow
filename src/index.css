@@ -4038,6 +4038,21 @@ html.theme-light .lp-cursor-ring.is-cta {
   background: rgba(124, 58, 237, 0.1);
 }
 
+/* Adaptive cursor style when hovering over dark containers (e.g. .lp-footer) */
+.lp-cursor-dot.is-on-dark {
+  background: #ffffff !important;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8) !important;
+}
+
+.lp-cursor-ring.is-on-dark {
+  border-color: rgba(255, 255, 255, 0.45) !important;
+}
+
+.lp-cursor-ring.is-on-dark.is-hovering {
+  border-color: #FF7A1A !important;
+  background: rgba(255, 122, 26, 0.18) !important;
+}
+
 /* Force dark charcoal cursor with premium orange accents on the light landing page */
 html:has(.lp-root) .lp-cursor-dot {
   background: #1D1D1F !important;
@@ -4056,6 +4071,7 @@ html:has(.lp-root) .lp-cursor-ring.is-cta {
   border-color: rgba(230, 126, 34, 0.9) !important;
   background: rgba(230, 126, 34, 0.1) !important;
 }
+
 
 /* Hide custom cursor on touch devices */
 @media (hover: none) {
